@@ -36,6 +36,7 @@ public class Server {
 		Space rooms = new SequentialSpace();
 			
         int roomCounter = 0;
+        int playerCount = 1;
         
         // id=1 rooms(id=1,counter=0)
         // id=0 rooms(id=0,counter=1)
@@ -52,19 +53,32 @@ public class Server {
 			
 			System.out.println(who + " wants to join room: " + roomID);
 			
-			Object[] getRoom = rooms.queryp(new ActualField(roomID), new FormalField(Integer.class));
+			Object[] getRoom = rooms.getp(new ActualField(roomID), new FormalField(Integer.class), 
+					new FormalField(Integer.class));
 			if (getRoom != null) {
-                roomURI = host + "game" + (int) getRoom[1] + "?keep";   // fx. tcp://127.0.0.1:9001/game0?keep
+				playerCount = (int) getRoom[2];
+				if (playerCount >= 2) {
+					System.out.println("Room is full. Please enter new roomID");
+					lobby.put("roomURI",who, roomID, "");
+				} else {
+					// Join room	
+					roomURI = host + "game" + (int) getRoom[1] + "?keep";   // fx. tcp://127.0.0.1:9001/game0?keep
+					System.out.println("Sending user: " + who + " to game room: " + roomCounter);
+		            lobby.put("roomURI", who, roomID, roomURI);  
+		            playerCount++;
+				}  
+				rooms.put(roomID, roomCounter, playerCount);
 			} else {
 				System.out.println("Creating new room with ID: " + roomID + " for: " + who);
 				roomURI = host + "game" + roomCounter + "?keep";        // fx. tcp://127.0.0.1:9001/game0?keep
-				rooms.put(roomID, roomCounter);
+				rooms.put(roomID, roomCounter, playerCount);
                 new Thread(new roomHandler(roomID, roomCounter, roomURI, repo)).start();
                 roomCounter++;
+                
+                // Join room
+                System.out.println("Sending user: " + who + " to game room: " + roomCounter);
+                lobby.put("roomURI", who, roomID, roomURI);
             }
-            
-            System.out.println("Sending user: " + who + " to game room: " + roomCounter);
-            lobby.put("roomURI", who, roomID, roomURI);
 		}
 	}
 }

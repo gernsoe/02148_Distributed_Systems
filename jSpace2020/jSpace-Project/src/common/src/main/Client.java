@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 
 
 public class Client {
+	static String name, roomID, roomURI;
 
 	public static void main(String[] argv) throws InterruptedException, IOException, UnknownHostException {
 
@@ -19,17 +20,23 @@ public class Client {
 
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Enter your name: ");
-        String name = input.readLine();
-
-        System.out.print("Enter roomID: ");
-        String roomID = input.readLine();
-
-        lobby.put("enter", name, roomID);
-        System.out.println("Waiting for server response...");
+        name = input.readLine();
+        
+        enterRoom(lobby, input);
 
         // Name might be redundant (consider removing)
-        Object[] response = lobby.get(new ActualField("roomURI"), new ActualField(name), new ActualField(roomID), new FormalField(String.class));
-        String roomURI = (String) response[3];
+        
+        while (true) {
+            Object[] response = lobby.get(new ActualField("roomURI"), new ActualField(name), new ActualField(roomID), new FormalField(String.class));
+            roomURI = (String) response[3];
+            
+            if (roomURI.equals("")) {
+            	System.out.println("Room is full");
+            	enterRoom(lobby, input);         	
+            } else {
+            	break;
+            }
+        }
 
         System.out.println("Joining game room: " + roomID);
         RemoteSpace gameRoom = new RemoteSpace(roomURI);
@@ -41,5 +48,12 @@ public class Client {
             } catch (InterruptedException e) {}
         }
 	}
+	
+	public static void enterRoom (RemoteSpace lobby, BufferedReader input) throws InterruptedException, IOException {
+        System.out.print("Enter roomID: ");
+        roomID = input.readLine();
 
+        lobby.put("enter", name, roomID);
+        System.out.println("Waiting for server response...");
+	}
 }
