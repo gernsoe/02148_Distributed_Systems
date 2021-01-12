@@ -44,9 +44,9 @@ public class Server {
 		while(true) {
 			System.out.println("Waiting for client to enter...");
 			
-			Object[] credentials = lobby.get(new ActualField("enter"), new FormalField(String.class), new FormalField(Integer.class));
+			Object[] credentials = lobby.get(new ActualField("enter"), new FormalField(String.class), new FormalField(String.class));
 			String who = (String) credentials[1];
-			int roomID = (int) credentials[2];
+			String roomID = (String) credentials[2];
 			
 			System.out.println(who + " wants to join room: " + roomID);
 			
@@ -68,27 +68,25 @@ public class Server {
 }
 
 class roomHandler implements Runnable {
-    private int roomID;
-    private int roomCounter;
+    private String roomID;
 	private String roomURI;
     private Space gameRoom;
-    private SpaceRepository repo;
 
-	public roomHandler(int roomID, int roomCounter, String roomURI, SpaceRepository repo) {
+	public roomHandler(String roomID, int roomCounter, String roomURI, SpaceRepository repo) {
         this.roomID = roomID;
-        this.roomCounter = roomCounter;
         this.roomURI = roomURI;
-        this.repo = repo;
+
+        gameRoom = new SequentialSpace(); 
+        repo.add("game" + roomCounter, gameRoom);
     }
     
 	public void run() {
-        gameRoom = new SequentialSpace(); 
-        repo.add("game" + roomCounter, gameRoom);
-
+        
         while(true) {
             try {
                 gameRoom.get(new ActualField("ready"));
-                
+                System.out.println("User is ready to play!!!");
+
             } catch (InterruptedException e) {
                 System.out.println(e.getStackTrace());
             }
