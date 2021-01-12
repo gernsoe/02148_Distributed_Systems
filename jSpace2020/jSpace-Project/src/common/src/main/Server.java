@@ -24,6 +24,7 @@ public class Server {
 	public static void main(String[] args) throws InterruptedException {
 		SpaceRepository repo = new SpaceRepository();
 		
+		// Users request to join room, server sends rooms
 		Space lobby = new SequentialSpace();
 		
 		String host = "tcp://127.0.0.1:9001/";
@@ -33,33 +34,33 @@ public class Server {
 		repo.addGate(repoURI);
 		System.out.println("Opened gate at uri " + repoURI);
 		
+		// Used to keep track of active rooms (server side only)
 		Space rooms = new SequentialSpace();
-			
-        int roomCounter = 0;
-        int playerCount = 1;
-        
-        // id=1 rooms(id=1,counter=0)
-        // id=0 rooms(id=0,counter=1)
-        // id=0 rooms(id=0,counter=1)
-		
 		String roomURI;
 		
+        int roomCounter = 0;		// Used to identify rooms
+        
 		while(true) {
+			int playerCount = 1;	// Players in a specific room
 			System.out.println("Waiting for client to enter...");
 			
+			// Get client info, when someone wants to enter a room
 			Object[] credentials = lobby.get(new ActualField("enter"), new FormalField(String.class), new FormalField(String.class));
 			String who = (String) credentials[1];
 			String roomID = (String) credentials[2];
 			
 			System.out.println(who + " wants to join room: " + roomID);
 			
+			// Get room (non-blocking) and determine if a new room should be made
 			Object[] getRoom = rooms.getp(new ActualField(roomID), new FormalField(Integer.class), 
 					new FormalField(Integer.class));
-			if (getRoom != null) {
+			
+			if (getRoom != null) {			// Room was found
 				playerCount = (int) getRoom[2];
-				if (playerCount >= 2) {
+				if (playerCount >= 2) { 	// Room is full
 					System.out.println("Room is full. Please enter new roomID");
-					lobby.put("roomURI",who, roomID, "");
+					// Sending empty uri back, so client knows the room was full
+					lobby.put("roomURI",who, roomID, "");	
 				} else {
 					// Join room	
 					roomURI = host + "game" + (int) getRoom[1] + "?keep";   // fx. tcp://127.0.0.1:9001/game0?keep
@@ -67,11 +68,13 @@ public class Server {
 		            lobby.put("roomURI", who, roomID, roomURI);  
 		            playerCount++;
 				}  
+				// Put the updated room back
 				rooms.put(roomID, roomCounter, playerCount);
 			} else {
 				System.out.println("Creating new room with ID: " + roomID + " for: " + who);
 				roomURI = host + "game" + roomCounter + "?keep";        // fx. tcp://127.0.0.1:9001/game0?keep
 				rooms.put(roomID, roomCounter, playerCount);
+				// Create thread to take care of the new game room
                 new Thread(new roomHandler(roomID, roomCounter, roomURI, repo)).start();
                 roomCounter++;
                 
@@ -91,7 +94,7 @@ class roomHandler implements Runnable {
 	public roomHandler(String roomID, int roomCounter, String roomURI, SpaceRepository repo) {
         this.roomID = roomID;
         this.roomURI = roomURI;
-
+        
         gameRoom = new SequentialSpace(); 
         repo.add("game" + roomCounter, gameRoom);
     }
