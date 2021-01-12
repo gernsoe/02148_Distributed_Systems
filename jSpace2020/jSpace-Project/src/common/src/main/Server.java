@@ -69,7 +69,7 @@ public class Server {
 		            playerCount++;
 				}  
 				// Put the updated room back
-				rooms.put(roomID, roomCounter, playerCount);
+				rooms.put(roomID, (int) getRoom[1], playerCount);
 			} else {
 				System.out.println("Creating new room with ID: " + roomID + " for: " + who);
 				roomURI = host + "game" + roomCounter + "?keep";        // fx. tcp://127.0.0.1:9001/game0?keep
