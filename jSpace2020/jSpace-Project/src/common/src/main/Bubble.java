@@ -1,11 +1,12 @@
 package common.src.main;
 
 public class Bubble {
-    public static final double GRAVITY = 0.01;
+    public static final double GRAVITY = 0.1;
     private int bubbleID, size; 
-    int borderHeight = 650, borderWidth = 650; 
+    double borderHeight = 650, borderWidth = 650; 
     private String color;
-    private int speedX = 1, speedY = 1, dirVertical = 1, dirHorizontal = 1;
+    private double speedX = 1, speedY = 0; 
+    private int dirVertical = 1, dirHorizontal = 1;
     private Point bubble;
 
     public Bubble(int id, int size, String color, Point pos, int dirHorizontal, int dirVertical) {
@@ -20,7 +21,7 @@ public class Bubble {
     public void move() {
         moveHorizontal();
         moveVertical();
-        //accelerate(0, -GRAVITY);
+        accelerate(0, GRAVITY);
     }
 
     private void moveHorizontal() {
