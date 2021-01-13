@@ -66,7 +66,7 @@ public class Player {
 	}
 	
 	// Get arrow point based on players position
-	public Point getArrowPoint() {
+	public Point getArrowStartPoint() {
 		return new Point (player.getX(), playerHeight);
 	}
 
