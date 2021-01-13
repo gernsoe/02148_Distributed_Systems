@@ -9,7 +9,8 @@ public class Player {
 	
 	// Size of player
 	final int playerHeight = 5, playerHalfWidth = 1;
-	int playerID, borderWidth, stepSize = 1;
+	int playerID, borderWidth; 
+	int stepSize = 1;
 	String playerName;
 	
 	// borderHeight is not
@@ -19,13 +20,13 @@ public class Player {
 	}
 	
 	// Player movement and collision with wall
-	public void goRight(int x) {
+	public void goRight(double x) {
 		if (player.getX() + (stepSize + playerHalfWidth) <= borderWidth) {
 			player.setX(x + stepSize);
 		}
 	}
 	
-	public void goLeft(int x) {
+	public void goLeft(double x) {
 		if (player.getX() - (stepSize + playerHalfWidth) >= 0) {
 			player.setX(x - stepSize);
 		}
@@ -54,7 +55,7 @@ public class Player {
 	}
 	
 	public Point findContactPoint(Point bubble, Point player) {
-		int playerContactPointX; 
+		double playerContactPointX; 
 		// Check left side
 		if (bubble.getX() < (player.getX() - playerHalfWidth)) {
 			playerContactPointX = player.getX() - playerHalfWidth;
@@ -69,19 +70,19 @@ public class Player {
 		return new Point (player.getX(), playerHeight);
 	}
 
-	public int getX() {
+	public double getX() {
 		return player.getX();
 	}
 	
-	public int getY() {
+	public double getY() {
 		return player.getY();
 	}
 	
-	public void setX(int x) {
+	public void setX(double x) {
 		player.setX(x);
 	}
 	
-	public void setY(int y) {
+	public void setY(double y) {
 		player.setY(y);
 	}
 	

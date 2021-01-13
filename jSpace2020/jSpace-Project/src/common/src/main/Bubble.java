@@ -25,11 +25,11 @@ public class Bubble {
 
     private void moveHorizontal() {
         // Calculate the next move, from the middle of the bubble
-        int nextMove = bubble.getX() + dirHorizontal * (speedX + this.size/2);
+        double nextMove = bubble.getX() + dirHorizontal * (speedX + this.size/2);
         
         //Check for collision with walls
         if (nextMove < borderWidth && nextMove > 0) {
-            int newX = bubble.getX() + dirHorizontal * speedX;
+            double newX = bubble.getX() + dirHorizontal * speedX;
             bubble.setX(newX);
         } else if (nextMove >= borderWidth) {
             changeDirHorizontal();
@@ -43,11 +43,11 @@ public class Bubble {
 
     private void moveVertical() {
         // Calculate the next move, from the middle of the bubble
-        int nextMove = bubble.getY() + dirVertical * (speedY + this.size/2);
+        double nextMove = bubble.getY() + dirVertical * (speedY + this.size/2);
 
         //Check for collision with walls
         if (nextMove < borderHeight && nextMove > 0) {
-            int newY = bubble.getY() + dirVertical * speedY;
+            double newY = bubble.getY() + dirVertical * speedY;
             bubble.setY(newY);
         } else if (nextMove >= borderHeight) {
             changeDirVertical();
