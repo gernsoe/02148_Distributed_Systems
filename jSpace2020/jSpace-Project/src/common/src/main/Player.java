@@ -13,9 +13,8 @@ public class Player {
 	String playerName;
 	
 	// borderHeight is not
-	public Player(Point playerPos, int playerID, int borderWidth, String playerName) {
+	public Player(Point playerPos, int borderWidth, String playerName) {
 		this.player = playerPos;
-		this.playerID = playerID;
 		this.playerName = playerName;
 	}
 	
