@@ -63,8 +63,8 @@ public class Bubble {
         Bubble[] bubbles = new Bubble[2];
         Bubble left = new Bubble(id + 1, this.size/2, this.color, this.bubble, -1, 0);
         Bubble right = new Bubble(id + 2, this.size/2, this.color, this.bubble, 1, 0);
-        bubbles[1] = left;
-        bubbles[2] = right;        
+        bubbles[0] = left;
+        bubbles[1] = right;        
         return bubbles;
     }
 
