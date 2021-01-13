@@ -23,10 +23,9 @@ public class Client {
         name = input.readLine();
         
         enterRoom(lobby, input);
-
-        // Name might be redundant (consider removing)
         
         while (true) {
+        	// Name might be redundant (consider removing)
             Object[] response = lobby.get(new ActualField("roomURI"), new ActualField(name), new ActualField(roomID), new FormalField(String.class));
             roomURI = (String) response[3];
             
