@@ -73,6 +73,11 @@ public class GameRoom implements KeyListener, ActionListener {
 		frame.getContentPane().setLayout(null);
 		
 		panel = new JPanel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void paint(Graphics g) {
 				
