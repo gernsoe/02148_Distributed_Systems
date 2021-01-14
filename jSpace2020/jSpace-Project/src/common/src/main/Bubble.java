@@ -21,7 +21,7 @@ public class Bubble {
     public void move() {
         moveHorizontal();
         moveVertical();
-        accelerate(0, GRAVITY);
+        //accelerate(0, GRAVITY);
     }
 
     private void moveHorizontal() {
