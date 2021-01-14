@@ -104,5 +104,8 @@ public class Bubble {
     public int getID() {
         return this.bubbleID;
     }
-
-}
+    
+    public int getSize() {
+    	return this.size;
+    }
+ }
