@@ -20,6 +20,14 @@ public class Arrow {
 	public void setArrowWidth(int width) {
 		this.width = width;
 	}
+
+	public double getX() {
+		return arrow.getX();
+	}
+
+	public double getY() {
+		return arrow.getY();
+	}
 	
 	public void updatePos() {
 		if (arrow.getY() > -1) {

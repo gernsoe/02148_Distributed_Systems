@@ -69,6 +69,21 @@ public class Bubble {
         return bubbles;
     }
 
+    public boolean collisionWithArrow(Arrow arrow) {
+        int radius = this.size/2;
+
+        double distX = bubble.getX() - arrow.getX();
+        double distY = bubble.getY() - arrow.getY();
+        double distance = Math.sqrt((distX*distX) + (distY*distY));
+
+        if (distance <= radius) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     private void accelerate(double accelerationX, double accelerationY) {
         speedX += accelerationX;
         speedY += accelerationY;
