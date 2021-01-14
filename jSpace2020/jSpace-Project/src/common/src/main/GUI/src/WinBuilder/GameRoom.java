@@ -13,9 +13,6 @@ import javax.swing.Timer;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JLabel;
-import java.awt.BorderLayout;
-import javax.swing.BoxLayout;
 import javax.swing.border.LineBorder;
 
 import common.src.main.Bubble;
