@@ -10,25 +10,28 @@ public class Player {
 	// Size of player
 	final int playerHeight = 5, playerHalfWidth = 1;
 	int playerID, borderWidth; 
-	int stepSize = 1;
+	int stepSize = 5;
 	String playerName;
 	
 	// borderHeight is not
 	public Player(Point playerPos, int borderWidth, String playerName) {
 		this.player = playerPos;
 		this.playerName = playerName;
+		this.borderWidth = borderWidth;
 	}
 	
 	// Player movement and collision with wall
-	public void goRight(double x) {
+	public void goRight() {
 		if (player.getX() + (stepSize + playerHalfWidth) <= borderWidth) {
-			player.setX(x + stepSize);
+			System.out.println("Going right");
+			player.setX(player.getX() + stepSize);
 		}
 	}
 	
-	public void goLeft(double x) {
+	public void goLeft() {
 		if (player.getX() - (stepSize + playerHalfWidth) >= 0) {
-			player.setX(x - stepSize);
+			player.setX(player.getX() - stepSize);
+			System.out.println("Going left");
 		}
 	}
 	
