@@ -87,6 +87,8 @@ public class GameRoom implements KeyListener, ActionListener {
 				g.setColor(Color.blue);
 				g.fillOval((int)bubble.getPos().getX(), (int)bubble.getPos().getY(), bubble.getSize(), bubble.getSize());
 				bubble.move();
+				
+				g.dispose();
 			}
 		};
 		panel.setBounds(50, 0, borderWidth, borderHeight);
