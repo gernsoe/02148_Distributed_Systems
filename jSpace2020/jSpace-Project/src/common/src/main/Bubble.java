@@ -1,9 +1,9 @@
 package common.src.main;
 
 public class Bubble {
-    public static final double GRAVITY = 0.1;
+    public static final double GRAVITY = 0.05;
     private int bubbleID, size; 
-    double borderHeight = 650, borderWidth = 650; 
+    double borderHeight = 782, borderWidth = 546; 
     private String color;
     private double speedX = 1, speedY = 0; 
     private int dirVertical = 1, dirHorizontal = 1;
@@ -21,7 +21,12 @@ public class Bubble {
     public void move() {
         moveHorizontal();
         moveVertical();
-        //accelerate(0, GRAVITY);
+        if (dirVertical == 1) {
+            accelerate(0, GRAVITY);
+        } else {
+            accelerate(0, -GRAVITY);
+        }
+        
     }
 
     private void moveHorizontal() {
@@ -45,6 +50,7 @@ public class Bubble {
     private void moveVertical() {
         // Calculate the next move, from the middle of the bubble
         double nextMove = bubble.getY() + dirVertical * (speedY + this.size/2);
+        System.out.println("Next move Y: " + nextMove);
 
         //Check for collision with walls
         if (nextMove < borderHeight && nextMove > 0) {
