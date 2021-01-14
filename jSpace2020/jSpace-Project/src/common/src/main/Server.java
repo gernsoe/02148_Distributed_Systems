@@ -1,4 +1,4 @@
-package common.src.main;
+ package common.src.main;
 
 import org.jspace.*;
 
@@ -100,15 +100,56 @@ class roomHandler implements Runnable {
     }
     
 	public void run() {
-        
-        while(true) {
-            try {
-                gameRoom.get(new ActualField("ready"));
-                System.out.println("User is ready to play!!!");
+		
+		// Pre game lobby
+		try {
+			String user1 = (String) gameRoom.get(new FormalField(String.class), new ActualField("ready"))[0];
+			System.out.println(user1 + " is ready to play!!!");
+			
+			gameRoom.put(user1, "host");
+			boolean connected = true;
+			
+			// Get instruction (name, instruction) - where an instruction is either ready or start
+			Object[] initGameInstruction = gameRoom.get(new FormalField(String.class), new FormalField(String.class));
+			String who = (String) initGameInstruction[0];
+			String instruction = (String) initGameInstruction[1];
 
-            } catch (InterruptedException e) {
-                System.out.println(e.getStackTrace());
-            }
-        }
+			// Player 2 joins
+			if (instruction.equals("ready")) {
+				System.out.println(who + " is ready to play!!!");
+
+				// Signal to player1 that someone joined
+				gameRoom.put(user1, "playerJoiner");
+				String start_settings_inst = (String) gameRoom.query(new ActualField(user1), new FormalField(String.class))[1];
+
+				// Host starts game / wants to see settiings
+				if (start_settings_inst.equals("start")) {
+					System.out.println("Starting the game");
+					gameRoom.put(user1, "gameStarted");	//Player one
+					gameRoom.put(who, "gameStarted"); 	//Player two
+				} else if (start_settings_inst.equals("settings")) {
+					// Implement settings
+					System.out.println("Implement settings");
+				} else {
+					System.out.println("Invalid command.");
+				}
+
+			// Player 1 starts game alone
+			} else if (instruction.equals("start")) {
+				gameRoom.put(user1, "gameStarted");
+				System.out.println("Starting the game");
+			} else {
+				System.out.println("Invalid command.");
+			}
+
+			// Game loop
+			while (connected) {
+
+			}
+
+			
+		} catch (InterruptedException e) {
+			System.out.println(e.getStackTrace());
+		}
     }
 }
