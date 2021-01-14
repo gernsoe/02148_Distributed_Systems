@@ -31,36 +31,37 @@ public class Bubble {
 
     private void moveHorizontal() {
         // Calculate the next move, from the middle of the bubble
-        double nextMove = bubble.getX() + dirHorizontal * (speedX + this.size/2);
+        double nextMove = bubble.getX() + this.dirHorizontal * (this.speedX + this.size/2);
         
         //Check for collision with walls
         if (nextMove < borderWidth && nextMove > 0) {
-            double newX = bubble.getX() + dirHorizontal * speedX;
+            double newX = bubble.getX() + this.dirHorizontal * this.speedX;
             bubble.setX(newX);
         } else if (nextMove >= borderWidth) {
             changeDirHorizontal();
-            bubble.setX(borderWidth+dirHorizontal*this.size/2); // Move bubble back onto the map
+            bubble.setX(borderWidth+this.dirHorizontal*this.size/2); // Move bubble back onto the map
         } else if (nextMove <= 0) {
             changeDirHorizontal();
-            bubble.setX(0+dirHorizontal*this.size/2);// Move bubble back onto the map
+            bubble.setX(0+this.dirHorizontal*this.size/2);// Move bubble back onto the map
         }
     }
 
     private void moveVertical() {
         // Calculate the next move, from the middle of the bubble
-        double nextMove = bubble.getY() + dirVertical * (speedY + this.size/2);
+        double nextMove = bubble.getY() + this.dirVertical * (this.speedY + this.size/2);
         System.out.println("Next move Y: " + nextMove);
 
         //Check for collision with walls
         if (nextMove < borderHeight && nextMove > 0) {
-            double newY = bubble.getY() + dirVertical * speedY;
+            double newY = bubble.getY() + this.dirVertical * this.speedY;
             bubble.setY(newY);
         } else if (nextMove >= borderHeight) {
             changeDirVertical();
-            bubble.setY(borderHeight+dirVertical*this.size); // Move bubble back onto the map
+            bubble.setY(borderHeight+this.dirVertical*this.size); // Move bubble back onto the map
+            System.out.println("Y after hitting bottom " + bubble.getY());
         } else if (nextMove <= 0) {
             changeDirVertical();
-            bubble.setY(0+dirVertical*this.size); // Move bubble back onto the map
+            bubble.setY(0+this.dirVertical*this.size); // Move bubble back onto the map
         }
     }
 
@@ -89,16 +90,16 @@ public class Bubble {
     }
 
     private void accelerate(double accelerationX, double accelerationY) {
-        speedX += accelerationX;
-        speedY += accelerationY;
+        this.speedX += accelerationX;
+        this.speedY += accelerationY;
     }
 
     private void changeDirHorizontal() {
-        dirHorizontal *= -1;
+        this.dirHorizontal *= -1;
     }
 
     private void changeDirVertical() {
-        dirVertical *= -1;
+        this.dirVertical *= -1;
     }
 
     public Point getPos() {
