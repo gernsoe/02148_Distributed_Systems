@@ -3,7 +3,7 @@ package common.src.main;
 public class Bubble {
     public static final double GRAVITY = 0.05;
     private int bubbleID, size; 
-    double borderHeight = 782, borderWidth = 546; 
+    double borderHeight = 600, borderWidth = 800; 
     private String color;
     private double speedX = 1, speedY = 0; 
     private int dirVertical = 1, dirHorizontal = 1;
@@ -44,7 +44,6 @@ public class Bubble {
             changeDirHorizontal();
             bubble.setX(0+dirHorizontal*this.size/2);// Move bubble back onto the map
         }
-        System.out.println("X: " + bubble.getX());
     }
 
     private void moveVertical() {
@@ -58,12 +57,11 @@ public class Bubble {
             bubble.setY(newY);
         } else if (nextMove >= borderHeight) {
             changeDirVertical();
-            bubble.setY(borderHeight+dirVertical*this.size/2); // Move bubble back onto the map
+            bubble.setY(borderHeight+dirVertical*this.size); // Move bubble back onto the map
         } else if (nextMove <= 0) {
             changeDirVertical();
-            bubble.setY(0+dirVertical*this.size/2); // Move bubble back onto the map
+            bubble.setY(0+dirVertical*this.size); // Move bubble back onto the map
         }
-        System.out.println("Y: " + bubble.getY());
     }
 
     public Bubble[] kill(int id) {
