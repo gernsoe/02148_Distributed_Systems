@@ -79,8 +79,8 @@ public class GameRoom implements KeyListener, ActionListener {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void paint(Graphics g) {
-				
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g);
 				g.setColor(Color.red);
 				g.fillRect(((int)player.getX()), ((int)player.getY()), 6, 12);
 				
