@@ -3,14 +3,14 @@ package common.src.main;
 public class Arrow {
 	
 	// Default settings for arrow
-	int speed = 10;
+	int speed = 2;
 	Point arrow;
 	int width = 4;
-	int borderWidth;
+	boolean alive;
 	
-	public Arrow(Point arrowPos, int borderWidth) {
+	public Arrow(Point arrowPos) {
 		arrow = arrowPos;
-		this.borderWidth = borderWidth;
+		alive = true;
 	}
 	
 	public void setSpeed(int speed) {
@@ -19,6 +19,10 @@ public class Arrow {
 	
 	public void setArrowWidth(int width) {
 		this.width = width;
+	}
+	
+	public int getArrowWidth() {
+		return width;
 	}
 
 	public double getX() {
@@ -30,8 +34,15 @@ public class Arrow {
 	}
 	
 	public void updatePos() {
+		System.out.println(arrow.getY());
 		if (arrow.getY() > -1) {
 			arrow.setY(arrow.getY() - speed);
+		} else {
+			alive = false;
 		}
 	}
-}
+	
+	public boolean isAlive() {
+		return alive;
+	}
+ }

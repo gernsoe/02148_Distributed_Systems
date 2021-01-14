@@ -24,7 +24,7 @@ import common.src.main.Point;
 public class GameRoom implements KeyListener, ActionListener {
 	
 	private Timer timer;
-	private int delay = 8;
+	private int delay = 17;
 	private JFrame frame;
 	private JPanel panel;
 	private Player player;
@@ -78,6 +78,15 @@ public class GameRoom implements KeyListener, ActionListener {
 				
 				g.setColor(Color.red);
 				g.fillRect(((int)player.getX()), ((int)player.getY()), 6, 12);
+				
+				if (player.getArrowIsAlive()) {
+					g.setColor(Color.YELLOW);
+					g.fillRect((int)player.getArrow().getX(), (int)player.getArrow().getY(), player.getArrow().getArrowWidth(), 4);
+					player.getArrow().updatePos();
+				}
+				
+				g.setColor(Color.blue);
+				
 			}
 		};
 		panel.setBounds(50, 0, borderWidth, borderHeight);
@@ -101,8 +110,12 @@ public class GameRoom implements KeyListener, ActionListener {
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			player.goRight();
-		} else if(e.getKeyCode() == KeyEvent.VK_LEFT) {	
+		}
+		if(e.getKeyCode() == KeyEvent.VK_LEFT) {	
 			player.goLeft();
+		}
+		if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+			player.makeArrow();
 		}
 	}
 

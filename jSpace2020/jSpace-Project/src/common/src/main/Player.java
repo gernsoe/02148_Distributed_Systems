@@ -6,6 +6,7 @@ public class Player {
 	
 	// Player position
 	Point player;
+	Arrow arrow;
 	
 	// Size of player
 	final int playerHeight = 5, playerHalfWidth = 1;
@@ -69,8 +70,19 @@ public class Player {
 	}
 	
 	// Get arrow point based on players position
-	public Point getArrowStartPoint() {
-		return new Point (player.getX(), playerHeight);
+	public void makeArrow() {
+		if (!getArrowIsAlive()) {
+			arrow = new Arrow (new Point(player.getX(), player.getY() - playerHeight));
+		}
+	}
+	
+	public boolean getArrowIsAlive() {
+		if (arrow != null) {
+			if (arrow.isAlive()) {
+				return true;
+			}
+		} 
+		return false;
 	}
 
 	public double getX() {
@@ -103,5 +115,9 @@ public class Player {
 	
 	public boolean isAlive() {
 		return isAlive;
+	}
+	
+	public Arrow getArrow() {
+		return arrow;
 	}
  }
