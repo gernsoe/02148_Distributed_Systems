@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="common/src/main/GUI/img/|common/src/main/GUI/playMusic/|common/src/main/GUI/bin/WinBuilder/|common/src/main/GUI/bin/" kind="src" path="src"/>
+	<classpathentry kind="src" path="src/common/src/main/GUI/img"/>
+	<classpathentry kind="src" path="src/common/src/main/GUI/playMusic"/>
+	<classpathentry kind="src" path="src/common/src/main/GUI/bin/WinBuilder"/>
+	<classpathentry excluding="WinBuilder/" kind="src" path="src/common/src/main/GUI/bin"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
