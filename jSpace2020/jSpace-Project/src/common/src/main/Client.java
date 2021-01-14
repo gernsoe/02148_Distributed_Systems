@@ -40,12 +40,21 @@ public class Client {
         System.out.println("Joining game room: " + roomID);
         RemoteSpace gameRoom = new RemoteSpace(roomURI);
 
-        while(true) {
-            try {
-                gameRoom.put("ready");
-                gameRoom.get(new ActualField("data"));
-            } catch (InterruptedException e) {}
-        }
+        try {
+            gameRoom.put(name, "ready");
+            boolean connected = true;
+
+            while (connected) {
+                System.out.println("Waiting for another player to join...");
+
+                //Click a button to start the game
+                gameRoom.put(name, "start");
+                
+                //Click a button to set settings
+                gameRoom.put(name, "settings");
+            }
+            
+        } catch (InterruptedException e) {}
 	}
 	
 	public static void enterRoom (RemoteSpace lobby, BufferedReader input) throws InterruptedException, IOException {
