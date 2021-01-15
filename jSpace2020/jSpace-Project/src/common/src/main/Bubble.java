@@ -48,19 +48,20 @@ public class Bubble {
 
     private void moveVertical() {
         // Calculate the next move, from the middle of the bubble
-        double nextMove = bubble.getY() + this.dirVertical * (this.speedY + this.size/2);
+        double nextMove = bubble.getY() + dirVertical * (this.speedY + this.size/2);
         System.out.println("Next move Y: " + nextMove);
+        if (Math.signum(this.speedY) != this.dirVertical) {
+            changeDirVertical();
+        }
 
         //Check for collision with walls
         if (nextMove < borderHeight && nextMove > 0) {
-            double newY = bubble.getY() + this.dirVertical * this.speedY;
+            double newY = bubble.getY() + dirVertical * this.speedY;
             bubble.setY(newY);
         } else if (nextMove >= borderHeight) {
-            changeDirVertical();
             bubble.setY(borderHeight+this.dirVertical*this.size); // Move bubble back onto the map
-            System.out.println("Y after hitting bottom " + bubble.getY());
+            System.out.println("Y after hitting bottom " + bubble.getY() + " Dir: " + this.dirVertical);
         } else if (nextMove <= 0) {
-            changeDirVertical();
             bubble.setY(0+this.dirVertical*this.size); // Move bubble back onto the map
         }
     }
