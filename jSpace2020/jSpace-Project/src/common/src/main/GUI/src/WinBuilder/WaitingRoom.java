@@ -42,6 +42,7 @@ public class WaitingRoom {
 	 */
 	private void initialize() {
 		frmWaitingRoom = new JFrame();
+		frmWaitingRoom.setLocationRelativeTo(null);
 		frmWaitingRoom.setTitle("Waiting Room");
 		frmWaitingRoom.setBounds(100, 100, 782, 546);
 		frmWaitingRoom.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

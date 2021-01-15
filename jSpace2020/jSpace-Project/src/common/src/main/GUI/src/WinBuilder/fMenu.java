@@ -51,7 +51,7 @@ public class fMenu {
 	 */
 	private void initialize() {
 		frame = new JFrame("Start Window");
-
+		frame.setLocationRelativeTo(null);
 		frame.getContentPane().setBackground(new Color(47, 79, 79));
 		frame.setBounds(100, 100, 782, 546);
 		frame.setResizable(false);

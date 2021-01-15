@@ -19,6 +19,7 @@ import common.src.main.Bubble;
 import common.src.main.Map;
 import common.src.main.Player;
 import common.src.main.Point;
+import javax.swing.JLabel;
 
 public class GameRoom implements KeyListener, ActionListener {
 	
@@ -29,6 +30,8 @@ public class GameRoom implements KeyListener, ActionListener {
 	private Map game;
 	private Bubble bubble;
 	private int borderWidth = 800, borderHeight = 600, platformHeight = borderHeight-50;
+	private JLabel lblNewLabel_1;
+	private JLabel lblNewLabel_3;
 
 	/**
 	 * Launch the application.
@@ -65,9 +68,9 @@ public class GameRoom implements KeyListener, ActionListener {
 		frame = new JFrame("Game Room");
 		
 		frame.setLocationRelativeTo(null);
-		frame.getContentPane().setBackground(new Color(165, 42, 42));
+		frame.getContentPane().setBackground(new Color(135, 206, 250));
 		frame.setResizable(false);
-		frame.setSize(900,700);
+		frame.setSize(1000,700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Image img = new ImageIcon(this.getClass().getResource("/Group1.png")).getImage();
 		Image img1 = new ImageIcon(this.getClass().getResource("/Group2.png")).getImage();
@@ -113,13 +116,33 @@ public class GameRoom implements KeyListener, ActionListener {
 				// g.dispose();
 			}
 		};
-		panel.setBackground(Color.white);
-		panel.setBounds(50, 0, borderWidth, borderHeight);
+		panel.setBackground(new Color(135, 206, 235));
+		panel.setBounds(100, 0, borderWidth, borderHeight);
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel.setFocusable(true);
 		frame.getContentPane().add(panel);
 		panel.addKeyListener(this);
 		panel.setLayout(null);
+		
+	
+		JLabel lblNewLabel = new JLabel("");
+		Image img5 = new ImageIcon(this.getClass().getResource("/Group1.png")).getImage();
+		lblNewLabel.setIcon(new ImageIcon(img5));
+		lblNewLabel.setBounds(-14, 0, 114, 600);
+		frame.getContentPane().add(lblNewLabel);
+		
+		lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setIcon(new ImageIcon(img5));
+		lblNewLabel_1.setBounds(886, 0, 114, 600);
+		frame.getContentPane().add(lblNewLabel_1);
+		
+		Image img6 = new ImageIcon(this.getClass().getResource("/Group2.png")).getImage();
+		lblNewLabel_3 = new JLabel("");
+		lblNewLabel_3.setBackground(new Color(135, 206, 250));
+		lblNewLabel_3.setIcon(new ImageIcon(img6));
+		lblNewLabel_3.setBounds(-4, 597, 1037, 81);
+		frame.getContentPane().add(lblNewLabel_3);
+		
 		timer = new Timer(delay, this);
 		timer.start();
 	}
