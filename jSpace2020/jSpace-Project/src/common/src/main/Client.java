@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 
-
 public class Client {
     static String name, roomID, roomURI;
     public static final String LEAVE_ROOM = "leave_room";
