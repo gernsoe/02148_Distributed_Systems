@@ -65,7 +65,7 @@ public class GameRoom implements KeyListener, ActionListener {
 		// Add GUI
 		frame = new JFrame("Game Room");
 		
-		frame.setLocationRelativeTo(null);
+
 		frame.getContentPane().setBackground(new Color(135, 206, 250));
 		frame.setResizable(false);
 		frame.setSize(1000,700);
@@ -73,6 +73,7 @@ public class GameRoom implements KeyListener, ActionListener {
 		Image img = new ImageIcon(this.getClass().getResource("/Group1.png")).getImage();
 		Image img1 = new ImageIcon(this.getClass().getResource("/Group2.png")).getImage();
 		frame.getContentPane().setLayout(null);
+		frame.setLocationRelativeTo(null);
 		
 		panel = new JPanel() {
 			/**

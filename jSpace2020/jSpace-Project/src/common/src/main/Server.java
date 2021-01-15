@@ -114,18 +114,18 @@ class roomHandler implements Runnable {
 		
 		// Pre game lobby
 		try {
-			String user1 = (String) gameRoom.get(new FormalField(String.class), new ActualField(READY_TO_PLAY))[0];
+			String user1 = (String) gameRoom.get(new ActualField(FROM), new FormalField(String.class), new ActualField(READY_TO_PLAY))[1];
 			System.out.println(user1 + " is ready to play!!!");
 			
-			gameRoom.put(user1, PERMISSION, "host");
+			gameRoom.put(TO, user1, PERMISSION, "host");
 			boolean connected = true;
 			boolean inLobby = true;
 
 			while (inLobby) {
 				// Get instruction (name, instruction) - where an instruction is either ready or start
-				Object[] initGameInstruction = gameRoom.get(new FormalField(String.class), new FormalField(String.class));
-				String who = (String) initGameInstruction[0];
-				String instruction = (String) initGameInstruction[1];
+				Object[] initGameInstruction = gameRoom.get(new ActualField(FROM), new FormalField(String.class), new FormalField(String.class));
+				String who = (String) initGameInstruction[1];
+				String instruction = (String) initGameInstruction[2];
 
 				// Player 2 joins
 				if (instruction.equals(READY_TO_PLAY) && !who.equals(user1)) {
@@ -133,14 +133,14 @@ class roomHandler implements Runnable {
 
 					// Signal to player1 that someone joined
 					gameRoom.put(TO, user1, PLAYER_JOINED);
-					gameRoom.put(who, PERMISSION, "participant");
-					String start_settings_inst = (String) gameRoom.get(new ActualField(user1), new FormalField(String.class))[1];
+					gameRoom.put(TO, who, PERMISSION, "participant");
+					String start_settings_inst = (String) gameRoom.get(new ActualField(FROM), new ActualField(user1), new FormalField(String.class))[2];
 
 					// Host starts game / wants to see settings
 					if (start_settings_inst.equals(START_GAME)) {
 						System.out.println("Starting the game");
-						gameRoom.put(user1, GAME_STARTED);	//Player one
-						gameRoom.put(who, GAME_STARTED); 	//Player two'
+						gameRoom.put(TO, user1, GAME_STARTED);	//Player one
+						gameRoom.put(TO, who, GAME_STARTED); 	//Player two'
 						inLobby = false;
 					} else if (start_settings_inst.equals(SETTINGS)) {
 						// Implement settings
@@ -151,7 +151,7 @@ class roomHandler implements Runnable {
 
 				// Player 1 starts game alone
 				} else if (instruction.equals(START_GAME)) {
-					gameRoom.put(user1, GAME_STARTED);
+					gameRoom.put(TO, user1, GAME_STARTED);
 					System.out.println("Starting the game");
 					inLobby = false;
 				} else {

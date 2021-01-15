@@ -56,8 +56,8 @@ public class Client {
             boolean inLobby = true;
             boolean connected = true;
 
-            gameRoom.put(name, READY_TO_PLAY);
-            String permissions = (String) gameRoom.get(new ActualField(name), new ActualField(PERMISSION), new FormalField(String.class))[2];
+            gameRoom.put(FROM, name, READY_TO_PLAY);
+            String permissions = (String) gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(PERMISSION), new FormalField(String.class))[3];
 
             // Check if client is a host
             if (permissions.equals("host")) {
@@ -69,7 +69,7 @@ public class Client {
                     if (lobbyStatus != null) {
                         //Todo update lobby screen, to show the joined player
                         System.out.println("Player 2 joined");
-                        gameRoom.put(name, START_GAME);
+                        gameRoom.put(FROM, name, START_GAME);
                         inLobby = false;
                     } else {
                         System.out.println("No player joined yet");
@@ -87,7 +87,7 @@ public class Client {
             } else if (permissions.equals("participant")) {
 
                 System.out.println("Waiting for host to start the game");
-                gameRoom.get(new ActualField(name), new ActualField(GAME_STARTED));
+                gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(GAME_STARTED));
 
                 //Click a button to leave the room
                 //gameRoom.put(name, LEAVE_ROOM);
