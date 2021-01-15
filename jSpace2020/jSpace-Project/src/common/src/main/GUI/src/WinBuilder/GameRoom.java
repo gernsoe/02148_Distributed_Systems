@@ -105,10 +105,23 @@ public class GameRoom implements KeyListener, ActionListener {
 				
 				// Bubble
 				g.setColor(Color.blue);
-				for(Bubble bubble : game.getBubbles()) {
-					g.fillOval((int)bubble.getPos().getX(), (int)bubble.getPos().getY(), bubble.getSize(), bubble.getSize());
-					bubble.move();
+				for(int i = 0; i < game.getBubbles().size(); i++) {
+					
+					// Bubble collision with arrow
+					if (game.getPlayer1().getArrowIsAlive() && game.getBubbles().get(i).collisionWithArrow(game.getPlayer1().getArrow())) {
+						if (game.getBubbles().get(i).getSize() > 20) {
+							game.getBubbles().addAll(game.getBubbles().get(i).addSplitBubbles());
+						}
+						game.getBubbles().remove(i);
+						game.getPlayer1().getArrow().setAliveTo(false);
+					} else {
+						int size = game.getBubbles().get(i).getSize();
+						g.fillOval((int)game.getBubbles().get(i).getPos().getX(), (int)game.getBubbles().get(i).getPos().getY(), size, size);
+					}
+					game.getBubbles().get(i).move();
 				}
+				
+				// Bubble collision with arrow
 
 				// g.dispose();
 			}

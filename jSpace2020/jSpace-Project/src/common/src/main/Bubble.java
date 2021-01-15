@@ -1,15 +1,16 @@
 package common.src.main;
 
+import java.util.ArrayList;
+
 public class Bubble {
     public static final double GRAVITY = 0.05;
-    private int bubbleID, size; 
+    private int size; 
     int borderHeight, borderWidth; 
     private String color;
     private double speedX = 1, speedY = 0; 
     private Point bubble;
 
-    public Bubble(int id, int size, String color, Point pos, int borderHeight, int borderWidth, int speedX) {
-        this.bubbleID = id;
+    public Bubble(int size, String color, Point pos, int borderHeight, int borderWidth, int speedX) {
         this.size = size;
         this.color = color;
         this.speedX = speedX;
@@ -33,20 +34,32 @@ public class Bubble {
         }
     }
 
-    public Bubble[] kill(int id) {
-        Bubble[] bubbles = new Bubble[2];
-        Bubble left = new Bubble(id + 1, this.size/2, this.color, this.bubble, this.borderHeight, this.borderWidth, -1);
-        Bubble right = new Bubble(id + 2, this.size/2, this.color, this.bubble, this.borderHeight, this.borderWidth, 1);
-        bubbles[0] = left;
-        bubbles[1] = right;        
-        return bubbles;
+    public ArrayList<Bubble> addSplitBubbles() {
+    	ArrayList<Bubble> newBubbles = new ArrayList<Bubble>();
+        newBubbles.add(new Bubble(this.size/3*2, this.color, new Point(bubble.getX(),bubble.getY()), this.borderHeight, this.borderWidth, -1));
+        newBubbles.add(new Bubble(this.size/3*2, this.color, new Point(bubble.getX(),bubble.getY()), this.borderHeight, this.borderWidth, 1)); 
+        return newBubbles;
     }
 
     public boolean collisionWithArrow(Arrow arrow) {
         int radius = this.size/2;
+        
+        double testX = bubble.getX();
+        double testY = bubble.getY();
+        if (bubble.getX() < arrow.getX()) {
+        	testX = arrow.getX();
+        } else if (bubble.getX() > arrow.getX()+arrow.getArrowWidth()) {
+        	testX = arrow.getX() + arrow.getArrowWidth();
+        }
+        
+        if (bubble.getY() < arrow.getY()) {
+        	testY = arrow.getY();
+        } else if (bubble.getY() > arrow.getY()+arrow.getArrowHeight()) {
+        	testY = arrow.getY() + arrow.getArrowHeight();
+        }
 
-        double distX = bubble.getX() - arrow.getX();
-        double distY = bubble.getY() - arrow.getY();
+        double distX = bubble.getX() - testX;
+        double distY = bubble.getY() - testY;
         double distance = Math.sqrt((distX*distX) + (distY*distY));
 
         if (distance <= radius) {
@@ -60,11 +73,7 @@ public class Bubble {
     public Point getPos() {
         return this.bubble;
     }
-    
-    public int getID() {
-        return this.bubbleID;
-    }
-    
+
     public int getSize() {
     	return this.size;
     }

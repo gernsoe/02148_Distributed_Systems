@@ -5,10 +5,11 @@ public class Arrow {
 	// Default settings for arrow
 	int speed = 6;
 	Point arrow;
-	int width = 4, height = 0;
+	int width = 0, height = 0;
 	boolean alive;
 	
-	public Arrow(Point arrowPos) {
+	public Arrow(Point arrowPos, int playerHeight) {
+		width = playerHeight/4;
 		arrow = arrowPos;
 		alive = true;
 	}
@@ -38,13 +39,17 @@ public class Arrow {
 	}
 	
 	public void updatePos() {
-		System.out.println(arrow.getY());
+		System.out.println(height);
 		if (arrow.getY() > -1) {
-			arrow.setY(arrow.getY() - speed);
 			height += speed;
+			arrow.setY(arrow.getY() - speed);
 		} else {
 			alive = false;
 		}
+	}
+	
+	public void setAliveTo(boolean alive) {
+		this.alive = alive;
 	}
 	
 	public boolean isAlive() {

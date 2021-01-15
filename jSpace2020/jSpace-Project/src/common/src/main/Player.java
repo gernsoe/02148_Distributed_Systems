@@ -73,7 +73,7 @@ public class Player {
 	// Get arrow point based on players position
 	public void makeArrow() {
 		if (!getArrowIsAlive()) {
-			arrow = new Arrow (new Point(player.getX(), player.getY()));
+			arrow = new Arrow (new Point(player.getX()+stepSize/4, player.getY()+playerHeight), playerHeight);
 		}
 	}
 	

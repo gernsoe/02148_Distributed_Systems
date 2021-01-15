@@ -108,8 +108,8 @@ public class WaitingRoom {
 		System.out.println("This is the RoomURI: " + roomURI);
 		
 	    RemoteSpace gameRoom;
-		try {
-			gameRoom = new RemoteSpace(roomURI);
+		/*try {
+			//gameRoom = new RemoteSpace(roomURI);
 	        gameRoom.put(name, "ready");
 	        boolean connected = true;
 
@@ -131,6 +131,6 @@ public class WaitingRoom {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}	*/	
 	}
 }
