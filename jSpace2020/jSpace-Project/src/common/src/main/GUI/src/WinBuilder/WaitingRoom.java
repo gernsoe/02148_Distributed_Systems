@@ -44,7 +44,7 @@ public class WaitingRoom {
 		initialize();
 		this.name = name;
 		this.roomID = roomID;
-		startWaiting();
+		//startWaiting();
 		
 	}
 
@@ -71,7 +71,7 @@ public class WaitingRoom {
 		JButton btnNewButton = new JButton("Start Game");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				frmWaitingRoom.setVisible(false);
 				GameRoom.NewScreen();	
 			}
 		});
@@ -101,6 +101,7 @@ public class WaitingRoom {
 		
 		
 	}
+	/*
 	public void startWaiting() {
 		
 		roomURI = "tcp://127.0.0.1:9001/space?"+roomID;
@@ -132,5 +133,5 @@ public class WaitingRoom {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
-	}
+	} */
 }

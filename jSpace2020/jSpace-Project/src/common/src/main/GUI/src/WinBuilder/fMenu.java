@@ -71,11 +71,9 @@ public class fMenu {
 				/*GameRoom gameRoom = new GameRoom();
 				gameRoom.NewScreen();	*/
 				
-				// WaitingRoom waitingRoom = new WaitingRoom();
-				// waitingRoom.Waiting();
 				String name = textField_Name.getText();
 				String roomID = textField_RoomID.getText();
-				
+				frame.setVisible(false);
 				WaitingRoom.Waiting(name, roomID);
 				
 			}
@@ -135,6 +133,5 @@ public class fMenu {
 		lblNewLabel_2.setIcon(new ImageIcon(img3));
 		lblNewLabel_5.setBounds(211, 6, 416, 133);
 		frame.getContentPane().add(lblNewLabel_5);
-		
 	}
 }
