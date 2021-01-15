@@ -27,7 +27,7 @@ public class GameRoom implements KeyListener, ActionListener {
 	private JPanel panel;
 	private Player player;
 	private Bubble bubble;
-	private int borderWidth = 800, borderHeight = 600;
+	private int borderWidth = 800, borderHeight = 600, platformHeight = borderHeight-50;
 
 	/**
 	 * Launch the application.
@@ -57,7 +57,7 @@ public class GameRoom implements KeyListener, ActionListener {
 	 */
 	private void initialize() {
 		// Add game elements
-		player = new Player(new Point(borderWidth/2,borderHeight-50), borderWidth, "David");
+		player = new Player(new Point(borderWidth/2,platformHeight), borderWidth, "David");
 		bubble = new Bubble(0, 20, "farve", new Point(50,100), -1, 1);
 		
 		// Add GUI
@@ -81,8 +81,13 @@ public class GameRoom implements KeyListener, ActionListener {
 			@Override
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
+				
+				setBackground(Color.white);
+				g.setColor(Color.darkGray);
+				g.fillRect(0, (int)(platformHeight+player.getPlayerHeight()), borderWidth, (int)(borderHeight-platformHeight+player.getPlayerHeight()));
+				
 				g.setColor(Color.red);
-				g.fillRect(((int)player.getX()), ((int)player.getY()), 6, 12);
+				g.fillRect(((int)player.getX()), ((int)player.getY()), player.getPlayerWidth(), player.getPlayerHeight());
 				
 				if (player.getArrowIsAlive()) {
 					g.setColor(Color.YELLOW);

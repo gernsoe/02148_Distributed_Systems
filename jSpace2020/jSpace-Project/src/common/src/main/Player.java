@@ -9,7 +9,7 @@ public class Player {
 	Arrow arrow;
 	
 	// Size of player
-	final int playerHeight = 5, playerHalfWidth = 1;
+	final int playerHeight = 12, playerWidth = 6, playerHalfWidth = playerWidth/2;
 	int playerID, borderWidth; 
 	int stepSize = 5;
 	String playerName;
@@ -103,6 +103,14 @@ public class Player {
 	
 	public Point getPos() {
 		return player;
+	}
+	
+	public int getPlayerHeight() {
+		return playerHeight;
+	}
+	
+	public int getPlayerWidth() {
+		return playerWidth;
 	}
 
 	public int getID() {
