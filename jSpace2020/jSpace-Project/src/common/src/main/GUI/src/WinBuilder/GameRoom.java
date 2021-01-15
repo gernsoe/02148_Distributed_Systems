@@ -19,6 +19,7 @@ import common.src.main.Bubble;
 import common.src.main.Map;
 import common.src.main.Point;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 public class GameRoom implements KeyListener, ActionListener {
 	
@@ -31,6 +32,14 @@ public class GameRoom implements KeyListener, ActionListener {
 	private int borderWidth = 800, borderHeight = 600;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_3;
+	private JTextField textField_player1;
+	private JTextField textField_player2;
+	private JTextField textField_p1_scores;
+	private JTextField textField_pl2_scores;
+	private JLabel pl1;
+	private JLabel pl2;
+
+
 
 	/**
 	 * Launch the application.
@@ -135,7 +144,43 @@ public class GameRoom implements KeyListener, ActionListener {
 		panel.addKeyListener(this);
 		panel.setLayout(null);
 		
-	
+		
+		
+		
+		//Player 1 scores
+		pl1 = new JLabel("");
+		Image imgP1 = new ImageIcon(this.getClass().getResource("/Player1.png")).getImage();
+		pl1.setIcon(new ImageIcon(imgP1));
+		pl1.setBounds(110, 612, 127, 34);
+		frame.getContentPane().add(pl1);
+		textField_player1 = new JTextField("");
+		textField_player1.setBounds(100, 612, 114, 34);
+		frame.getContentPane().add(textField_player1);
+		textField_player1.setColumns(10);
+		textField_p1_scores = new JTextField();
+		textField_p1_scores.setBounds(226, 612, 54, 34);
+		frame.getContentPane().add(textField_p1_scores);
+		textField_p1_scores.setColumns(10);
+		
+		//Player 2
+		pl2 = new JLabel("");
+		Image imgP2 = new ImageIcon(this.getClass().getResource("/Player2.png")).getImage();
+		pl2.setIcon(new ImageIcon(imgP2));
+		pl2.setBounds(714, 617, 120, 27);
+		frame.getContentPane().add(pl2);
+		textField_player2 = new JTextField("");
+		textField_player2.setBounds(707, 612, 114, 34);
+		frame.getContentPane().add(textField_player2);
+		textField_player2.setColumns(10);
+		textField_pl2_scores = new JTextField();
+		textField_pl2_scores.setBounds(846, 612, 54, 34);
+		frame.getContentPane().add(textField_pl2_scores);
+		textField_pl2_scores.setColumns(10);
+		
+
+		
+		
+		
 		JLabel lblNewLabel = new JLabel("");
 		Image img5 = new ImageIcon(this.getClass().getResource("/Group1.png")).getImage();
 		lblNewLabel.setIcon(new ImageIcon(img5));
@@ -153,6 +198,10 @@ public class GameRoom implements KeyListener, ActionListener {
 		lblNewLabel_3.setIcon(new ImageIcon(img6));
 		lblNewLabel_3.setBounds(-4, 597, 1037, 81);
 		frame.getContentPane().add(lblNewLabel_3);
+		
+		
+		
+		
 		
 		timer = new Timer(delay, this);
 		timer.start();

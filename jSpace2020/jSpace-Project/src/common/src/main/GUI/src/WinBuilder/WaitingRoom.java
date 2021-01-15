@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
 
 public class WaitingRoom {
 
@@ -21,6 +22,8 @@ public class WaitingRoom {
 	private String name;
 	private String roomID;
 	private String roomURI;
+	private JTextField textField_User2;
+	private JTextField textField_User1;
 	
 
 	/**
@@ -77,8 +80,17 @@ public class WaitingRoom {
 			}
 		});
 		btnNewButton.setBounds(438, 282, 117, 29);
+		//User texfields
 		frmWaitingRoom.getContentPane().add(btnNewButton);
+		textField_User2 = new JTextField();
+		textField_User2.setBounds(719, 571, 163, 26);
+		frmWaitingRoom.getContentPane().add(textField_User2);
+		textField_User2.setColumns(10);
 		
+		textField_User1 = new JTextField();
+		textField_User1.setBounds(105, 571, 163, 26);
+		frmWaitingRoom.getContentPane().add(textField_User1);
+		textField_User1.setColumns(10);
 		
 		//Sofa
 		JLabel lblNewLabel_2 = new JLabel("");
@@ -105,44 +117,9 @@ public class WaitingRoom {
 		frmWaitingRoom.getContentPane().add(lblNewLabel_4);
 		
 		
+	
+		
+		
 		
 	}
-	/*
-	public void startWaiting() {
-		
-		roomURI = "tcp://127.0.0.1:9001/space?"+roomID;
-		System.out.println("This is the RoomID: " + roomID);
-		System.out.println("This is the RoomURI: " + roomURI);
-		
-	    RemoteSpace gameRoom;
-		/*try {
-			//gameRoom = new RemoteSpace(roomURI);
-	        gameRoom.put(name, "ready");
-	        boolean connected = true;
-
-	        while (connected) {
-	            //System.out.println("Waiting for another player to join...");
-
-	            //Click a button to start the game
-	            gameRoom.put(name, "start");
-	            
-	            //Click a button to set settings
-	            gameRoom.put(name, "settings");
-	        }
-		} catch (UnknownHostException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-<<<<<<< HEAD
-		}	*/	
-	}
-=======
-		}		
-	} */
->>>>>>> branch 'master' of https://github.com/gernsoe/02148_Game_Repo
 }
