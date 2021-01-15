@@ -83,7 +83,9 @@ public class GameRoom implements KeyListener, ActionListener {
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
 				
-				setBackground(Color.white);
+				// Background
+				g.setColor(Color.white);
+				g.fillRect(0,0,borderWidth,borderHeight);
 				
 				// Platform
 				g.setColor(Color.darkGray);
