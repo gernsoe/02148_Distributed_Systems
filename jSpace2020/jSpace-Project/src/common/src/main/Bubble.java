@@ -8,10 +8,11 @@ public class Bubble {
     private double speedX = 1, speedY = 0; 
     private Point bubble;
 
-    public Bubble(int id, int size, String color, Point pos, int borderHeight, int borderWidth) {
+    public Bubble(int id, int size, String color, Point pos, int borderHeight, int borderWidth, int speedX) {
         this.bubbleID = id;
         this.size = size;
         this.color = color;
+        this.speedX = speedX;
         this.bubble = pos;
         this.borderHeight = borderHeight;
         this.borderWidth = borderWidth;
@@ -24,7 +25,7 @@ public class Bubble {
         speedY = speedY + GRAVITY;
 
         if (bubble.getY() > borderHeight - this.size) {
-            speedY = speedY * -0.96;
+            speedY = speedY * -0.99;
             bubble.setY(borderHeight - this.size);
         } 
         if (bubble.getX() > borderWidth - this.size || bubble.getX() < 0) {
@@ -34,8 +35,8 @@ public class Bubble {
 
     public Bubble[] kill(int id) {
         Bubble[] bubbles = new Bubble[2];
-        Bubble left = new Bubble(id + 1, this.size/2, this.color, this.bubble, this.borderHeight, this.borderWidth);
-        Bubble right = new Bubble(id + 2, this.size/2, this.color, this.bubble, this.borderHeight, this.borderWidth);
+        Bubble left = new Bubble(id + 1, this.size/2, this.color, this.bubble, this.borderHeight, this.borderWidth, -1);
+        Bubble right = new Bubble(id + 2, this.size/2, this.color, this.bubble, this.borderHeight, this.borderWidth, 1);
         bubbles[0] = left;
         bubbles[1] = right;        
         return bubbles;
