@@ -11,7 +11,7 @@ public class Player {
 	// Size of player
 	final int playerHeight = 12, playerWidth = 6, playerHalfWidth = playerWidth/2;
 	int playerID, borderWidth; 
-	int stepSize = 5;
+	int stepSize = 6;
 	String playerName;
 	
 	// borderHeight is not
