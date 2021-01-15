@@ -3,9 +3,9 @@ package common.src.main;
 public class Arrow {
 	
 	// Default settings for arrow
-	int speed = 2;
+	int speed = 6;
 	Point arrow;
-	int width = 4;
+	int width = 4, height = 0;
 	boolean alive;
 	
 	public Arrow(Point arrowPos) {
@@ -19,6 +19,10 @@ public class Arrow {
 	
 	public void setArrowWidth(int width) {
 		this.width = width;
+	}
+	
+	public int getArrowHeight() {
+		return height;
 	}
 	
 	public int getArrowWidth() {
@@ -37,6 +41,7 @@ public class Arrow {
 		System.out.println(arrow.getY());
 		if (arrow.getY() > -1) {
 			arrow.setY(arrow.getY() - speed);
+			height += speed;
 		} else {
 			alive = false;
 		}
