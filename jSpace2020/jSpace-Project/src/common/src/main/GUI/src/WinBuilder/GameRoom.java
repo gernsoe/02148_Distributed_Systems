@@ -17,19 +17,17 @@ import javax.swing.border.LineBorder;
 
 import common.src.main.Bubble;
 import common.src.main.Map;
-import common.src.main.Player;
 import common.src.main.Point;
 
 public class GameRoom implements KeyListener, ActionListener {
 	
 	private Timer timer;
-	private int delay = 17;
+	private int delay = 17, playerHeight = 20, playerWidth = playerHeight/2;
 	private JFrame frame;
 	private JPanel panel;
 	private Map game;
 	private Color color = new Color(135, 206, 250);
-	private Bubble bubble;
-	private int borderWidth = 800, borderHeight = 600, platformHeight = borderHeight-50;
+	private int borderWidth = 800, borderHeight = 600;
 
 	/**
 	 * Launch the application.
@@ -59,8 +57,7 @@ public class GameRoom implements KeyListener, ActionListener {
 	 */
 	private void initialize() {
 		// Add game elements
-		game = new Map(borderWidth, borderHeight, platformHeight, 0, "David", "Christian");
-		bubble = new Bubble(0, 100, "farve", new Point(50,100), platformHeight, borderWidth);
+		game = new Map(borderWidth, borderHeight, 10, "David", "Christian", playerHeight);
 		
 		// Add GUI
 		frame = new JFrame("Game Room");
@@ -88,13 +85,10 @@ public class GameRoom implements KeyListener, ActionListener {
 				g.setColor(color);
 				g.fillRect(0,0,borderWidth,borderHeight);
 				
-				// Platform
-				g.setColor(Color.darkGray);
-				g.fillRect(0, (int)(platformHeight+game.getPlayer1().getPlayerHeight()), borderWidth, (int)(borderHeight-platformHeight+game.getPlayer1().getPlayerHeight()));
-				
+		
 				// Player 1
 				g.setColor(Color.red);
-				g.fillRect(((int)game.getPlayer1().getX()), ((int)game.getPlayer1().getY()), game.getPlayer1().getPlayerWidth(), game.getPlayer1().getPlayerHeight());
+				g.fillRect(((int)game.getPlayer1().getX()), ((int)game.getPlayer1().getY()), playerWidth, playerHeight);
 				
 				// Player 2
 				g.setColor(Color.orange);
@@ -102,15 +96,17 @@ public class GameRoom implements KeyListener, ActionListener {
 				// Arrow
 				if (game.getPlayer1().getArrowIsAlive()) {
 					g.setColor(Color.YELLOW);
-					g.fillRect((int)game.getPlayer1().getArrow().getX(), (int)game.getPlayer1().getArrow().getY(), game.getPlayer1().getArrow().getArrowWidth(), 4);
+					g.fillRect((int)game.getPlayer1().getArrow().getX(), (int)game.getPlayer1().getArrow().getY(), game.getPlayer1().getArrow().getArrowWidth(), game.getPlayer1().getArrow().getArrowHeight());
 					game.getPlayer1().getArrow().updatePos();
 				}
 				
 				// Bubble
 				g.setColor(Color.blue);
-				g.fillOval((int)bubble.getPos().getX(), (int)bubble.getPos().getY(), bubble.getSize(), bubble.getSize());
-				bubble.move();
-				
+				for(Bubble bubble : game.getBubbles()) {
+					g.fillOval((int)bubble.getPos().getX(), (int)bubble.getPos().getY(), bubble.getSize(), bubble.getSize());
+					bubble.move();
+				}
+
 				// g.dispose();
 			}
 		};
