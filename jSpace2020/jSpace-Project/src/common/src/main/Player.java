@@ -40,7 +40,7 @@ public class Player {
 	public boolean checkCollisionWith(Point bubble, int bubbleSize) {
 		
 		// Find where the contact point is for player
-		Point contactPoint = findContactPoint(bubble, player);
+		Point contactPoint = findContactPoint(bubble);
 		
 		// Now check if there's a collision
 		int bubbleRadius = bubbleSize/2;
@@ -58,7 +58,7 @@ public class Player {
 		}
 	}
 	
-	public Point findContactPoint(Point bubble, Point player) {
+	public Point findContactPoint(Point bubble) {
 		double playerContactPointX; 
 		// Check left side
 		if (bubble.getX() < (player.getX() - playerHalfWidth)) {

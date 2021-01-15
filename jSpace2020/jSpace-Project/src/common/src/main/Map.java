@@ -14,6 +14,10 @@ public class Map {
 		players[0] = new Player(new Point(borderWidth/2,platFormHeight),borderHeight, playerName1);
 		players[1] = new Player(new Point(borderWidth/2,platFormHeight),borderHeight, playerName2);
 		
+		// Add bubbles
+		/*for (int i = 0; i < bubbleCount, i++) {
+			// bubbles[i] = new Bubble
+		}*/
 		
 	}
 	
