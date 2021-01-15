@@ -58,7 +58,7 @@ public class GameRoom implements KeyListener, ActionListener {
 	private void initialize() {
 		// Add game elements
 		player = new Player(new Point(borderWidth/2,borderHeight-50), borderWidth, "David");
-		bubble = new Bubble(0, 20, "farve", new Point(50,50), -1, 1);
+		bubble = new Bubble(0, 20, "farve", new Point(50,100), -1, 1);
 		
 		// Add GUI
 		frame = new JFrame("Game Room");
@@ -93,9 +93,11 @@ public class GameRoom implements KeyListener, ActionListener {
 				g.fillOval((int)bubble.getPos().getX(), (int)bubble.getPos().getY(), bubble.getSize(), bubble.getSize());
 				bubble.move();
 				
+				
 				g.dispose();
 			}
 		};
+		panel.setBackground(Color.white);
 		panel.setBounds(50, 0, borderWidth, borderHeight);
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel.setFocusable(true);

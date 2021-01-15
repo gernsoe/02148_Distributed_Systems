@@ -19,14 +19,13 @@ public class Bubble {
     }
 
     public void move() {
-        moveHorizontal();
-        moveVertical();
         if (dirVertical == 1) {
             accelerate(0, GRAVITY);
         } else {
             accelerate(0, -GRAVITY);
         }
-        
+        moveHorizontal();
+        moveVertical();
     }
 
     private void moveHorizontal() {
@@ -57,11 +56,11 @@ public class Bubble {
             bubble.setY(newY);
         } else if (nextMove >= borderHeight) {
             changeDirVertical();
-            bubble.setY(borderHeight+this.dirVertical*this.size); // Move bubble back onto the map
+            bubble.setY(borderHeight+this.dirVertical*this.size/2); // Move bubble back onto the map
             System.out.println("Y after hitting bottom " + bubble.getY());
         } else if (nextMove <= 0) {
             changeDirVertical();
-            bubble.setY(0+this.dirVertical*this.size); // Move bubble back onto the map
+            bubble.setY(0+this.dirVertical*this.size/2); // Move bubble back onto the map
         }
     }
 
