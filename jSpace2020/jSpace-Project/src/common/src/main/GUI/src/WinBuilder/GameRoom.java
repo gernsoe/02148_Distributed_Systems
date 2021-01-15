@@ -98,6 +98,12 @@ public class GameRoom implements KeyListener, ActionListener {
 				g.setColor(color);
 				g.fillRect(0,0,borderWidth,borderHeight);
 				
+				// Arrow
+				if (game.getPlayer1().getArrowIsAlive()) {
+					g.setColor(Color.YELLOW);
+					g.fillRect((int)game.getPlayer1().getArrow().getX(), (int)game.getPlayer1().getArrow().getY(), game.getPlayer1().getArrow().getArrowWidth(), game.getPlayer1().getArrow().getArrowHeight());
+					game.getPlayer1().getArrow().updatePos();
+				}
 		
 				// Player 1
 				g.setColor(Color.red);
@@ -106,12 +112,6 @@ public class GameRoom implements KeyListener, ActionListener {
 				// Player 2
 				g.setColor(Color.orange);
 				
-				// Arrow
-				if (game.getPlayer1().getArrowIsAlive()) {
-					g.setColor(Color.YELLOW);
-					g.fillRect((int)game.getPlayer1().getArrow().getX(), (int)game.getPlayer1().getArrow().getY(), game.getPlayer1().getArrow().getArrowWidth(), game.getPlayer1().getArrow().getArrowHeight());
-					game.getPlayer1().getArrow().updatePos();
-				}
 				
 				// Bubble
 				g.setColor(Color.blue);

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+import javax.swing.JPanel;
 
 public class WaitingRoom {
 
