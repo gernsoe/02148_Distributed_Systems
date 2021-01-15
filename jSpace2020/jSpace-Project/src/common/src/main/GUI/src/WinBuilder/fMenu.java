@@ -72,7 +72,7 @@ public class fMenu {
 				gameRoom.NewScreen();	*/
 				
 				WaitingRoom waitingRoom = new WaitingRoom();
-				waitingRoom.Waiting();
+				// waitingRoom.Waiting();
 			}
 		});
 		

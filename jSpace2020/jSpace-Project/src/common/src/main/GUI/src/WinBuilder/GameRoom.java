@@ -17,7 +17,6 @@ import javax.swing.border.LineBorder;
 
 import common.src.main.Bubble;
 import common.src.main.Map;
-import common.src.main.Point;
 
 public class GameRoom implements KeyListener, ActionListener {
 	
@@ -138,7 +137,8 @@ public class GameRoom implements KeyListener, ActionListener {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {}
+	public void keyReleased(KeyEvent e) {
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
