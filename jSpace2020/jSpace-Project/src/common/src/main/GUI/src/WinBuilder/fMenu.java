@@ -51,13 +51,16 @@ public class fMenu {
 	 */
 	private void initialize() {
 		frame = new JFrame("Start Window");
-		frame.setLocationRelativeTo(null);
+		
 		frame.getContentPane().setBackground(new Color(47, 79, 79));
 		frame.setBounds(100, 100, 782, 546);
 		frame.setResizable(false);
 		//frame.setSize(500,300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		frame.setSize(1000,700);
+		frame.setLocationRelativeTo(null);
+		
 		Image img = new ImageIcon(this.getClass().getResource("/bg.png")).getImage();
 		
 		JLabel lblNewLabel_1 = new JLabel("");
@@ -79,59 +82,64 @@ public class fMenu {
 			}
 		});
 		
-		btnNewButton.setBounds(323, 398, 117, 29);
+		btnNewButton.setBounds(447, 477, 117, 29);
 		frame.getContentPane().add(btnNewButton); 
 		//btnNewButton.addActionListener(new ActionListener());
 		
 		textField_RoomID = new JTextField();
-		textField_RoomID.setBounds(300, 342, 167, 26);
+		textField_RoomID.setBounds(411, 398, 188, 26);
 		frame.getContentPane().add(textField_RoomID);
 		textField_RoomID.setColumns(10);
 		
 		//RoomID
 		JLabel roomIDLabel = new JLabel("RoomID"); 
 		roomIDLabel.setForeground(new Color(255, 255, 255));
-		roomIDLabel.setBounds(302, 324, 104, 16);
+		roomIDLabel.setBounds(413, 380, 104, 16);
 		frame.getContentPane().add(roomIDLabel);
 		
 		JLabel nameLabel = new JLabel("Name"); //Name
 		nameLabel.setForeground(new Color(255, 255, 255));
-		nameLabel.setBounds(302, 262, 115, 16);
+		nameLabel.setBounds(415, 300, 115, 16);
 		frame.getContentPane().add(nameLabel);
 		
 		textField_Name = new JTextField();
-		textField_Name.setBounds(300, 286, 167, 26);
+		textField_Name.setBounds(411, 319, 188, 26);
 		frame.getContentPane().add(textField_Name);
 		textField_Name.setColumns(10);
 		
 		JLabel lblNewLabel_6 = new JLabel("");
 		Image img2 = new ImageIcon(this.getClass().getResource("/usnId.png")).getImage();
 		lblNewLabel_6.setIcon(new ImageIcon(img2));
-		lblNewLabel_6.setBounds(272, 218, 235, 268);
+		lblNewLabel_6.setBounds(384, 205, 293, 420);
 		frame.getContentPane().add(lblNewLabel_6);
 		
 		JLabel lblNewLabel_1_1 = new JLabel("");
 		lblNewLabel_1_1.setIcon(new ImageIcon(img1));
-		lblNewLabel_1_1.setBounds(639, 114, 144, 214);
+		lblNewLabel_1_1.setBounds(826, 114, 144, 214);
 		frame.getContentPane().add(lblNewLabel_1_1);
 		lblNewLabel_1.setIcon(new ImageIcon(img1));
-		lblNewLabel_1.setBounds(41, 114, 144, 214);
+		lblNewLabel_1.setBounds(77, 114, 144, 214);
 		frame.getContentPane().add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("");
 		
 		//lblNewLabel_2.setIcon(new ImageIcon(img2));
-		lblNewLabel_2.setBounds(182, 6, 618, 174);
+		lblNewLabel_2.setBounds(285, 19, 618, 174);
 		frame.getContentPane().add(lblNewLabel_2);
 		
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(img));
-		lblNewLabel.setBounds(-11, 0, 811, 534);
+		lblNewLabel.setBounds(-14, 0, 904, 697);
 		frame.getContentPane().add(lblNewLabel);
 		
 		JLabel lblNewLabel_5 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(img3));
 		lblNewLabel_5.setBounds(211, 6, 416, 133);
 		frame.getContentPane().add(lblNewLabel_5);
+		
+		JLabel NewLabel_bg = new JLabel("");
+		NewLabel_bg.setBounds(756, -14, 258, 724);
+		NewLabel_bg.setIcon(new ImageIcon(img));
+		frame.getContentPane().add(NewLabel_bg);
 	}
 }

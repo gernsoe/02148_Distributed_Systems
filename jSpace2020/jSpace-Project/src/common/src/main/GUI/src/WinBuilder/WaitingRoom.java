@@ -53,18 +53,19 @@ public class WaitingRoom {
 	 */
 	private void initialize() {
 		frmWaitingRoom = new JFrame();
-		frmWaitingRoom.setLocationRelativeTo(null);
+		
 		frmWaitingRoom.setTitle("Waiting Room");
 		frmWaitingRoom.setBounds(100, 100, 782, 546);
 		frmWaitingRoom.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmWaitingRoom.getContentPane().setLayout(null);
-	
+		frmWaitingRoom.setSize(1000,700);
+		frmWaitingRoom.setLocationRelativeTo(null);
 		
 		//Logo
 		JLabel lblNewLabel_3 = new JLabel();
 		Image img2 = new ImageIcon(this.getClass().getResource("/BubShooter.png")).getImage();
 		lblNewLabel_3.setIcon(new ImageIcon(img2));
-		lblNewLabel_3.setBounds(163, 6, 544, 158);
+		lblNewLabel_3.setBounds(261, 44, 544, 158);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_3);
 	
 		//Button
@@ -75,7 +76,7 @@ public class WaitingRoom {
 				GameRoom.NewScreen();	
 			}
 		});
-		btnNewButton.setBounds(300, 262, 117, 29);
+		btnNewButton.setBounds(438, 282, 117, 29);
 		frmWaitingRoom.getContentPane().add(btnNewButton);
 		
 		
@@ -83,11 +84,11 @@ public class WaitingRoom {
 		JLabel lblNewLabel_2 = new JLabel("");
 		Image img1 = new ImageIcon(this.getClass().getResource("/Sofa-icon.png")).getImage();
 		lblNewLabel_2.setIcon(new ImageIcon(img1));
-		lblNewLabel_2.setBounds(556, 345, 137, 150);
+		lblNewLabel_2.setBounds(736, 420, 137, 150);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_2);
 		JLabel lblNewLabel_1 = new JLabel();
 		lblNewLabel_1.setIcon(new ImageIcon(img1));
-		lblNewLabel_1.setBounds(77, 355, 214, 130);
+		lblNewLabel_1.setBounds(120, 431, 214, 130);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_1);
 	
 		//Background
@@ -95,8 +96,13 @@ public class WaitingRoom {
 		
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(img));
-		lblNewLabel.setBounds(-11, 0, 793, 524);
+		lblNewLabel.setBounds(-11, 0, 793, 678);
 		frmWaitingRoom.getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_4 = new JLabel("");
+		lblNewLabel_4.setIcon(new ImageIcon(img));
+		lblNewLabel_4.setBounds(760, 0, 320, 678);
+		frmWaitingRoom.getContentPane().add(lblNewLabel_4);
 		
 		
 		
