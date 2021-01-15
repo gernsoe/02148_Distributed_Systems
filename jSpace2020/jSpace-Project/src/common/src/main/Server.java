@@ -126,7 +126,7 @@ class roomHandler implements Runnable {
 				if (start_settings_inst.equals("start")) {
 					System.out.println("Starting the game");
 					gameRoom.put(user1, "gameStarted");	//Player one
-					gameRoom.put(who, "gameStarted"); 	//Player two
+					gameRoom.put(who, "gameStarted"); 	//Player two'
 				} else if (start_settings_inst.equals("settings")) {
 					// Implement settings
 					System.out.println("Implement settings");
