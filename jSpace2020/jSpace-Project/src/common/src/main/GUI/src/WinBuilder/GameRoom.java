@@ -27,6 +27,7 @@ public class GameRoom implements KeyListener, ActionListener {
 	private JFrame frame;
 	private JPanel panel;
 	private Map game;
+	private Color color = new Color(135, 206, 250);
 	private Bubble bubble;
 	private int borderWidth = 800, borderHeight = 600, platformHeight = borderHeight-50;
 
@@ -84,7 +85,7 @@ public class GameRoom implements KeyListener, ActionListener {
 				super.paintComponent(g);
 				
 				// Background
-				g.setColor(Color.white);
+				g.setColor(color);
 				g.fillRect(0,0,borderWidth,borderHeight);
 				
 				// Platform
