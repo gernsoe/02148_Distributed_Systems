@@ -23,11 +23,11 @@ public class Bubble {
 
         speedY = speedY + GRAVITY;
 
-        if (bubble.getY() > borderHeight - this.size/2) {
-            speedY = speedY * -0.95;
-            bubble.setY(borderHeight - this.size/2);
+        if (bubble.getY() > borderHeight - this.size) {
+            speedY = speedY * -0.96;
+            bubble.setY(borderHeight - this.size);
         } 
-        if (bubble.getX() > borderWidth - this.size/2 || bubble.getX() < this.size/2) {
+        if (bubble.getX() > borderWidth - this.size || bubble.getX() < 0) {
             speedX = speedX * -1;
         }
     }
