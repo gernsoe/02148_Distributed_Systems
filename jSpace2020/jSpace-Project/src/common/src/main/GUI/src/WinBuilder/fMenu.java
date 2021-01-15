@@ -15,8 +15,8 @@ import javax.swing.JButton;
 public class fMenu {
 
 	private JFrame frame;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField textField_Name;
+	private JTextField textField_RoomID;
 
 	/**
 	 * Launch the application.
@@ -51,7 +51,7 @@ public class fMenu {
 	 */
 	private void initialize() {
 		frame = new JFrame("Start Window");
-
+		frame.setLocationRelativeTo(null);
 		frame.getContentPane().setBackground(new Color(47, 79, 79));
 		frame.setBounds(100, 100, 782, 546);
 		frame.setResizable(false);
@@ -71,8 +71,13 @@ public class fMenu {
 				/*GameRoom gameRoom = new GameRoom();
 				gameRoom.NewScreen();	*/
 				
-				WaitingRoom waitingRoom = new WaitingRoom();
+				// WaitingRoom waitingRoom = new WaitingRoom();
 				// waitingRoom.Waiting();
+				String name = textField_Name.getText();
+				String roomID = textField_RoomID.getText();
+				
+				WaitingRoom.Waiting(name, roomID);
+				
 			}
 		});
 		
@@ -80,25 +85,26 @@ public class fMenu {
 		frame.getContentPane().add(btnNewButton); 
 		//btnNewButton.addActionListener(new ActionListener());
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(300, 342, 167, 26);
-		frame.getContentPane().add(textField_1);
-		textField_1.setColumns(10);
+		textField_RoomID = new JTextField();
+		textField_RoomID.setBounds(300, 342, 167, 26);
+		frame.getContentPane().add(textField_RoomID);
+		textField_RoomID.setColumns(10);
 		
-		JLabel lblNewLabel_4 = new JLabel("RoomID");
-		lblNewLabel_4.setForeground(new Color(255, 255, 255));
-		lblNewLabel_4.setBounds(302, 324, 104, 16);
-		frame.getContentPane().add(lblNewLabel_4);
+		//RoomID
+		JLabel roomIDLabel = new JLabel("RoomID"); 
+		roomIDLabel.setForeground(new Color(255, 255, 255));
+		roomIDLabel.setBounds(302, 324, 104, 16);
+		frame.getContentPane().add(roomIDLabel);
 		
-		JLabel lblNewLabel_3 = new JLabel("Name");
-		lblNewLabel_3.setForeground(new Color(255, 255, 255));
-		lblNewLabel_3.setBounds(302, 262, 115, 16);
-		frame.getContentPane().add(lblNewLabel_3);
+		JLabel nameLabel = new JLabel("Name"); //Name
+		nameLabel.setForeground(new Color(255, 255, 255));
+		nameLabel.setBounds(302, 262, 115, 16);
+		frame.getContentPane().add(nameLabel);
 		
-		textField = new JTextField();
-		textField.setBounds(300, 286, 167, 26);
-		frame.getContentPane().add(textField);
-		textField.setColumns(10);
+		textField_Name = new JTextField();
+		textField_Name.setBounds(300, 286, 167, 26);
+		frame.getContentPane().add(textField_Name);
+		textField_Name.setColumns(10);
 		
 		JLabel lblNewLabel_6 = new JLabel("");
 		Image img2 = new ImageIcon(this.getClass().getResource("/usnId.png")).getImage();
