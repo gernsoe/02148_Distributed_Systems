@@ -89,7 +89,18 @@ public class Server {
 class roomHandler implements Runnable {
     private String roomID;
 	private String roomURI;
-    private Space gameRoom;
+	private Space gameRoom;
+	
+	public static final String LEAVE_ROOM = "leave_room";
+    public static final String READY_TO_PLAY = "ready_to_play";
+    public static final String SETTINGS = "settings";
+    public static final String PLAYER_JOINED = "player_joined";
+	public static final String START_GAME = "start_game";
+	public static final String GAME_STARTED = "game_started";
+	public static final String PERMISSION = "permission";
+	public static final String LOBBY_INSTRUCTION = "lobby_instruction";
+	public static final String TO = "to";
+	public static final String FROM = "from";
 
 	public roomHandler(String roomID, int roomCounter, String roomURI, SpaceRepository repo) {
         this.roomID = roomID;
@@ -103,48 +114,54 @@ class roomHandler implements Runnable {
 		
 		// Pre game lobby
 		try {
-			String user1 = (String) gameRoom.get(new FormalField(String.class), new ActualField("ready"))[0];
+			String user1 = (String) gameRoom.get(new FormalField(String.class), new ActualField(READY_TO_PLAY))[0];
 			System.out.println(user1 + " is ready to play!!!");
 			
-			gameRoom.put(user1, "host");
+			gameRoom.put(user1, PERMISSION, "host");
 			boolean connected = true;
-			
-			// Get instruction (name, instruction) - where an instruction is either ready or start
-			Object[] initGameInstruction = gameRoom.get(new FormalField(String.class), new FormalField(String.class));
-			String who = (String) initGameInstruction[0];
-			String instruction = (String) initGameInstruction[1];
+			boolean inLobby = true;
 
-			// Player 2 joins
-			if (instruction.equals("ready")) {
-				System.out.println(who + " is ready to play!!!");
+			while (inLobby) {
+				// Get instruction (name, instruction) - where an instruction is either ready or start
+				Object[] initGameInstruction = gameRoom.get(new FormalField(String.class), new FormalField(String.class));
+				String who = (String) initGameInstruction[0];
+				String instruction = (String) initGameInstruction[1];
 
-				// Signal to player1 that someone joined
-				gameRoom.put(user1, "playerJoiner");
-				String start_settings_inst = (String) gameRoom.query(new ActualField(user1), new FormalField(String.class))[1];
+				// Player 2 joins
+				if (instruction.equals(READY_TO_PLAY) && !who.equals(user1)) {
+					System.out.println(who + " is ready to play!!!");
 
-				// Host starts game / wants to see settiings
-				if (start_settings_inst.equals("start")) {
+					// Signal to player1 that someone joined
+					gameRoom.put(TO, user1, PLAYER_JOINED);
+					gameRoom.put(who, PERMISSION, "participant");
+					String start_settings_inst = (String) gameRoom.get(new ActualField(user1), new FormalField(String.class))[1];
+
+					// Host starts game / wants to see settings
+					if (start_settings_inst.equals(START_GAME)) {
+						System.out.println("Starting the game");
+						gameRoom.put(user1, GAME_STARTED);	//Player one
+						gameRoom.put(who, GAME_STARTED); 	//Player two'
+						inLobby = false;
+					} else if (start_settings_inst.equals(SETTINGS)) {
+						// Implement settings
+						System.out.println("Implement settings");
+					} else {
+						System.out.println("No valid command found");
+					}
+
+				// Player 1 starts game alone
+				} else if (instruction.equals(START_GAME)) {
+					gameRoom.put(user1, GAME_STARTED);
 					System.out.println("Starting the game");
-					gameRoom.put(user1, "gameStarted");	//Player one
-					gameRoom.put(who, "gameStarted"); 	//Player two'
-				} else if (start_settings_inst.equals("settings")) {
-					// Implement settings
-					System.out.println("Implement settings");
+					inLobby = false;
 				} else {
 					System.out.println("Invalid command.");
 				}
-
-			// Player 1 starts game alone
-			} else if (instruction.equals("start")) {
-				gameRoom.put(user1, "gameStarted");
-				System.out.println("Starting the game");
-			} else {
-				System.out.println("Invalid command.");
 			}
 
 			// Game loop
 			while (connected) {
-
+				System.out.println("Entered game loop");
 			}
 
 			
