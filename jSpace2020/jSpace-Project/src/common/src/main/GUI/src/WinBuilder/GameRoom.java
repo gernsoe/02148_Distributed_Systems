@@ -130,8 +130,6 @@ public class GameRoom implements KeyListener, ActionListener {
 					}
 					game.getBubbles().get(i).move();
 				}
-				
-				// Bubble collision with arrow
 
 				// g.dispose();
 			}
