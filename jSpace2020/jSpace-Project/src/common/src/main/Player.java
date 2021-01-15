@@ -9,9 +9,9 @@ public class Player {
 	Arrow arrow;
 	
 	// Size of player
-	final int playerHeight = 5, playerHalfWidth = 1;
+	final int playerHeight = 12, playerWidth = 6, playerHalfWidth = playerWidth/2;
 	int playerID, borderWidth; 
-	int stepSize = 5;
+	int stepSize = 6;
 	String playerName;
 	
 	// borderHeight is not
@@ -23,14 +23,14 @@ public class Player {
 	
 	// Player movement and collision with wall
 	public void goRight() {
-		if (player.getX() + (stepSize + playerHalfWidth) <= borderWidth) {
+		if (player.getX() + (stepSize + playerHalfWidth) <= borderWidth & isAlive) {
 			System.out.println("Going right");
 			player.setX(player.getX() + stepSize);
 		}
 	}
 	
 	public void goLeft() {
-		if (player.getX() - (stepSize + playerHalfWidth) >= 0) {
+		if (player.getX() - (stepSize + playerHalfWidth) >= 0 & isAlive) {
 			player.setX(player.getX() - stepSize);
 			System.out.println("Going left");
 		}
@@ -40,7 +40,7 @@ public class Player {
 	public boolean checkCollisionWith(Point bubble, int bubbleSize) {
 		
 		// Find where the contact point is for player
-		Point contactPoint = findContactPoint(bubble, player);
+		Point contactPoint = findContactPoint(bubble);
 		
 		// Now check if there's a collision
 		int bubbleRadius = bubbleSize/2;
@@ -58,7 +58,7 @@ public class Player {
 		}
 	}
 	
-	public Point findContactPoint(Point bubble, Point player) {
+	public Point findContactPoint(Point bubble) {
 		double playerContactPointX; 
 		// Check left side
 		if (bubble.getX() < (player.getX() - playerHalfWidth)) {
@@ -103,6 +103,14 @@ public class Player {
 	
 	public Point getPos() {
 		return player;
+	}
+	
+	public int getPlayerHeight() {
+		return playerHeight;
+	}
+	
+	public int getPlayerWidth() {
+		return playerWidth;
 	}
 
 	public int getID() {

@@ -8,19 +8,25 @@ public class Map {
 	Arrow arrow;
 	Player players[] = new Player[2];
 
-	public Map (int borderWidth, int borderHeight, int bubbleCount, String playerName1, String playerName2) {
-		this.players = players;
-		this.bubbleCount = bubbleCount;
-		
-		bubbles = new int[bubbleCount];
+	public Map (int borderWidth, int borderHeight, int platFormHeight, int bubbleCount, String playerName1, String playerName2) {
 		
 		// Add players and spawn players and bubbles
-		players[0] = new Player(new Point(borderWidth/2,0),borderWidth, playerName1);
-		players[1] = new Player(new Point(borderWidth/2,0),borderWidth, playerName2);
+		players[0] = new Player(new Point(borderWidth/2,platFormHeight),borderHeight, playerName1);
+		players[1] = new Player(new Point(borderWidth/2,platFormHeight),borderHeight, playerName2);
 		
+		// Add bubbles
+		/*for (int i = 0; i < bubbleCount, i++) {
+			// bubbles[i] = new Bubble
+		}*/
 		
 	}
 	
 	// Make a function to remove balls from the array, if player is dead, remove player from array
+	public Player getPlayer1() {
+		return players[0];
+	}
 	
+	public Player getPlayer2() {
+		return players[1];
+	}
 }

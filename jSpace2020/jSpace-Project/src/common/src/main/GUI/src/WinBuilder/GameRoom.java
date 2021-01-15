@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import common.src.main.Bubble;
+import common.src.main.Map;
 import common.src.main.Player;
 import common.src.main.Point;
 
@@ -25,9 +26,9 @@ public class GameRoom implements KeyListener, ActionListener {
 	private int delay = 17;
 	private JFrame frame;
 	private JPanel panel;
-	private Player player;
+	private Map game;
 	private Bubble bubble;
-	private int borderWidth = 800, borderHeight = 600;
+	private int borderWidth = 800, borderHeight = 600, platformHeight = borderHeight-50;
 
 	/**
 	 * Launch the application.
@@ -57,8 +58,8 @@ public class GameRoom implements KeyListener, ActionListener {
 	 */
 	private void initialize() {
 		// Add game elements
-		player = new Player(new Point(borderWidth/2,borderHeight-50), borderWidth, "David");
-		bubble = new Bubble(0, 20, "farve", new Point(50,50), -1, 1);
+		game = new Map(borderWidth, borderHeight, platformHeight, 0, "David", "Christian");
+		bubble = new Bubble(0, 20, "farve", new Point(50,100), -1, 1);
 		
 		// Add GUI
 		frame = new JFrame("Game Room");
@@ -79,23 +80,40 @@ public class GameRoom implements KeyListener, ActionListener {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void paint(Graphics g) {
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g);
 				
+				// Background
+				g.setColor(Color.white);
+				g.fillRect(0,0,borderWidth,borderHeight);
+				
+				// Platform
+				g.setColor(Color.darkGray);
+				g.fillRect(0, (int)(platformHeight+game.getPlayer1().getPlayerHeight()), borderWidth, (int)(borderHeight-platformHeight+game.getPlayer1().getPlayerHeight()));
+				
+				// Player 1
 				g.setColor(Color.red);
-				g.fillRect(((int)player.getX()), ((int)player.getY()), 6, 12);
+				g.fillRect(((int)game.getPlayer1().getX()), ((int)game.getPlayer1().getY()), game.getPlayer1().getPlayerWidth(), game.getPlayer1().getPlayerHeight());
 				
-				if (player.getArrowIsAlive()) {
+				// Player 2
+				g.setColor(Color.orange);
+				
+				// Arrow
+				if (game.getPlayer1().getArrowIsAlive()) {
 					g.setColor(Color.YELLOW);
-					g.fillRect((int)player.getArrow().getX(), (int)player.getArrow().getY(), player.getArrow().getArrowWidth(), 4);
-					player.getArrow().updatePos();
+					g.fillRect((int)game.getPlayer1().getArrow().getX(), (int)game.getPlayer1().getArrow().getY(), game.getPlayer1().getArrow().getArrowWidth(), 4);
+					game.getPlayer1().getArrow().updatePos();
 				}
+				
+				// Bubble
 				g.setColor(Color.blue);
 				g.fillOval((int)bubble.getPos().getX(), (int)bubble.getPos().getY(), bubble.getSize(), bubble.getSize());
 				bubble.move();
 				
-				g.dispose();
+				// g.dispose();
 			}
 		};
+		panel.setBackground(Color.white);
 		panel.setBounds(50, 0, borderWidth, borderHeight);
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel.setFocusable(true);
@@ -104,37 +122,33 @@ public class GameRoom implements KeyListener, ActionListener {
 		panel.setLayout(null);
 		timer = new Timer(delay, this);
 		timer.start();
-		
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			player.goRight();
+			game.getPlayer1().goRight();
 		}
 		if(e.getKeyCode() == KeyEvent.VK_LEFT) {	
-			player.goLeft();
+			game.getPlayer1().goLeft();
 		}
 		if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-			player.makeArrow();
+			game.getPlayer1().makeArrow();
 		}
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyReleased(KeyEvent e) {}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		timer.start();
+		
+		// Get info about player 2
+		
 		panel.repaint();
 	}
 }
