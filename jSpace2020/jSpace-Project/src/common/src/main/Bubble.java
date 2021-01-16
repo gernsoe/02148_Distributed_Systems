@@ -28,13 +28,27 @@ public class Bubble {
 
         speedY = speedY + GRAVITY;
 
+        // Bounce of bottom
         if (bubble.getY() > borderHeight - this.size) {
             speedY = speedY * -0.99;
             bubble.setY(borderHeight - this.size);
         } 
-        if (bubble.getX() > borderWidth - this.size || bubble.getX() < 0) {
-            speedX = speedX * -1;
+        // Bounce of top
+        if (bubble.getY() < 0) {
+            speedY = speedY * -0.99;
+            bubble.setY(0.1);
         }
+        // Bounce of right wall
+        if (bubble.getX() > borderWidth - this.size) {
+            speedX = speedX * -1;
+            bubble.setX(borderWidth - this.size);
+        }
+        // Bounce of left wall
+        if (bubble.getX() < 0) {
+            speedX = speedX * -1;
+            bubble.setX(0.1);
+        }
+
     }
 
     public ArrayList<Bubble> addSplitBubbles() {
