@@ -90,6 +90,10 @@ class roomHandler implements Runnable {
     private String roomID;
 	private String roomURI;
 	private Space gameRoom;
+	private static boolean connected = true;
+	private static boolean inLobby = true;
+	private String player1;
+	private String player2;
 	
 	public static final String LEAVE_ROOM = "leave_room";
     public static final String READY_TO_PLAY = "ready_to_play";
@@ -114,12 +118,10 @@ class roomHandler implements Runnable {
 		
 		// Pre game lobby
 		try {
-			String user1 = (String) gameRoom.get(new ActualField(FROM), new FormalField(String.class), new ActualField(READY_TO_PLAY))[1];
-			System.out.println(user1 + " is ready to play!!!");
+			player1 = (String) gameRoom.get(new ActualField(FROM), new FormalField(String.class), new ActualField(READY_TO_PLAY))[1];
+			System.out.println(player1 + " is ready to play!!!");
 			
-			gameRoom.put(TO, user1, PERMISSION, "host");
-			boolean connected = true;
-			boolean inLobby = true;
+			gameRoom.put(TO, player1, PERMISSION, "host");
 
 			while (inLobby) {
 				// Get instruction (name, instruction) - where an instruction is either ready or start
@@ -128,19 +130,21 @@ class roomHandler implements Runnable {
 				String instruction = (String) initGameInstruction[2];
 
 				// Player 2 joins
-				if (instruction.equals(READY_TO_PLAY) && !who.equals(user1)) {
-					System.out.println(who + " is ready to play!!!");
+				if (instruction.equals(READY_TO_PLAY) && !who.equals(player1)) {
+					player2 = who;
+					System.out.println(player2 + " is ready to play!!!");
 
 					// Signal to player1 that someone joined
-					gameRoom.put(TO, user1, PLAYER_JOINED);
-					gameRoom.put(TO, who, PERMISSION, "participant");
-					String start_settings_inst = (String) gameRoom.get(new ActualField(FROM), new ActualField(user1), new FormalField(String.class))[2];
+					gameRoom.put(TO, player1, PLAYER_JOINED, player2);
+					gameRoom.put(TO, player2, PERMISSION, "participant");
+					gameRoom.put(TO, player2, PLAYER_JOINED, player1);
+					String start_settings_inst = (String) gameRoom.get(new ActualField(FROM), new ActualField(player1), new FormalField(String.class))[2];
 
 					// Host starts game / wants to see settings
 					if (start_settings_inst.equals(START_GAME)) {
 						System.out.println("Starting the game");
-						gameRoom.put(TO, user1, GAME_STARTED);	//Player one
-						gameRoom.put(TO, who, GAME_STARTED); 	//Player two'
+						gameRoom.put(TO, player1, GAME_STARTED);	//Player one
+						gameRoom.put(TO, player2, GAME_STARTED); 	//Player two'
 						inLobby = false;
 					} else if (start_settings_inst.equals(SETTINGS)) {
 						// Implement settings
@@ -151,7 +155,7 @@ class roomHandler implements Runnable {
 
 				// Player 1 starts game alone
 				} else if (instruction.equals(START_GAME)) {
-					gameRoom.put(TO, user1, GAME_STARTED);
+					gameRoom.put(TO, player1, GAME_STARTED);
 					System.out.println("Starting the game");
 					inLobby = false;
 				} else {
@@ -162,6 +166,7 @@ class roomHandler implements Runnable {
 			// Game loop
 			while (connected) {
 				System.out.println("Entered game loop");
+				gameRoom.get(new ActualField("TEST"));
 			}
 
 			

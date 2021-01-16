@@ -76,16 +76,16 @@ public class fMenu {
 		Image img3 = new ImageIcon(this.getClass().getResource("/BubShooter.png")).getImage();
 		
 		
-		btnNewButton = new JButton("Start Game");
+		btnNewButton = new JButton("Login");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				/*GameRoom gameRoom = new GameRoom();
 				gameRoom.NewScreen();*/	
 				
-				String name = textField_Name.getText();
-				String roomID = textField_RoomID.getText();
+				//String name = textField_Name.getText();
+				//String roomID = textField_RoomID.getText();
 				frame.setVisible(false);
-				WaitingRoom.Waiting(name, roomID);
+				//WaitingRoom.Waiting(name, roomID);
 			}
 		});
 		
@@ -150,7 +150,7 @@ public class fMenu {
 		frame.getContentPane().add(NewLabel_bg);
 	}
 	
-	public JButton getStartButton() {
+	public JButton getLoginButton() {
 		return btnNewButton;
 	}
 	

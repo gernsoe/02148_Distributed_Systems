@@ -46,6 +46,7 @@ public class GameRoom implements KeyListener, ActionListener {
 	/**
 	 * Launch the application.
 	 */
+	/*
 	public static void NewScreen() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -58,12 +59,14 @@ public class GameRoom implements KeyListener, ActionListener {
 			}
 		});
 	}
+	*/
 
 	/**
 	 * Create the application.
 	 */
 	public GameRoom() {
 		initialize();
+		frame.setVisible(true);
 	}
 
 	/**
@@ -251,6 +254,14 @@ public class GameRoom implements KeyListener, ActionListener {
 		}
 		
 		panel.repaint();
+	}
+
+	public void setUserName1(String name) {
+		textField_player1.setText(name);
+	}
+
+	public void setUserName2(String name) {
+		textField_player2.setText(name);
 	}
 }
 

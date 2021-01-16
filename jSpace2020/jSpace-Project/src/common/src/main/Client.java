@@ -15,6 +15,12 @@ import java.net.UnknownHostException;
 
 public class Client {
     static String name, roomID, roomURI;
+    static String player1 = null;
+    static String player2 = null;
+    public static boolean loginButtonClicked = false;
+    public static boolean startButtonClicked = false;
+    public static boolean inLobby = true;
+    public static boolean connected = true;
     public static final String LEAVE_ROOM = "leave_room";
     public static final String READY_TO_PLAY = "ready_to_play";
     public static final String SETTINGS = "settings";
@@ -26,40 +32,29 @@ public class Client {
     public static final String TO = "to";
 	public static final String FROM = "from";
 
-	public static void main(String[] argv) throws InterruptedException, IOException, UnknownHostException {
+	public static void main(String[] argv) throws InterruptedException, UnknownHostException, IOException {
 
         String host = "tcp://127.0.0.1:9001/";
         String lobbyURI = host + "lobby?keep";
-
         RemoteSpace lobby = new RemoteSpace(lobbyURI);
 
-        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Enter your name: ");
-       // name = input.readLine();
-        
         fMenu menu = new fMenu();
-        menu.getStartButton().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				/*GameRoom gameRoom = new GameRoom();
-				gameRoom.NewScreen();*/	
-				
-				name = menu.getName();
-				roomID = menu.getRoomID();
-				System.out.print(name + roomID);
-			}
-		});
-        
-        enterRoom(lobby, input);
-        
+        loginButton(menu, lobby);
         try {
             while (true) {
+                loginButtonClicked = false;
+                // Launch enter page and wait for input
+                while (!loginButtonClicked) {
+                    Thread.sleep(500);
+                }
+
                 // Name might be redundant (consider removing)
                 Object[] response = lobby.get(new ActualField("roomURI"), new ActualField(name), new ActualField(roomID), new FormalField(String.class));
                 roomURI = (String) response[3];
                 
                 if (roomURI.equals("")) {
+                    // Create popup window
                     System.out.println("Room is full");
-                    enterRoom(lobby, input); 
                 } else {
                     break;
                 }
@@ -68,33 +63,33 @@ public class Client {
             System.out.println("Joining game room: " + roomID);
             RemoteSpace gameRoom = new RemoteSpace(roomURI);
             
-            
             // Pre game lobby
-            boolean inLobby = true;
-            boolean connected = true;
-
             gameRoom.put(FROM, name, READY_TO_PLAY);
             String permissions = (String) gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(PERMISSION), new FormalField(String.class))[3];
 
+            WaitingRoom wRoom = new WaitingRoom(name, roomID);
+
             // Check if client is a host
             if (permissions.equals("host")) {
+                wRoom.createStartButton();
+                // Add functionallity to the start button
+                startGameButton(wRoom, gameRoom);
                 while (inLobby) {
-                    System.out.println("You're the host");
-                    System.out.println("Waiting for another player to join...");
-                    
-                    Object[] lobbyStatus = gameRoom.getp(new ActualField(TO), new ActualField(name), new ActualField(PLAYER_JOINED));
-                    if (lobbyStatus != null) {
-                        //Todo update lobby screen, to show the joined player
-                        System.out.println("Player 2 joined");
-                        gameRoom.put(FROM, name, START_GAME);
-                        inLobby = false;
-                    } else {
-                        System.out.println("No player joined yet");
-                    }
+                    wRoom.setUserName1(name);
 
-                    //Click a button to start the game
-                    //gameRoom.put(name, START_GAME);
-                    //inLobby = false;
+                    if (player2 == null) {
+                        Object[] playerJoined = gameRoom.getp(new ActualField(TO), new ActualField(name), new ActualField(PLAYER_JOINED), new FormalField(String.class));
+                        if (playerJoined != null) {
+                            player2 = (String) playerJoined[3];
+                            wRoom.setUserName2(player2);
+                            System.out.println("Player 2 joined");
+                        } 
+                    }
+                    
+                    Object[] gameStarted = gameRoom.getp(new ActualField(TO), new ActualField(name), new ActualField(GAME_STARTED));
+                    if (gameStarted != null) {
+                        enterGame(wRoom);
+                    }
                     
                     //Click a button to set settings
                     //gameRoom.put(name, SETTINGS);
@@ -103,26 +98,65 @@ public class Client {
             // If client is not host
             } else if (permissions.equals("participant")) {
 
+                // Get host name
+                Object[] lobbyStatus = gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(PLAYER_JOINED), new FormalField(String.class));
+
+                wRoom.setUserName1(name);
+                player1 = (String) lobbyStatus[3];
+                wRoom.setUserName2(player1);  // Set host name under sofa
+
                 System.out.println("Waiting for host to start the game");
                 gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(GAME_STARTED));
+                enterGame(wRoom);
 
                 //Click a button to leave the room
                 //gameRoom.put(name, LEAVE_ROOM);
             }
 
+            GameRoom gRoom = new GameRoom();
+            if (permissions.equals("host")) {
+                gRoom.setUserName1(name);
+                gRoom.setUserName2(player2);
+            }
+            if (permissions.equals("participant")) {
+                gRoom.setUserName1(name);
+                gRoom.setUserName2(player1);
+            }
+
             // Game loop
             while(connected) {
                 System.out.println("Entered game loop");
+                gameRoom.get(new ActualField("TEST"));
             }   
             
         } catch (InterruptedException e) {}
-	}
-	
-	public static void enterRoom (RemoteSpace lobby, BufferedReader input) throws InterruptedException, IOException {
-        System.out.print("Enter roomID: ");
-        roomID = input.readLine();
+    }
 
-        lobby.put("enter", name, roomID);
-        System.out.println("Waiting for server response...");
+    public static void enterGame(WaitingRoom wRoom) {
+        inLobby = false;
+        wRoom.closeWindow();
+    }
+    
+    public static void loginButton(fMenu menu, Space lobby) throws InterruptedException{
+        menu.getLoginButton().addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    name = menu.getName();
+                    roomID = menu.getRoomID();
+                    lobby.put("enter", name, roomID);
+                    loginButtonClicked = true;
+                } catch (InterruptedException err) {}
+            }
+        });
+    }
+
+    public static void startGameButton(WaitingRoom waitingRoom, Space gameRoom) throws InterruptedException {
+        waitingRoom.getStartButton().addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    gameRoom.put(FROM, name, START_GAME);
+                } catch (InterruptedException err) {}
+            }
+        });
     }
 }

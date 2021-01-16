@@ -23,13 +23,16 @@ public class WaitingRoom {
 	private String name;
 	private String roomID;
 	private String roomURI;
+	private String permission;
 	private JTextField textField_User2;
 	private JTextField textField_User1;
+	private JButton btnNewButton;
 	
 
 	/**
 	 * Launch the application.
 	 */
+	/*
 	public static void Waiting(String name, String roomID) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -42,12 +45,13 @@ public class WaitingRoom {
 			}
 		});
 	}
-
+	*/
 	
 	public WaitingRoom(String name, String roomID) {
 		initialize();
 		this.name = name;
 		this.roomID = roomID;
+		frmWaitingRoom.setVisible(true);
 		//startWaiting();
 		
 	}
@@ -71,18 +75,8 @@ public class WaitingRoom {
 		lblNewLabel_3.setIcon(new ImageIcon(img2));
 		lblNewLabel_3.setBounds(261, 44, 544, 158);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_3);
-	
-		//Button
-		JButton btnNewButton = new JButton("Start Game");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frmWaitingRoom.setVisible(false);
-				GameRoom.NewScreen();	
-			}
-		});
-		btnNewButton.setBounds(438, 282, 117, 29);
+
 		//User texfields
-		frmWaitingRoom.getContentPane().add(btnNewButton);
 		textField_User2 = new JTextField();
 		textField_User2.setBounds(719, 571, 163, 26);
 		frmWaitingRoom.getContentPane().add(textField_User2);
@@ -103,6 +97,7 @@ public class WaitingRoom {
 		lblNewLabel_1.setIcon(new ImageIcon(img1));
 		lblNewLabel_1.setBounds(120, 431, 214, 130);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_1);
+		lblNewLabel_1.setText(name);
 	
 		//Background
 		Image img = new ImageIcon(this.getClass().getResource("/bg.png")).getImage();
@@ -117,10 +112,31 @@ public class WaitingRoom {
 		lblNewLabel_4.setBounds(760, 0, 320, 678);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_4);
 		
-		
-	
-		
-		
-		
+	}
+
+	public void createStartButton() {
+		//Button
+		btnNewButton = new JButton("Start Game");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {}
+		});
+		btnNewButton.setBounds(438, 282, 117, 29);
+		frmWaitingRoom.getContentPane().add(btnNewButton);
+	}
+
+	public JButton getStartButton() {
+		return btnNewButton;
+	}
+
+	public void setUserName1(String name) {
+		textField_User1.setText(name);
+	}
+
+	public void setUserName2(String name) {
+		textField_User2.setText(name);
+	}
+
+	public void closeWindow() {
+		frmWaitingRoom.setVisible(false);
 	}
 }
