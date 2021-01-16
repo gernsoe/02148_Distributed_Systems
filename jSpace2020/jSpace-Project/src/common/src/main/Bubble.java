@@ -11,10 +11,11 @@ public class Bubble {
     private double speedX = 1, speedY = 0; 
     private Point bubble;
 
-    public Bubble(int size, String color, Point pos, int borderHeight, int borderWidth, int speedX) {
+    public Bubble(int size, String color, Point pos, int borderHeight, int borderWidth, int speedX, int speedY) {
         this.size = size;
         this.color = color;
         this.speedX = speedX;
+        this.speedY = speedY;
         this.bubble = pos;
         this.borderHeight = borderHeight;
         this.borderWidth = borderWidth;
@@ -37,8 +38,8 @@ public class Bubble {
 
     public ArrayList<Bubble> addSplitBubbles() {
     	ArrayList<Bubble> newBubbles = new ArrayList<Bubble>();
-        newBubbles.add(new Bubble(this.size/3*2, this.color, new Point(bubble.getX(),bubble.getY()), this.borderHeight, this.borderWidth, -1));
-        newBubbles.add(new Bubble(this.size/3*2, this.color, new Point(bubble.getX(),bubble.getY()), this.borderHeight, this.borderWidth, 1)); 
+        newBubbles.add(new Bubble(this.size/3*2, this.color, new Point(bubble.getX(),bubble.getY()), this.borderHeight, this.borderWidth, -1, -3));
+        newBubbles.add(new Bubble(this.size/3*2, this.color, new Point(bubble.getX(),bubble.getY()), this.borderHeight, this.borderWidth, 1, -3)); 
         return newBubbles;
     }
 

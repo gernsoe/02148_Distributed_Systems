@@ -71,7 +71,7 @@ public class GameRoom implements KeyListener, ActionListener {
 	private void initialize() {
 		// Add game elements
 		game = new Map(borderWidth, borderHeight, 10, "David", "Christian", playerHeight);
-		bubble = new Bubble(50, "whatever", new Point(0,0), borderHeight, borderWidth, 1);
+		bubble = new Bubble(50, "whatever", new Point(0,0), borderHeight, borderWidth, 1, 0);
 		
 		// Add GUI
 		frame = new JFrame("Game Room");

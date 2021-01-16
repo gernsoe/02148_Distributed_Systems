@@ -22,9 +22,9 @@ public class Map {
 		bubbles = new ArrayList<Bubble>();
 		for (int i = 0; i < bubbleCount; i++) {
 			if (i % 2 == 0) {
-				bubbles.add(new Bubble((rand.nextInt(90)+10), "farve", new Point((rand.nextInt(750)),(rand.nextInt(300))), borderHeight, borderWidth, 1));
+				bubbles.add(new Bubble((rand.nextInt(90)+10), "farve", new Point((rand.nextInt(750)),(rand.nextInt(300))), borderHeight, borderWidth, 1, 0));
 			} else {
-				bubbles.add(new Bubble((rand.nextInt(90)+10), "farve", new Point((rand.nextInt(750)),(rand.nextInt(300))), borderHeight, borderWidth, -1));
+				bubbles.add(new Bubble((rand.nextInt(90)+10), "farve", new Point((rand.nextInt(750)),(rand.nextInt(300))), borderHeight, borderWidth, -1, 0));
 			}
 		}
 		System.out.print(bubbles.get(0).toString());
