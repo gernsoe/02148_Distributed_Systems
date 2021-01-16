@@ -10,18 +10,24 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import common.src.main.Client;
+
 import javax.swing.JButton;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class fMenu {
 
 	private JFrame frame;
 	private JTextField textField_Name;
 	private JTextField textField_RoomID;
+	private JButton btnNewButton;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public void NewScreen() {
 		//showWindow();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -33,7 +39,8 @@ public class fMenu {
 				}
 			}
 		});
-	}
+	}*/
+	
 	
 	public void actionPerformed(ActionEvent e) {
 
@@ -44,6 +51,7 @@ public class fMenu {
 	 */
 	public fMenu() {
 		initialize();
+		frame.setVisible(true);
 	}
 
 	/**
@@ -68,17 +76,15 @@ public class fMenu {
 		Image img3 = new ImageIcon(this.getClass().getResource("/BubShooter.png")).getImage();
 		
 		
-		JButton btnNewButton = new JButton("Start Game");
+		btnNewButton = new JButton("Login");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				/*GameRoom gameRoom = new GameRoom();
-				gameRoom.NewScreen();	*/
+				gameRoom.NewScreen();*/	
 				
-				String name = textField_Name.getText();
-				String roomID = textField_RoomID.getText();
-				frame.setVisible(false);
-				WaitingRoom.Waiting(name, roomID);
-				
+				//String name = textField_Name.getText();
+				//String roomID = textField_RoomID.getText();
+				//WaitingRoom.Waiting(name, roomID);
 			}
 		});
 		
@@ -141,5 +147,29 @@ public class fMenu {
 		NewLabel_bg.setBounds(756, -14, 258, 724);
 		NewLabel_bg.setIcon(new ImageIcon(img));
 		frame.getContentPane().add(NewLabel_bg);
+	}
+	
+	public void closeWindow() {
+		frame.setVisible(false);
+	}
+
+	public JButton getLoginButton() {
+		return btnNewButton;
+	}
+	
+	public void clearNameField() {
+		textField_Name.setText("");
+	}
+
+	public void clearIDField() {
+		textField_RoomID.setText("");
+	}
+
+	public String getName() {
+		return textField_Name.getText();
+	}
+	
+	public String getRoomID() {
+		return textField_RoomID.getText();
 	}
 }
