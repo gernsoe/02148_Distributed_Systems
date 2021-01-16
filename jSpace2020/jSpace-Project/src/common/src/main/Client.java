@@ -2,6 +2,14 @@ package common.src.main;
 
 import org.jspace.*;
 
+import common.src.main.GUI.src.WinBuilder.GameRoom;
+import common.src.main.GUI.src.WinBuilder.WaitingRoom;
+import common.src.main.GUI.src.WinBuilder.fMenu;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,7 +37,19 @@ public class Client {
 
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Enter your name: ");
-        name = input.readLine();
+       // name = input.readLine();
+        
+        fMenu menu = new fMenu();
+        menu.getStartButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				/*GameRoom gameRoom = new GameRoom();
+				gameRoom.NewScreen();*/	
+				
+				name = menu.getName();
+				roomID = menu.getRoomID();
+				System.out.print(name + roomID);
+			}
+		});
         
         enterRoom(lobby, input);
         
@@ -41,7 +61,7 @@ public class Client {
                 
                 if (roomURI.equals("")) {
                     System.out.println("Room is full");
-                    enterRoom(lobby, input);         	
+                    enterRoom(lobby, input); 
                 } else {
                     break;
                 }

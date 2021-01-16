@@ -19,8 +19,8 @@ public class Player {
 	// borderHeight is not
 	public Player(Point playerPos, int borderWidth, String playerName, int playerHeight) {
 		this.playerHeight = playerHeight;
-		stepSize = playerHeight/2;
-		playerWidth = stepSize;
+		playerWidth = playerHeight/2;
+		stepSize = playerWidth/2;
 		this.player = playerPos;
 		this.playerName = playerName;
 		this.borderWidth = borderWidth;
@@ -44,7 +44,7 @@ public class Player {
 	// Get arrow point based on players position
 	public void makeArrow() {
 		if (!getArrowIsAlive()) {
-			arrow = new Arrow (new Point(player.getX()+stepSize/4, player.getY()+playerHeight), playerHeight);
+			arrow = new Arrow (new Point(player.getX()+playerWidth/2, player.getY()+playerHeight), playerHeight);
 		}
 	}
 	

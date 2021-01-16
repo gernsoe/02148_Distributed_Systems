@@ -24,7 +24,7 @@ import javax.swing.JTextField;
 public class GameRoom implements KeyListener, ActionListener {
 	
 	private Timer timer;
-	private int delay = 17, playerHeight = 20, playerWidth = playerHeight/2, timeLeftForInvincibility1 = (1000/delay)*3, 
+	private int delay = 17, playerHeight = 40, playerWidth = playerHeight/2, timeLeftForInvincibility1 = (1000/delay)*3, 
 			timeLeftForInvincibility2 = (1000/delay)*3;
 	static int score1 = 0, score2 = 0;
 	private JFrame frame;
