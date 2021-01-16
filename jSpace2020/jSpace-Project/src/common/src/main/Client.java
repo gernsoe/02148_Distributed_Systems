@@ -99,7 +99,6 @@ public class Client {
             
             // If client is not host
             } else if (permissions.equals("participant")) {
-
                 // Get host name
                 Object[] lobbyStatus = gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(PLAYER_JOINED), new FormalField(String.class));
 
