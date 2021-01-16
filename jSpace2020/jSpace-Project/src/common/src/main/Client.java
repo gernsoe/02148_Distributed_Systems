@@ -55,7 +55,9 @@ public class Client {
                 if (roomURI.equals("")) {
                     // Create popup window
                     System.out.println("Room is full");
+                    menu.clearIDField();
                 } else {
+                    enterPreGameLobby(menu);
                     break;
                 }
             }
@@ -130,6 +132,9 @@ public class Client {
             }   
             
         } catch (InterruptedException e) {}
+    }
+    public static void enterPreGameLobby(fMenu menu) {
+        menu.closeWindow();
     }
 
     public static void enterGame(WaitingRoom wRoom) {

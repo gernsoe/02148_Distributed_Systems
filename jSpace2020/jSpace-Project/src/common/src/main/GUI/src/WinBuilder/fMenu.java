@@ -84,7 +84,6 @@ public class fMenu {
 				
 				//String name = textField_Name.getText();
 				//String roomID = textField_RoomID.getText();
-				frame.setVisible(false);
 				//WaitingRoom.Waiting(name, roomID);
 			}
 		});
@@ -150,10 +149,22 @@ public class fMenu {
 		frame.getContentPane().add(NewLabel_bg);
 	}
 	
+	public void closeWindow() {
+		frame.setVisible(false);
+	}
+
 	public JButton getLoginButton() {
 		return btnNewButton;
 	}
 	
+	public void clearNameField() {
+		textField_Name.setText("");
+	}
+
+	public void clearIDField() {
+		textField_RoomID.setText("");
+	}
+
 	public String getName() {
 		return textField_Name.getText();
 	}
