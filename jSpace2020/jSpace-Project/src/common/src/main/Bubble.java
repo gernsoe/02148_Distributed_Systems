@@ -12,7 +12,7 @@ public class Bubble {
     private double speedX = 1, speedY = 0; 
     private Point bubble;
 
-    public Bubble(int size, String color, Point pos, int borderHeight, int borderWidth, int speedX, int speedY) {
+    public Bubble(int size, Color color, Point pos, int borderHeight, int borderWidth, int speedX, int speedY) {
         this.size = size;
         this.color = color;
         this.speedX = speedX;
