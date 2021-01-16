@@ -69,6 +69,8 @@ public class WaitingRoom {
 		frmWaitingRoom.setSize(1000,700);
 		frmWaitingRoom.setLocationRelativeTo(null);
 		
+		
+		
 		//Logo
 		JLabel lblNewLabel_3 = new JLabel();
 		Image img2 = new ImageIcon(this.getClass().getResource("/BubShooter.png")).getImage();
@@ -112,8 +114,7 @@ public class WaitingRoom {
 		lblNewLabel_4.setBounds(760, 0, 320, 678);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_4);
 		
-<<<<<<< HEAD
-=======
+
 	}
 
 	public void createStartButton() {
@@ -125,34 +126,7 @@ public class WaitingRoom {
 		btnNewButton.setBounds(438, 282, 117, 29);
 		frmWaitingRoom.getContentPane().add(btnNewButton);
 	}
-
-	public JButton getStartButton() {
-		return btnNewButton;
-	}
-
-	public void setUserName1(String name) {
-		textField_User1.setText(name);
-	}
-
-	public void setUserName2(String name) {
-		textField_User2.setText(name);
-	}
-
-	public void closeWindow() {
-		frmWaitingRoom.setVisible(false);
->>>>>>> branch 'master' of https://github.com/gernsoe/02148_Game_Repo.git
-	}
-
-	public void createStartButton() {
-		//Button
-		btnNewButton = new JButton("Start Game");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {}
-		});
-		btnNewButton.setBounds(438, 282, 117, 29);
-		frmWaitingRoom.getContentPane().add(btnNewButton);
-	}
-
+	
 	public JButton getStartButton() {
 		return btnNewButton;
 	}

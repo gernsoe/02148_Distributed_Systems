@@ -154,7 +154,6 @@ public class Client {
             }
         });
     }
-
     public static void startGameButton(WaitingRoom waitingRoom, Space gameRoom) throws InterruptedException {
         waitingRoom.getStartButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

@@ -148,7 +148,6 @@ public class fMenu {
 		NewLabel_bg.setIcon(new ImageIcon(img));
 		frame.getContentPane().add(NewLabel_bg);
 	}
-	
 	public void closeWindow() {
 		frame.setVisible(false);
 	}
@@ -168,12 +167,8 @@ public class fMenu {
 	public String getName() {
 		return textField_Name.getText();
 	}
-	
 	public String getRoomID() {
 		return textField_RoomID.getText();
 	}
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> branch 'master' of https://github.com/gernsoe/02148_Game_Repo.git

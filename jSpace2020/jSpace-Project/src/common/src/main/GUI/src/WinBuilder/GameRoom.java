@@ -38,8 +38,7 @@ public class GameRoom implements KeyListener, ActionListener {
 	private JTextField textField_player2;
 	private JTextField textField_p1_scores;
 	private JTextField textField_pl2_scores;
-	private JLabel pl1;
-	private JLabel pl2;
+	private JLabel Label_level;
 
 
 
@@ -165,15 +164,13 @@ public class GameRoom implements KeyListener, ActionListener {
 		panel.addKeyListener(this);
 		panel.setLayout(null);
 		
-		
-		
-		
-		//Player 1 scores
-		pl1 = new JLabel("");
+
+		Label_level = new JLabel("");
+		Label_level.setBounds(384, 612, 73, 53);
+		frame.getContentPane().add(Label_level);
+		Image level = new ImageIcon(this.getClass().getResource("/level.png")).getImage();
+		Label_level.setIcon(new ImageIcon(level));
 		Image imgP1 = new ImageIcon(this.getClass().getResource("/Player1.png")).getImage();
-		pl1.setIcon(new ImageIcon(imgP1));
-		pl1.setBounds(110, 612, 127, 34);
-		frame.getContentPane().add(pl1);
 		textField_player1 = new JTextField("");
 		textField_player1.setBounds(100, 612, 114, 34);
 		frame.getContentPane().add(textField_player1);
@@ -182,13 +179,7 @@ public class GameRoom implements KeyListener, ActionListener {
 		textField_p1_scores.setBounds(226, 612, 54, 34);
 		frame.getContentPane().add(textField_p1_scores);
 		textField_p1_scores.setColumns(10);
-		
-		//Player 2
-		pl2 = new JLabel("");
 		Image imgP2 = new ImageIcon(this.getClass().getResource("/Player2.png")).getImage();
-		pl2.setIcon(new ImageIcon(imgP2));
-		pl2.setBounds(714, 617, 120, 27);
-		frame.getContentPane().add(pl2);
 		textField_player2 = new JTextField("");
 		textField_player2.setBounds(707, 612, 114, 34);
 		frame.getContentPane().add(textField_player2);
@@ -213,8 +204,10 @@ public class GameRoom implements KeyListener, ActionListener {
 		lblNewLabel_3 = new JLabel("");
 		lblNewLabel_3.setBackground(new Color(135, 206, 250));
 		lblNewLabel_3.setIcon(new ImageIcon(img6));
-		lblNewLabel_3.setBounds(-4, 597, 1037, 81);
+		lblNewLabel_3.setBounds(-34, 599, 1270, 81);
 		frame.getContentPane().add(lblNewLabel_3);
+		
+		
 		
 		timer = new Timer(delay, this);
 		timer.start();
