@@ -1,12 +1,14 @@
 package common.src.main;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Map {
 	
-	int bubbleCount, playerCount = 2, playerHeight = 20;
+	private int bubbleCount, playerCount = 2, playerHeight = 20;
 	// Changed later to ball/bubbles class
+	private float r, g, b;
 	ArrayList<Bubble> bubbles;
 	Arrow arrow;
 	Player players[] = new Player[playerCount];
@@ -18,13 +20,17 @@ public class Map {
 		players[1] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName2, playerHeight);
 		
 		Random rand = new Random();
+
 		// Add bubbles
 		bubbles = new ArrayList<Bubble>();
 		for (int i = 0; i < bubbleCount; i++) {
+			r = rand.nextFloat();
+			g = rand.nextFloat();
+			b = rand.nextFloat();
 			if (i % 2 == 0) {
-				bubbles.add(new Bubble((rand.nextInt(90)+10), "farve", new Point((rand.nextInt(750)),(rand.nextInt(300))), borderHeight, borderWidth, 1));
+				bubbles.add(new Bubble((rand.nextInt(90)+10), new Color(r,g,b), new Point((rand.nextInt(750)),(rand.nextInt(300))), borderHeight, borderWidth, 1));
 			} else {
-				bubbles.add(new Bubble((rand.nextInt(90)+10), "farve", new Point((rand.nextInt(750)),(rand.nextInt(300))), borderHeight, borderWidth, -1));
+				bubbles.add(new Bubble((rand.nextInt(90)+10), new Color(r,g,b), new Point((rand.nextInt(750)),(rand.nextInt(300))), borderHeight, borderWidth, -1));
 			}
 		}
 		System.out.print(bubbles.get(0).toString());

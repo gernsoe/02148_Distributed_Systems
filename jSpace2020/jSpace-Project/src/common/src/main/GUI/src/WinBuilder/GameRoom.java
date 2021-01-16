@@ -24,7 +24,9 @@ import javax.swing.JTextField;
 public class GameRoom implements KeyListener, ActionListener {
 	
 	private Timer timer;
-	private int delay = 17, playerHeight = 20, playerWidth = playerHeight/2;
+	private int delay = 17, playerHeight = 20, playerWidth = playerHeight/2, timeLeftForInvincibility1 = (1000/delay)*3, 
+			timeLeftForInvincibility2 = (1000/delay)*3;
+	static int score1 = 0, score2 = 0;
 	private JFrame frame;
 	private JPanel panel;
 	private Map game;
@@ -38,7 +40,6 @@ public class GameRoom implements KeyListener, ActionListener {
 	private JTextField textField_pl2_scores;
 	private JLabel pl1;
 	private JLabel pl2;
-	private Bubble bubble;
 
 
 
@@ -71,7 +72,6 @@ public class GameRoom implements KeyListener, ActionListener {
 	private void initialize() {
 		// Add game elements
 		game = new Map(borderWidth, borderHeight, 10, "David", "Christian", playerHeight);
-		bubble = new Bubble(50, "whatever", new Point(0,0), borderHeight, borderWidth, 1);
 		
 		// Add GUI
 		frame = new JFrame("Game Room");
@@ -100,15 +100,19 @@ public class GameRoom implements KeyListener, ActionListener {
 				g.setColor(color);
 				g.fillRect(0,0,borderWidth,borderHeight);
 				
-				// Arrow
+				// Arrow for player 1
 				if (game.getPlayer1().getArrowIsAlive()) {
 					g.setColor(Color.YELLOW);
 					g.fillRect((int)game.getPlayer1().getArrow().getX(), (int)game.getPlayer1().getArrow().getY(), game.getPlayer1().getArrow().getArrowWidth(), game.getPlayer1().getArrow().getArrowHeight());
 					game.getPlayer1().getArrow().updatePos();
 				}
-		
+				
 				// Player 1
-				g.setColor(Color.red);
+				if (game.getPlayer1().getInvicibilityStatus()) {
+					g.setColor(Color.yellow);
+				} else {
+					g.setColor(Color.red);
+				}
 				g.fillRect(((int)game.getPlayer1().getX()), ((int)game.getPlayer1().getY()), playerWidth, playerHeight);
 				
 				// Player 2
@@ -116,30 +120,25 @@ public class GameRoom implements KeyListener, ActionListener {
 				
 				
 				// Bubble
-				g.setColor(Color.blue);
 				for(int i = 0; i < game.getBubbles().size(); i++) {
 					
-					// Bubble collision with arrow
-					/*if (game.getPlayer1().getArrowIsAlive() && game.getBubbles().get(i).collisionWithArrow(game.getPlayer1().getArrow())) {
-						if (game.getBubbles().get(i).getSize() > 20) {
-							game.getBubbles().addAll(game.getBubbles().get(i).addSplitBubbles());
-						}
-						game.getBubbles().remove(i);
-						game.getPlayer1().getArrow().setAliveTo(false);
-					} else {
-						int size = game.getBubbles().get(i).getSize();
-						g.fillOval((int)game.getBubbles().get(i).getPos().getX(), (int)game.getBubbles().get(i).getPos().getY(), size, size);
-					}
-					game.getBubbles().get(i).move();
-					*/
+					// Get color from bubble
+					g.setColor(game.getBubbles().get(i).getColor());
 					
 					// Bubble collision with player
-					if(game.getPlayer1().isAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getShape())) {
-						game.getPlayer1().setAlive(false);
-						timer.stop();
+					if(!game.getPlayer1().getInvicibilityStatus()) {
+						if(game.getPlayer1().isAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getShape())) {
+							
+							// Lose life if player gets hit and set invicincibility on
+							game.getPlayer1().loseHeart();
+							if (!game.getPlayer1().isAlive()) {
+								timer.stop();
+							}
+							game.getPlayer1().setInvincibility(true);
+						}
 					}
 					
-					// Bubble collision with arrow part 2
+					// Bubble collision with arrow
 					if(game.getPlayer1().getArrowIsAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getArrow().getShape())) {
 						if (game.getBubbles().get(i).getSize() > 20) {
 							game.getBubbles().addAll(game.getBubbles().get(i).addSplitBubbles());
@@ -150,12 +149,8 @@ public class GameRoom implements KeyListener, ActionListener {
 						int size = game.getBubbles().get(i).getSize();
 						g.fillOval((int)game.getBubbles().get(i).getPos().getX(), (int)game.getBubbles().get(i).getPos().getY(), size, size);
 					}
-					game.getBubbles().get(i).move();
-						
+					game.getBubbles().get(i).move();			
 				}
-				g.setColor(Color.green);
-				g.fillOval((int)bubble.getPos().getX(), (int)bubble.getPos().getY(), bubble.getSize(), bubble.getSize());
-
 				// g.dispose();
 			}
 		};
@@ -200,10 +195,6 @@ public class GameRoom implements KeyListener, ActionListener {
 		frame.getContentPane().add(textField_pl2_scores);
 		textField_pl2_scores.setColumns(10);
 		
-
-		
-		
-		
 		JLabel lblNewLabel = new JLabel("");
 		Image img5 = new ImageIcon(this.getClass().getResource("/Group1.png")).getImage();
 		lblNewLabel.setIcon(new ImageIcon(img5));
@@ -221,10 +212,6 @@ public class GameRoom implements KeyListener, ActionListener {
 		lblNewLabel_3.setIcon(new ImageIcon(img6));
 		lblNewLabel_3.setBounds(-4, 597, 1037, 81);
 		frame.getContentPane().add(lblNewLabel_3);
-		
-		
-		
-		
 		
 		timer = new Timer(delay, this);
 		timer.start();
@@ -253,8 +240,30 @@ public class GameRoom implements KeyListener, ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		timer.start();
 		
-		// Get info about player 2
+		// Get info about player 1
+		if(game.getPlayer1().getInvicibilityStatus()) {
+			timeLeftForInvincibility1--;
+		}
+		
+		if (timeLeftForInvincibility1 == 0) {
+			game.getPlayer1().setInvincibility(false);
+			timeLeftForInvincibility1 = (1000/delay)* 3;
+		}
 		
 		panel.repaint();
 	}
 }
+
+// Bubble collision with arrow
+/*if (game.getPlayer1().getArrowIsAlive() && game.getBubbles().get(i).collisionWithArrow(game.getPlayer1().getArrow())) {
+	if (game.getBubbles().get(i).getSize() > 20) {
+		game.getBubbles().addAll(game.getBubbles().get(i).addSplitBubbles());
+	}
+	game.getBubbles().remove(i);
+	game.getPlayer1().getArrow().setAliveTo(false);
+} else {
+	int size = game.getBubbles().get(i).getSize();
+	g.fillOval((int)game.getBubbles().get(i).getPos().getX(), (int)game.getBubbles().get(i).getPos().getY(), size, size);
+}
+game.getBubbles().get(i).move();
+*/
