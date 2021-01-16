@@ -1,5 +1,7 @@
 package common.src.main;
 
+import java.awt.geom.Rectangle2D;
+
 public class Player {
 	// Check if player is alive
 	boolean isAlive = true;
@@ -37,7 +39,7 @@ public class Player {
 		}
 	}
 	
-	// Player collision with bubble
+	/*// Player collision with bubble
 	public boolean checkCollisionWith(Point bubble, int bubbleSize) {
 		
 		// Find where the contact point is for player
@@ -68,13 +70,17 @@ public class Player {
 			playerContactPointX = player.getX() + playerWidth;
 		}
 		return new Point (playerContactPointX, playerHeight);
-	}
+	}*/
 	
 	// Get arrow point based on players position
 	public void makeArrow() {
 		if (!getArrowIsAlive()) {
 			arrow = new Arrow (new Point(player.getX()+stepSize/4, player.getY()+playerHeight), playerHeight);
 		}
+	}
+	
+	public Rectangle2D getShape() {
+		return new Rectangle2D.Double(getX(), getY(), playerWidth, playerHeight);
 	}
 	
 	public boolean getArrowIsAlive() {
@@ -124,6 +130,10 @@ public class Player {
 	
 	public boolean isAlive() {
 		return isAlive;
+	}
+	
+	public void setAlive(boolean live) {
+		isAlive = live;
 	}
 	
 	public Arrow getArrow() {

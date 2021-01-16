@@ -38,6 +38,7 @@ public class GameRoom implements KeyListener, ActionListener {
 	private JTextField textField_pl2_scores;
 	private JLabel pl1;
 	private JLabel pl2;
+	private Bubble bubble;
 
 
 
@@ -70,6 +71,7 @@ public class GameRoom implements KeyListener, ActionListener {
 	private void initialize() {
 		// Add game elements
 		game = new Map(borderWidth, borderHeight, 10, "David", "Christian", playerHeight);
+		bubble = new Bubble(50, "whatever", new Point(0,0), borderHeight, borderWidth, 1);
 		
 		// Add GUI
 		frame = new JFrame("Game Room");
@@ -98,6 +100,12 @@ public class GameRoom implements KeyListener, ActionListener {
 				g.setColor(color);
 				g.fillRect(0,0,borderWidth,borderHeight);
 				
+				// Arrow
+				if (game.getPlayer1().getArrowIsAlive()) {
+					g.setColor(Color.YELLOW);
+					g.fillRect((int)game.getPlayer1().getArrow().getX(), (int)game.getPlayer1().getArrow().getY(), game.getPlayer1().getArrow().getArrowWidth(), game.getPlayer1().getArrow().getArrowHeight());
+					game.getPlayer1().getArrow().updatePos();
+				}
 		
 				// Player 1
 				g.setColor(Color.red);
@@ -106,19 +114,13 @@ public class GameRoom implements KeyListener, ActionListener {
 				// Player 2
 				g.setColor(Color.orange);
 				
-				// Arrow
-				if (game.getPlayer1().getArrowIsAlive()) {
-					g.setColor(Color.YELLOW);
-					g.fillRect((int)game.getPlayer1().getArrow().getX(), (int)game.getPlayer1().getArrow().getY(), game.getPlayer1().getArrow().getArrowWidth(), game.getPlayer1().getArrow().getArrowHeight());
-					game.getPlayer1().getArrow().updatePos();
-				}
 				
 				// Bubble
 				g.setColor(Color.blue);
 				for(int i = 0; i < game.getBubbles().size(); i++) {
 					
 					// Bubble collision with arrow
-					if (game.getPlayer1().getArrowIsAlive() && game.getBubbles().get(i).collisionWithArrow(game.getPlayer1().getArrow())) {
+					/*if (game.getPlayer1().getArrowIsAlive() && game.getBubbles().get(i).collisionWithArrow(game.getPlayer1().getArrow())) {
 						if (game.getBubbles().get(i).getSize() > 20) {
 							game.getBubbles().addAll(game.getBubbles().get(i).addSplitBubbles());
 						}
@@ -129,7 +131,30 @@ public class GameRoom implements KeyListener, ActionListener {
 						g.fillOval((int)game.getBubbles().get(i).getPos().getX(), (int)game.getBubbles().get(i).getPos().getY(), size, size);
 					}
 					game.getBubbles().get(i).move();
+					*/
+					
+					// Bubble collision with player
+					if(game.getPlayer1().isAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getShape())) {
+						game.getPlayer1().setAlive(false);
+						timer.stop();
+					}
+					
+					// Bubble collision with arrow part 2
+					if(game.getPlayer1().getArrowIsAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getArrow().getShape())) {
+						if (game.getBubbles().get(i).getSize() > 20) {
+							game.getBubbles().addAll(game.getBubbles().get(i).addSplitBubbles());
+						}
+						game.getBubbles().remove(i);
+						game.getPlayer1().getArrow().setAliveTo(false);
+					} else {
+						int size = game.getBubbles().get(i).getSize();
+						g.fillOval((int)game.getBubbles().get(i).getPos().getX(), (int)game.getBubbles().get(i).getPos().getY(), size, size);
+					}
+					game.getBubbles().get(i).move();
+						
 				}
+				g.setColor(Color.green);
+				g.fillOval((int)bubble.getPos().getX(), (int)bubble.getPos().getY(), bubble.getSize(), bubble.getSize());
 
 				// g.dispose();
 			}

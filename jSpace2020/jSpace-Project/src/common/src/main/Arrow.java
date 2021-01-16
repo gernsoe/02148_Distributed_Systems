@@ -1,15 +1,16 @@
 package common.src.main;
 
+import java.awt.geom.*;
+
 public class Arrow {
 	
 	// Default settings for arrow
 	int speed = 6;
 	Point arrow;
-	int width = 0, height = 0;
+	int width = 2, height = 0;
 	boolean alive;
 	
 	public Arrow(Point arrowPos, int playerHeight) {
-		width = playerHeight/4;
 		arrow = arrowPos;
 		alive = true;
 	}
@@ -40,6 +41,7 @@ public class Arrow {
 	
 	public void updatePos() {
 		System.out.println(height);
+		System.out.println(arrow.toString());
 		if (arrow.getY() > -1) {
 			height += speed;
 			arrow.setY(arrow.getY() - speed);
@@ -48,8 +50,16 @@ public class Arrow {
 		}
 	}
 	
+	public Point getArrowPos() {
+		return arrow;
+	}
+	
 	public void setAliveTo(boolean alive) {
 		this.alive = alive;
+	}
+	
+	public Rectangle2D getShape() {
+		return new Rectangle2D.Double(getX(), getY(), getArrowWidth(), getArrowHeight());
 	}
 	
 	public boolean isAlive() {
