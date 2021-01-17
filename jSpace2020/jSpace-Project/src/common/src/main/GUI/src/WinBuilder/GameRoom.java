@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import common.src.main.Bubble;
+import common.src.main.LevelHandler;
 import common.src.main.Map;
 import common.src.main.Point;
 import javax.swing.JLabel;
@@ -24,13 +25,13 @@ import javax.swing.JTextField;
 public class GameRoom implements KeyListener, ActionListener {
 	
 	private Timer timer;
-	private int delay = 17, playerHeight = 40, playerWidth = playerHeight/2, timeLeftForInvincibility1 = (1000/delay)*3, 
+	private int delay = 17, playerHeight = 20, timeLeftForInvincibility1 = (1000/delay)*3, 
 			timeLeftForInvincibility2 = (1000/delay)*3;
-	static int score1 = 0, score2 = 0;
+	static int score1 = 0, score2 = 0, level = 1;
 	private JFrame frame;
 	private JPanel panel;
-	private Map game;
-	private Color color = new Color(135, 206, 250);
+	private boolean left1, left2, right1, right2;
+	private LevelHandler game;
 	private int borderWidth = 800, borderHeight = 600;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_3;
@@ -39,26 +40,6 @@ public class GameRoom implements KeyListener, ActionListener {
 	private JTextField textField_p1_scores;
 	private JTextField textField_pl2_scores;
 	private JLabel Label_level;
-
-
-
-	/**
-	 * Launch the application.
-	 */
-	/*
-	public static void NewScreen() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GameRoom window = new GameRoom();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	*/
 
 	/**
 	 * Create the application.
@@ -73,7 +54,8 @@ public class GameRoom implements KeyListener, ActionListener {
 	 */
 	private void initialize() {
 		// Add game elements
-		game = new Map(borderWidth, borderHeight, 10, "David", "Christian", playerHeight);
+	
+		game = new LevelHandler(level, borderWidth, borderHeight, "Name", "", playerHeight);
 		
 		// Add GUI
 		frame = new JFrame("Game Room");
@@ -99,12 +81,12 @@ public class GameRoom implements KeyListener, ActionListener {
 				super.paintComponent(g);
 				
 				// Background
-				g.setColor(color);
+				g.setColor(game.getLevelColor(level));
 				g.fillRect(0,0,borderWidth,borderHeight);
 				
 				// Arrow for player 1
 				if (game.getPlayer1().getArrowIsAlive()) {
-					g.setColor(Color.YELLOW);
+					g.setColor(Color.black);
 					g.fillRect((int)game.getPlayer1().getArrow().getX(), (int)game.getPlayer1().getArrow().getY(), game.getPlayer1().getArrow().getArrowWidth(), game.getPlayer1().getArrow().getArrowHeight());
 					game.getPlayer1().getArrow().updatePos();
 				}
@@ -115,7 +97,7 @@ public class GameRoom implements KeyListener, ActionListener {
 				} else {
 					g.setColor(Color.red);
 				}
-				g.fillRect(((int)game.getPlayer1().getX()), ((int)game.getPlayer1().getY()), playerWidth, playerHeight);
+				g.fillRect(((int)game.getPlayer1().getX()), ((int)game.getPlayer1().getY()), game.getPlayer1().getPlayerWidth(), game.getPlayer1().getPlayerHeight());
 				
 				// Player 2
 				g.setColor(Color.orange);
@@ -149,11 +131,11 @@ public class GameRoom implements KeyListener, ActionListener {
 						game.getPlayer1().getArrow().setAliveTo(false);
 					} else {
 						int size = game.getBubbles().get(i).getSize();
+				
 						g.fillOval((int)game.getBubbles().get(i).getPos().getX(), (int)game.getBubbles().get(i).getPos().getY(), size, size);
 					}
 					game.getBubbles().get(i).move();			
 				}
-				// g.dispose();
 			}
 		};
 		panel.setBackground(new Color(135, 206, 235));
@@ -220,9 +202,12 @@ public class GameRoom implements KeyListener, ActionListener {
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			game.getPlayer1().goRight();
+			right1 = true;
+		
 		}
 		if(e.getKeyCode() == KeyEvent.VK_LEFT) {	
 			game.getPlayer1().goLeft();
+			left1 = true;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_SPACE) {
 			game.getPlayer1().makeArrow();
@@ -230,11 +215,32 @@ public class GameRoom implements KeyListener, ActionListener {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {}
+	public void keyReleased(KeyEvent e) {
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_RIGHT:
+			right1 = false;
+			break;
+		case KeyEvent.VK_LEFT:
+			left1 = false;
+			break;
+		}
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		timer.start();
+		
+		// Keep moving the player 1
+		if (left1) {
+			game.getPlayer1().goLeft();
+		} else if (right1) {
+			game.getPlayer1().goRight();
+		}
+		
+		// When the level is cleared, make a new level
+		if (game.getBubbles().isEmpty()) {
+			game.makeLevel(++level);
+		}
 		
 		// Get info about player 1
 		if(game.getPlayer1().getInvicibilityStatus()) {
@@ -257,17 +263,3 @@ public class GameRoom implements KeyListener, ActionListener {
 		textField_player2.setText(name);
 	}
 }
-
-// Bubble collision with arrow
-/*if (game.getPlayer1().getArrowIsAlive() && game.getBubbles().get(i).collisionWithArrow(game.getPlayer1().getArrow())) {
-	if (game.getBubbles().get(i).getSize() > 20) {
-		game.getBubbles().addAll(game.getBubbles().get(i).addSplitBubbles());
-	}
-	game.getBubbles().remove(i);
-	game.getPlayer1().getArrow().setAliveTo(false);
-} else {
-	int size = game.getBubbles().get(i).getSize();
-	g.fillOval((int)game.getBubbles().get(i).getPos().getX(), (int)game.getBubbles().get(i).getPos().getY(), size, size);
-}
-game.getBubbles().get(i).move();
-*/

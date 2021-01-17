@@ -73,6 +73,15 @@ public class WaitingRoom {
 		//Logo
 		JLabel lblNewLabel_3 = new JLabel();
 		Image img2 = new ImageIcon(this.getClass().getResource("/BubShooter.png")).getImage();
+		
+		btnNewButton = new JButton("Start Game");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {}
+		});
+		btnNewButton.setBounds(438, 282, 117, 29);
+		btnNewButton.setVisible(false);
+		btnNewButton.setEnabled(false);
+		frmWaitingRoom.getContentPane().add(btnNewButton);
 		lblNewLabel_3.setIcon(new ImageIcon(img2));
 		lblNewLabel_3.setBounds(261, 44, 544, 158);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_3);
@@ -98,7 +107,6 @@ public class WaitingRoom {
 		lblNewLabel_1.setIcon(new ImageIcon(img1));
 		lblNewLabel_1.setBounds(120, 431, 214, 130);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_1);
-		lblNewLabel_1.setText(name);
 	
 		//Background
 		Image img = new ImageIcon(this.getClass().getResource("/bg.png")).getImage();
@@ -117,12 +125,9 @@ public class WaitingRoom {
 
 	public void createStartButton() {
 		//Button
-		btnNewButton = new JButton("Start Game");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {}
-		});
-		btnNewButton.setBounds(438, 282, 117, 29);
-		frmWaitingRoom.getContentPane().add(btnNewButton);
+		System.out.println("Button created");
+		btnNewButton.setVisible(true);
+		btnNewButton.setEnabled(true);
 	}
 
 	public JButton getStartButton() {

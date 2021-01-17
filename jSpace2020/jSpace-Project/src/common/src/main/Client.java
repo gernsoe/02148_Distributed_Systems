@@ -68,13 +68,15 @@ public class Client {
             // Pre game lobby
             gameRoom.put(FROM, name, READY_TO_PLAY);
             String permissions = (String) gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(PERMISSION), new FormalField(String.class))[3];
-
+            
+            System.out.print(permissions);
             WaitingRoom wRoom = new WaitingRoom(name, roomID);
 
             // Check if client is a host
             if (permissions.equals("host")) {
                 wRoom.createStartButton();
                 // Add functionallity to the start button
+                System.out.println("now has permissions");
                 startGameButton(wRoom, gameRoom);
                 while (inLobby) {
                     wRoom.setUserName1(name);
@@ -157,6 +159,7 @@ public class Client {
         waitingRoom.getStartButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+         
                     gameRoom.put(FROM, name, START_GAME);
                 } catch (InterruptedException err) {}
             }

@@ -1,7 +1,6 @@
 package common.src.main.GUI.src.WinBuilder;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,12 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-
-import common.src.main.Client;
-
 import javax.swing.JButton;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class fMenu {
 
@@ -23,28 +17,6 @@ public class fMenu {
 	private JTextField textField_Name;
 	private JTextField textField_RoomID;
 	private JButton btnNewButton;
-
-	/**
-	 * Launch the application.
-	 */
-	/*public void NewScreen() {
-		//showWindow();
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					fMenu window = new fMenu();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
-	
-	
-	public void actionPerformed(ActionEvent e) {
-
-	}
 
 	/**
 	 * Create the application.
