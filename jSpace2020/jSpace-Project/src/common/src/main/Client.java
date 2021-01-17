@@ -15,6 +15,7 @@ public class Client {
     static String name, roomID, roomURI;
     static String player1 = null;
     static String player2 = null;
+    public static String permissions;
     public static boolean loginButtonClicked = false;
     public static boolean startButtonClicked = false;
     public static boolean inLobby = true;
@@ -28,7 +29,7 @@ public class Client {
     public static final String LOBBY_INSTRUCTION = "lobby_instruction";
     public static final String GAME_STARTED = "game_started";
     public static final String TO = "to";
-	public static final String FROM = "from";
+    public static final String FROM = "from";
 
 	public static void main(String[] argv) throws InterruptedException, UnknownHostException, IOException {
 
@@ -65,7 +66,7 @@ public class Client {
             
             // Pre game lobby
             gameRoom.put(FROM, name, READY_TO_PLAY);
-            String permissions = (String) gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(PERMISSION), new FormalField(String.class))[3];
+            permissions = (String) gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(PERMISSION), new FormalField(String.class))[3];
             
             System.out.print(permissions);
             WaitingRoom wRoom = new WaitingRoom(name, roomID);
@@ -80,7 +81,7 @@ public class Client {
                     wRoom.setUserName1(name);
 
                     if (player2 == null) {
-                        Object[] playerJoined = gameRoom.getp(new ActualField(TO), new ActualField(name), new ActualField(PLAYER_JOINED), new FormalField(String.class));
+                        Object[] playerJoined = gameRoom.getp(new ActualField(TO), new ActualField(permissions), new ActualField(PLAYER_JOINED), new FormalField(String.class));
                         if (playerJoined != null) {
                             player2 = (String) playerJoined[3];
                             wRoom.setUserName2(player2);
@@ -88,7 +89,7 @@ public class Client {
                         } 
                     }
                     
-                    Object[] gameStarted = gameRoom.getp(new ActualField(TO), new ActualField(name), new ActualField(GAME_STARTED));
+                    Object[] gameStarted = gameRoom.getp(new ActualField(TO), new ActualField(permissions), new ActualField(GAME_STARTED));
                     if (gameStarted != null) {
                         enterGame(wRoom);
                     }
@@ -100,14 +101,14 @@ public class Client {
             // If client is not host
             } else if (permissions.equals("participant")) {
                 // Get host name
-                Object[] lobbyStatus = gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(PLAYER_JOINED), new FormalField(String.class));
+                Object[] lobbyStatus = gameRoom.get(new ActualField(TO), new ActualField(permissions), new ActualField(PLAYER_JOINED), new FormalField(String.class));
 
                 wRoom.setUserName1(name);
                 player1 = (String) lobbyStatus[3];
                 wRoom.setUserName2(player1);  // Set host name under sofa
 
                 System.out.println("Waiting for host to start the game");
-                gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(GAME_STARTED));
+                gameRoom.get(new ActualField(TO), new ActualField(permissions), new ActualField(GAME_STARTED));
                 enterGame(wRoom);
 
                 //Click a button to leave the room
@@ -162,7 +163,7 @@ public class Client {
         waitingRoom.getStartButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    gameRoom.put(FROM, name, START_GAME);
+                    gameRoom.put(FROM, permissions, START_GAME);
                 } catch (InterruptedException err) {}
             }
         });
