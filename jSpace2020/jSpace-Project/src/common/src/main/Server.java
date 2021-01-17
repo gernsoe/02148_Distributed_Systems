@@ -35,7 +35,7 @@ public class Server {
 		System.out.println("Opened gate at uri " + repoURI);
 		
 		// Used to keep track of active rooms (server side only)
-		Space rooms = new SequentialSpace();
+		Space rooms = new SequentialSpace(); // (roomID, roomCounter, playerCount)
 		String roomURI;
 		
         int roomCounter = 0;		// Used to identify rooms

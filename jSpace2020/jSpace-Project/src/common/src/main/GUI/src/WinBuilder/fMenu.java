@@ -142,8 +142,4 @@ public class fMenu {
 	public String getRoomID() {
 		return textField_RoomID.getText();
 	}
-<<<<<<< HEAD
-=======
-
->>>>>>> branch 'master' of https://github.com/gernsoe/02148_Game_Repo.git
 }

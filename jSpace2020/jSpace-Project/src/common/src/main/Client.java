@@ -149,8 +149,13 @@ public class Client {
                 try {
                     name = menu.getName();
                     roomID = menu.getRoomID();
-                    lobby.put("enter", name, roomID);
-                    loginButtonClicked = true;
+                    if (name.equals("") || roomID.equals("") || name.equals(null) || roomID.equals(null)) {
+                        //TODO create popup
+                        System.out.println("Please enter a name and roomID");
+                    } else {
+                        lobby.put("enter", name, roomID);
+                        loginButtonClicked = true;
+                    }
                 } catch (InterruptedException err) {}
             }
         });
@@ -159,7 +164,6 @@ public class Client {
         waitingRoom.getStartButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-         
                     gameRoom.put(FROM, name, START_GAME);
                 } catch (InterruptedException err) {}
             }
