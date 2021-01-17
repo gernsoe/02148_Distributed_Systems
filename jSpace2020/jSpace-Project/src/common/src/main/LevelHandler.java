@@ -41,6 +41,10 @@ public class LevelHandler {
 		} else if (level == 5) {
 			bubbleCounts = new int[] {10,0,0,0,0,0,0,0,0,0};
 			speedX = 2;
+		} else if (level == 6) {
+			bubbleCounts = new int[] {0,0,2,0,1,0,0,0,0,0};
+		} else if (level == 7) {
+			bubbleCounts = new int[] {0,0,0,0,0,0,1,0,0,0};
 		}
 		game = new Map(bWidth, bHeight, bubbleCounts, bubbleSizes, player1, player2, pHeight, speedX, speedY);
 	}

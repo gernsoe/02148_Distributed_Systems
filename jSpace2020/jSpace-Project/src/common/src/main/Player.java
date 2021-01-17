@@ -13,7 +13,7 @@ public class Player {
 	int lives = 3;
 	
 	// Size of player
-	private int playerHeight, playerID, borderWidth, stepSize = 1, playerWidth;
+	private int playerHeight, playerID, borderWidth, stepSize = 2, playerWidth;
 	String playerName;
 	
 	// borderHeight is not

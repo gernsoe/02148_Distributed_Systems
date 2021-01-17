@@ -30,8 +30,7 @@ public class Map {
 		players[0] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName1, playerHeight);
 		
 		
-		Random rand = new Random();
-
+		
 		// Add bubbles
 		bubbles = new ArrayList<Bubble>();
 		for (int i = 0; i < bubbleCounts.length; i++) {
@@ -39,26 +38,28 @@ public class Map {
 			//g = rand.nextFloat();
 			//b = rand.nextFloat();
 			if (i % 2 == 0) {
-				makeBubbles(i,bubbleSizes[i],bubbleCounts[i],rand.nextInt(borderWidth-bubbleSizes[i]),rand.nextInt(300));
+				makeBubbles(i,bubbleSizes[i],bubbleCounts[i],bubbleSizes[i]);
 			} else {
-				makeBubbles(i,bubbleSizes[i],bubbleCounts[i],rand.nextInt(borderWidth-bubbleSizes[i]),rand.nextInt(300));
+				makeBubbles(i,bubbleSizes[i],bubbleCounts[i],bubbleSizes[i]);
 			}
 		}
 	}
 	
-	public void makeBubbles(int colorID, int size, int amount, int x, int y) {
+	public void makeBubbles(int colorID, int size, int amount, int bubbleSize) {
 		for (int i = 0; i < amount; i++) {
+			int randomX = (int) (Math.random() * (borderWidth-bubbleSize));
+			int randomY = (int) (Math.random() * (400+bubbleSize));
 			if (i%2 == 0) {
-				bubbles.add(new Bubble(size, getColor(colorID), new Point(x,y), borderHeight, borderWidth, speedX, speedY));
+				bubbles.add(new Bubble(size, getColor(colorID), new Point(randomX,randomY), borderHeight, borderWidth, speedX, speedY));
 			} else {
-				bubbles.add(new Bubble(size, getColor(colorID), new Point(x,y), borderHeight, borderWidth, -speedX, speedY));
+				bubbles.add(new Bubble(size, getColor(colorID), new Point(randomX,randomY), borderHeight, borderWidth, -speedX, speedY));
 			}
 			
 		}
 	}
 	
 	public Color getColor(int i) {
-		i = (i-1)%10;
+		i = i%10;
 		Color[] colors = new Color[] {Color.red, Color.orange, Color.yellow, Color.green, Color.cyan, Color.blue, Color.pink, Color.magenta, Color.DARK_GRAY, Color.black};
 		return colors[i];
 	}
