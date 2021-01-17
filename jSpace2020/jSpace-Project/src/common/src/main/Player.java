@@ -10,16 +10,17 @@ public class Player {
 	// Player position
 	Point player;
 	Arrow arrow;
-	int lives = 3;
+	int hearts;
 	
 	// Size of player
 	private int playerHeight, playerID, borderWidth, stepSize = 2, playerWidth;
 	String playerName;
 	
 	// borderHeight is not
-	public Player(Point playerPos, int borderWidth, String playerName, int playerHeight) {
+	public Player(Point playerPos, int borderWidth, String playerName, int playerHeight, int hearts) {
 		this.playerHeight = playerHeight;
-		playerWidth = playerHeight/2;
+		this.hearts = hearts;
+		playerWidth = playerHeight/3*2;
 		this.player = playerPos;
 		this.playerName = playerName;
 		this.borderWidth = borderWidth;
@@ -117,11 +118,15 @@ public class Player {
 	
 	public void loseHeart() {
 		if (isAlive) {
-			lives--;
+			hearts--;
 		}
-		if (lives == 0) {
+		if (hearts == 0) {
 			setAlive(false);
 		}
+	}
+	
+	public int getHearts() {
+		return hearts;
 	}
 	
 	public Arrow getArrow() {

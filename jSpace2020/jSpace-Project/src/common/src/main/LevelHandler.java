@@ -13,7 +13,7 @@ public class LevelHandler {
 	int[] bubbleSizes = new int[] {20,30,45,68,80,100,130,160,200,270}; 
 	
 	
-	public LevelHandler(int level, int bWidth, int bHeight, String player1, String player2, int pHeight) {
+	public LevelHandler(int level, int bWidth, int bHeight, String player1, String player2, int pHeight, int hearts) {
 		this.level = level;
 		this.bWidth = bWidth;
 		this.bHeight = bHeight;
@@ -21,12 +21,10 @@ public class LevelHandler {
 		this.player2 = player2;
 		this.pHeight = pHeight;
 		
-		makeLevel(level);
+		makeLevel(level, hearts);
 	}
-	
 
-	
-	public void makeLevel(int level) {
+	public void makeLevel(int level, int hearts) {
 		// Default speed
 		speedX = 1;
 		speedY = 0;
@@ -45,16 +43,11 @@ public class LevelHandler {
 			bubbleCounts = new int[] {0,0,2,0,1,0,0,0,0,0};
 		} else if (level == 7) {
 			bubbleCounts = new int[] {0,0,0,0,0,0,1,0,0,0};
+		} else if (level == 8) {
+			bubbleCounts = new int[] {0,0,0,0,0,0,0,0,0,1};
 		}
-		game = new Map(bWidth, bHeight, bubbleCounts, bubbleSizes, player1, player2, pHeight, speedX, speedY);
-	}
-	
-	public void setTime(int time) {
-		timer = time;
-	}
-	
-	public int getTime() {
-		return timer;
+		
+		game = new Map(bWidth, bHeight, bubbleCounts, bubbleSizes, player1, player2, pHeight, speedX, speedY, hearts);
 	}
 	
 	public Player getPlayer1() {
@@ -67,6 +60,10 @@ public class LevelHandler {
 	
 	public ArrayList<Bubble> getBubbles() {
 		return game.getBubbles();
+	}
+	
+	public LevelHandler getCurrentLevel() {
+		return this;
 	}
 	
 	
