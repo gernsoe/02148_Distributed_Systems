@@ -14,7 +14,7 @@ public class Map {
 	Arrow arrow;
 	Player players[] = new Player[playerCount];
 
-	public Map (int borderWidth, int borderHeight, int[] bubbleCounts, int[] bubbleSizes, String playerName1, String playerName2, int playerHeight, double speedX, double speedY) {
+	public Map (int borderWidth, int borderHeight, int[] bubbleCounts, int[] bubbleSizes, String playerName1, String playerName2, int playerHeight, double speedX, double speedY, int hearts) {
 		this.borderHeight = borderHeight;
 		this.borderWidth = borderWidth;
 		this.speedX = speedX;
@@ -22,12 +22,12 @@ public class Map {
 		
 		if (!playerName2.equals("")) {
 			playerCount = 2;
-			players[1] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName2, playerHeight);
+			players[1] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName2, playerHeight, hearts);
 		}
 		
 		
 		// Add players and spawn players and bubbles
-		players[0] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName1, playerHeight);
+		players[0] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts);
 		
 		
 		
@@ -48,7 +48,7 @@ public class Map {
 	public void makeBubbles(int colorID, int size, int amount, int bubbleSize) {
 		for (int i = 0; i < amount; i++) {
 			int randomX = (int) (Math.random() * (borderWidth-bubbleSize));
-			int randomY = (int) (Math.random() * (400+bubbleSize));
+			int randomY = (int) (Math.random() * (500-bubbleSize));
 			if (i%2 == 0) {
 				bubbles.add(new Bubble(size, getColor(colorID), new Point(randomX,randomY), borderHeight, borderWidth, speedX, speedY));
 			} else {
@@ -71,6 +71,10 @@ public class Map {
 	
 	public Player getPlayer2() {
 		return players[1];
+	}
+	
+	public Map getMap() {
+		return this;
 	}
 	
 	public ArrayList<Bubble> getBubbles() {

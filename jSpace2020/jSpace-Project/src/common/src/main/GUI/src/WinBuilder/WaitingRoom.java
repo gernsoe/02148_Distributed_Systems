@@ -16,6 +16,8 @@ import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
 
 public class WaitingRoom {
 
@@ -24,8 +26,7 @@ public class WaitingRoom {
 	private String roomID;
 	private String roomURI;
 	private String permission;
-	private JTextField textField_User2;
-	private JTextField textField_User1;
+	private JLabel textField_User2, textField_User1;
 	private JButton btnNewButton;
 	
 
@@ -87,15 +88,17 @@ public class WaitingRoom {
 		frmWaitingRoom.getContentPane().add(lblNewLabel_3);
 
 		//User texfields
-		textField_User2 = new JTextField();
+		textField_User2 = new JLabel();
+		textField_User2.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		textField_User2.setHorizontalAlignment(SwingConstants.CENTER);
 		textField_User2.setBounds(719, 571, 163, 26);
 		frmWaitingRoom.getContentPane().add(textField_User2);
-		textField_User2.setColumns(10);
 		
-		textField_User1 = new JTextField();
+		textField_User1 = new JLabel();
+		textField_User1.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		textField_User1.setHorizontalAlignment(SwingConstants.CENTER);
 		textField_User1.setBounds(105, 571, 163, 26);
 		frmWaitingRoom.getContentPane().add(textField_User1);
-		textField_User1.setColumns(10);
 		
 		//Sofa
 		JLabel lblNewLabel_2 = new JLabel("");
