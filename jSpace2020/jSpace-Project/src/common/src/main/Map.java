@@ -33,7 +33,6 @@ public class Map {
 				bubbles.add(new Bubble((rand.nextInt(90)+10), new Color(r,g,b), new Point((rand.nextInt(750)),(rand.nextInt(300))), borderHeight, borderWidth, -1, 0));
 			}
 		}
-		System.out.print(bubbles.get(0).toString());
 	}
 	
 	// Make a function to remove balls from the array, if player is dead, remove player from array
