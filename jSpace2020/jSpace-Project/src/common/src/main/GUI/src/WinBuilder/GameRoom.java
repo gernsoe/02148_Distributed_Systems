@@ -10,7 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.Timer;
 import javax.swing.ImageIcon;
@@ -23,7 +24,7 @@ import common.src.main.LevelHandler;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-public class GameRoom implements KeyListener, ActionListener {
+public class GameRoom implements KeyListener, ActionListener, WindowListener {
 	
 	private Timer timer;
 	private int delay = 17, playerHeight = 24, timeLeftForInvincibility1 = (1000/delay)*3, 
@@ -36,7 +37,7 @@ public class GameRoom implements KeyListener, ActionListener {
 	private int borderWidth = 800, borderHeight = 600;
 	private JLabel lblNewLabel_1, lblNewLabel_3, lblNewLabel, Label_level;
 	private JLabel textField_player1, textField_player2, Player1Heart1, Player1Heart2, Player1Heart3,
-		Player2Heart1, Player2Heart2, Player2Heart3, Label_leveltext;
+		Player2Heart1, Player2Heart2, Player2Heart3, Label_leveltext, Player2Label, Player1Label;
 
 	/**
 	 * Create the application.
@@ -175,7 +176,7 @@ public class GameRoom implements KeyListener, ActionListener {
 		Image imgHeart =  new ImageIcon(this.getClass().getResource("/heart.png")).getImage();
 		
 		// Add playerNames
-		JLabel Player1Label = new JLabel("");
+		Player1Label = new JLabel("");
 		Player1Label.setHorizontalAlignment(SwingConstants.LEFT);
 		Player1Label.setFont(new Font("Lucida Grande", Font.BOLD, 18));
 		Player1Label.setBounds(100, 610, 150, 30);
@@ -184,7 +185,7 @@ public class GameRoom implements KeyListener, ActionListener {
 		panel_1.setBounds(100,610,150,30);
 		panel_1.add(Player1Label);
 		
-		JLabel Player2Label = new JLabel("");
+		Player2Label = new JLabel("");
 		Player2Label.setHorizontalAlignment(SwingConstants.RIGHT);
 		Player2Label.setFont(new Font("Lucida Grande", Font.BOLD, 18));
 		Player2Label.setBounds(750, 610, 150, 30);
@@ -200,15 +201,12 @@ public class GameRoom implements KeyListener, ActionListener {
 		panel_4.setBounds(660,610,70,30);
 		
 		// Filler text for now
-		Player2Label.setText("Player2");
 		Player2Label.setForeground(Color.green);
-		
 		frame.getContentPane().add(panel_2);
 		frame.getContentPane().add(panel_1);
 		frame.getContentPane().add(panel_3);
 		frame.getContentPane().add(panel_4);
 		
-		Player1Label.setText("Player1");
 		Player1Label.setForeground(Color.red);
 		
 		// Add scores
@@ -335,8 +333,6 @@ public class GameRoom implements KeyListener, ActionListener {
 			game.makeLevel(++level,game.getPlayer1().getHearts());
 			Label_leveltext.setText("" + level);
 		}
-		
-		
 		panel.repaint();
 	}
 
@@ -345,6 +341,48 @@ public class GameRoom implements KeyListener, ActionListener {
 	}
 
 	public void setUserName2(String name) {
-		textField_player2.setText(name);
+		Player2Label.setText(name);
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

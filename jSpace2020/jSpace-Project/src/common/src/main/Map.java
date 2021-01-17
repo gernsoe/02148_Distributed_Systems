@@ -48,7 +48,7 @@ public class Map {
 	public void makeBubbles(int colorID, int size, int amount, int bubbleSize) {
 		for (int i = 0; i < amount; i++) {
 			int randomX = (int) (Math.random() * (borderWidth-bubbleSize));
-			int randomY = (int) (Math.random() * (400+bubbleSize));
+			int randomY = (int) (Math.random() * (500-bubbleSize));
 			if (i%2 == 0) {
 				bubbles.add(new Bubble(size, getColor(colorID), new Point(randomX,randomY), borderHeight, borderWidth, speedX, speedY));
 			} else {
