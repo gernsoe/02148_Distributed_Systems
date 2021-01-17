@@ -6,33 +6,61 @@ import java.util.Random;
 
 public class Map {
 	
-	private int bubbleCount, playerCount = 2, playerHeight = 20;
+	private int playerCount = 1, playerHeight = 20, borderHeight, borderWidth, speedX, speedY;
 	// Changed later to ball/bubbles class
 	private float r, g, b;
 	ArrayList<Bubble> bubbles;
 	Arrow arrow;
 	Player players[] = new Player[playerCount];
 
-	public Map (int borderWidth, int borderHeight, int bubbleCount, String playerName1, String playerName2, int playerHeight) {
+	public Map (int borderWidth, int borderHeight, int[] bubbleCounts, int[] bubbleSizes, String playerName1, String playerName2, int playerHeight, int speedX, int speedY) {
+		this.borderHeight = borderHeight;
+		this.borderWidth = borderWidth;
+		this.speedX = speedX;
+		this.speedY = speedY;
+		
+		if (!playerName2.equals("")) {
+			playerCount = 2;
+			players[1] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName2, playerHeight);
+		}
+		
 		
 		// Add players and spawn players and bubbles
 		players[0] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName1, playerHeight);
-		players[1] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName2, playerHeight);
+		
 		
 		Random rand = new Random();
 
 		// Add bubbles
 		bubbles = new ArrayList<Bubble>();
-		for (int i = 0; i < bubbleCount; i++) {
-			r = rand.nextFloat();
-			g = rand.nextFloat();
-			b = rand.nextFloat();
+		for (int i = 0; i < bubbleCounts.length; i++) {
+			//r = rand.nextFloat();
+			//g = rand.nextFloat();
+			//b = rand.nextFloat();
 			if (i % 2 == 0) {
-				bubbles.add(new Bubble((rand.nextInt(90)+10), new Color(r,g,b), new Point((rand.nextInt(750)),(rand.nextInt(300))), borderHeight, borderWidth, 1, 0));
+				makeBubbles(i,bubbleSizes[i],bubbleCounts[i],rand.nextInt(borderWidth-bubbleSizes[i]),rand.nextInt(300));
 			} else {
-				bubbles.add(new Bubble((rand.nextInt(90)+10), new Color(r,g,b), new Point((rand.nextInt(750)),(rand.nextInt(300))), borderHeight, borderWidth, -1, 0));
+				makeBubbles(i,bubbleSizes[i],bubbleCounts[i],rand.nextInt(borderWidth-bubbleSizes[i]),rand.nextInt(300));
 			}
 		}
+	}
+	
+	public void makeBubbles(int colorID, int size, int amount, int x, int y) {
+		for (int i = 0; i < amount; i++) {
+			System.out.println("Making bubbles");
+			if (i%2 == 0) {
+				bubbles.add(new Bubble(size, getColor(colorID), new Point(x,y), borderHeight, borderWidth, speedX, speedY));
+			} else {
+				bubbles.add(new Bubble(size, getColor(colorID), new Point(x,y), borderHeight, borderWidth, -speedX, speedY));
+			}
+			
+		}
+	}
+	
+	public Color getColor(int i) {
+		i = (i-1)%10;
+		Color[] colors = new Color[] {Color.red, Color.orange, Color.yellow, Color.green, Color.cyan, Color.blue, Color.pink, Color.magenta, Color.DARK_GRAY, Color.black};
+		return colors[i];
 	}
 	
 	// Make a function to remove balls from the array, if player is dead, remove player from array

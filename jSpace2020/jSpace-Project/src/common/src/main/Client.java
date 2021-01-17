@@ -160,6 +160,7 @@ public class Client {
         waitingRoom.getStartButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+         
                     gameRoom.put(FROM, name, START_GAME);
                 } catch (InterruptedException err) {}
             }
