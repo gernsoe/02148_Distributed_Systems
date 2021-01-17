@@ -337,7 +337,7 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 	}
 
 	public void setUserName1(String name) {
-		textField_player1.setText(name);
+		Player1Label.setText(name);
 	}
 
 	public void setUserName2(String name) {
