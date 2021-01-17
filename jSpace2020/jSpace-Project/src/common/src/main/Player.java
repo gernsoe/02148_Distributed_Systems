@@ -20,7 +20,7 @@ public class Player {
 	public Player(Point playerPos, int borderWidth, String playerName, int playerHeight, int hearts) {
 		this.playerHeight = playerHeight;
 		this.hearts = hearts;
-		playerWidth = playerHeight/3*2;
+		playerWidth = (playerHeight/3)*2;
 		this.player = playerPos;
 		this.playerName = playerName;
 		this.borderWidth = borderWidth;
@@ -29,7 +29,7 @@ public class Player {
 	// Player movement and collision with wall
 	public void goRight() {
 		if (player.getX() + (stepSize + playerWidth) <= borderWidth & isAlive) {
-			System.out.println("Going right at " + player.toString());
+			// System.out.println("Going right at " + player.toString());
 			player.setX(player.getX() + stepSize);
 		}
 	}
@@ -37,7 +37,7 @@ public class Player {
 	public void goLeft() {
 		if (player.getX() - playerWidth >= 0 & isAlive) {
 			player.setX(player.getX() - stepSize);
-			System.out.println("Going left at " + player.toString());
+			// System.out.println("Going left at " + player.toString());
 		}
 	}
 	

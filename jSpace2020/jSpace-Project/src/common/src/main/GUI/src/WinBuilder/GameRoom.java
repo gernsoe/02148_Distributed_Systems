@@ -27,7 +27,7 @@ import javax.swing.SwingConstants;
 public class GameRoom implements KeyListener, ActionListener, WindowListener {
 	
 	private Timer timer;
-	private int delay = 17, playerHeight = 24, timeLeftForInvincibility1 = (1000/delay)*3, 
+	private int delay = 17, playerHeight = 48, timeLeftForInvincibility1 = (1000/delay)*3, 
 			timeLeftForInvincibility2 = (1000/delay)*3;
 	static int score1 = 0, score2 = 0, level = 1;
 	private JFrame frame;
@@ -118,8 +118,11 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 					g.setColor(game.getBubbles().get(i).getColor());
 					
 					// Bubble collision with player
-					if(game.getPlayer1().isAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getShape())) {
+					if(game.getPlayer1().isAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getShape()) && 
+							game.getBubbles().get(i).getShape().getBounds2D().intersects(game.getPlayer1().getShape().getBounds2D())) {
 						// Lose life if player gets hit and restart level, if dead then stop game
+						System.out.println("bubble shape" + game.getBubbles().get(i).getShape().getBounds2D());
+						System.out.println("player shape" + game.getPlayer1().getShape().toString());
 						if (game.getPlayer1().getHearts() == 3) {
 							Player1Heart3.setVisible(false);
 						} 
@@ -337,7 +340,7 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 	}
 
 	public void setUserName1(String name) {
-		textField_player1.setText(name);
+		Player1Label.setText(name);
 	}
 
 	public void setUserName2(String name) {

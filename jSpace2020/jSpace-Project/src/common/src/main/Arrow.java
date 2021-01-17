@@ -40,8 +40,8 @@ public class Arrow {
 	}
 	
 	public void updatePos() {
-		System.out.println(height);
-		System.out.println(arrow.toString());
+		//System.out.println(height);
+		//System.out.println(arrow.toString());
 		if (arrow.getY() > -1) {
 			height += speed;
 			arrow.setY(arrow.getY() - speed);
