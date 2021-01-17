@@ -69,6 +69,7 @@ public class WaitingRoom {
 		frmWaitingRoom.setSize(1000,700);
 		frmWaitingRoom.setLocationRelativeTo(null);
 		
+		
 		//Logo
 		JLabel lblNewLabel_3 = new JLabel();
 		Image img2 = new ImageIcon(this.getClass().getResource("/BubShooter.png")).getImage();
