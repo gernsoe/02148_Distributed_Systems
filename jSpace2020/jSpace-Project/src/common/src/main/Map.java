@@ -6,14 +6,15 @@ import java.util.Random;
 
 public class Map {
 	
-	private int playerCount = 1, playerHeight = 20, borderHeight, borderWidth, speedX, speedY;
+	private int playerCount = 1, borderHeight, borderWidth;
+	double speedX, speedY;
 	// Changed later to ball/bubbles class
 	private float r, g, b;
 	ArrayList<Bubble> bubbles;
 	Arrow arrow;
 	Player players[] = new Player[playerCount];
 
-	public Map (int borderWidth, int borderHeight, int[] bubbleCounts, int[] bubbleSizes, String playerName1, String playerName2, int playerHeight, int speedX, int speedY) {
+	public Map (int borderWidth, int borderHeight, int[] bubbleCounts, int[] bubbleSizes, String playerName1, String playerName2, int playerHeight, double speedX, double speedY) {
 		this.borderHeight = borderHeight;
 		this.borderWidth = borderWidth;
 		this.speedX = speedX;
@@ -47,7 +48,6 @@ public class Map {
 	
 	public void makeBubbles(int colorID, int size, int amount, int x, int y) {
 		for (int i = 0; i < amount; i++) {
-			System.out.println("Making bubbles");
 			if (i%2 == 0) {
 				bubbles.add(new Bubble(size, getColor(colorID), new Point(x,y), borderHeight, borderWidth, speedX, speedY));
 			} else {

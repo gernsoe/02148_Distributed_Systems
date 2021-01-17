@@ -7,7 +7,8 @@ public class LevelHandler {
 	
 	Map game;
 	String player1, player2;
-	int timer, level, bWidth, bHeight, pHeight, speedX, speedY;
+	int timer, level, bWidth, bHeight, pHeight;
+	double speedX, speedY;
 	int[] bubbleCounts;
 	int[] bubbleSizes = new int[] {20,30,45,68,80,100,130,160,200,270}; 
 	
