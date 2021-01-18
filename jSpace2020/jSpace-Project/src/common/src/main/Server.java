@@ -27,6 +27,7 @@ public class Server {
 		// Users request to join room, server sends rooms
 		Space lobby = new SequentialSpace();
 		
+		//String host = "tcp://2.tcp.ngrok.io:10963/";
 		String host = "tcp://127.0.0.1:9001/";
 		String repoURI = host + "?keep";
 		
