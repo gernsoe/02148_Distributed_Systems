@@ -28,11 +28,11 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 	
 	private Timer timer;
 	private int delay = 17, playerHeight = 48, timeLeftForInvincibility1 = (1000/delay)*3, 
-			timeLeftForInvincibility2 = (1000/delay)*3;
+			timeLeftForInvincibility2 = (1000/delay)*3, moveDelay = 0;
 	int score, level = 1, hearts = 3;
 	private JFrame frame;
 	private JPanel panel;
-	private boolean left1, left2, right1, right2;
+	private boolean left1, left2, right1, right2, shooting;
 	private LevelHandler game;
 	private int borderWidth = 800, borderHeight = 600;
 	private JLabel lblNewLabel_1, lblNewLabel_3, lblNewLabel, Label_level;
@@ -99,9 +99,9 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 				}
 				
 				// Player 1
-				if(left1) {
+				if(left1 & !shooting) {
 					g.drawImage(player1left,(int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight(), null);
-				} else if (right1) {
+				} else if (right1 & !shooting) {
 					g.drawImage(player1right,(int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight(), null);
 				} else {
 					g.drawImage(player1front,(int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight(), null);
@@ -291,17 +291,26 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			game.getPlayer1().goRight();
-			right1 = true;
-		
-		}
-		if(e.getKeyCode() == KeyEvent.VK_LEFT) {	
-			game.getPlayer1().goLeft();
-			left1 = true;
-		}
-		if(e.getKeyCode() == KeyEvent.VK_SPACE & !right1 & !left1) {
-			game.getPlayer1().makeArrow();
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_RIGHT:
+			if (!shooting) {
+				game.getPlayer1().goRight();
+				right1 = true;
+			}
+			break;
+		case KeyEvent.VK_LEFT:
+			if (!shooting) {
+				game.getPlayer1().goLeft();
+				left1 = true;	
+			}
+			break;
+		case KeyEvent.VK_SPACE:
+			if (!game.getPlayer1().getArrowIsAlive()) {
+				shooting = true;
+				game.getPlayer1().makeArrow();
+				moveDelay = (50/delay);
+			}
+			break;
 		}
 	}
 
@@ -327,12 +336,18 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 			Label_leveltext.setText("" + level);
 		}
 		panel.repaint();
+		
 		// Keep moving the player 1
-		if (left1) {
+		if (shooting) {
+			moveDelay--;
+			if (moveDelay == 0) {
+				shooting = false;
+			}
+		} else if (left1 & !shooting) {
 			game.getPlayer1().goLeft();
-		} else if (right1) {
+		} else if (right1 & !shooting) {
 			game.getPlayer1().goRight();
-		}
+		} 
 	}
 
 	public void setUserName1(String name) {
