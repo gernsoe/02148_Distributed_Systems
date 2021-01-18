@@ -81,7 +81,7 @@ public class WaitingRoom {
 		});
 		btnNewButton.setBounds(438, 282, 117, 29);
 		btnNewButton.setVisible(false);
-		//btnNewButton.setEnabled(false);
+		btnNewButton.setEnabled(false);
 		frmWaitingRoom.getContentPane().add(btnNewButton);
 		lblNewLabel_3.setIcon(new ImageIcon(img2));
 		lblNewLabel_3.setBounds(261, 44, 544, 158);
@@ -130,7 +130,7 @@ public class WaitingRoom {
 		//Button
 		System.out.println("Button created");
 		btnNewButton.setVisible(true);
-		//btnNewButton.setEnabled(true);
+		btnNewButton.setEnabled(true);
 	}
 
 	public JButton getStartButton() {
