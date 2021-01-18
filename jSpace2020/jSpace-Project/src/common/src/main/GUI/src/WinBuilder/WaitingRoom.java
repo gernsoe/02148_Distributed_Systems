@@ -82,7 +82,7 @@ public class WaitingRoom {
 		});
 		btnNewButton.setBounds(438, 282, 117, 29);
 		btnNewButton.setVisible(false);
-		//btnNewButton.setEnabled(false);
+		btnNewButton.setEnabled(false);
 		frmWaitingRoom.getContentPane().add(btnNewButton);
 		
 		//Character 1
@@ -154,7 +154,7 @@ public class WaitingRoom {
 		//Button
 		System.out.println("Button created");
 		btnNewButton.setVisible(true);
-		//btnNewButton.setEnabled(true);
+		btnNewButton.setEnabled(true);
 	}
 	
 	public JButton getStartButton() {
