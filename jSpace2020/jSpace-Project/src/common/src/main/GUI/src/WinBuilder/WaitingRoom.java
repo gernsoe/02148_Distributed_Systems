@@ -139,22 +139,12 @@ public class WaitingRoom {
 		JLabel lblNewLabel_4 = new JLabel("");
 		lblNewLabel_4.setIcon(new ImageIcon(img));
 		lblNewLabel_4.setBounds(760, 0, 320, 678);
-		frmWaitingRoom.getContentPane().add(lblNewLabel_4);
-		
+		frmWaitingRoom.getContentPane().add(lblNewLabel_4);	
 	}
-	/*
-	public void figure1() {
-		figure1.setVisible(true);
-	}
-	public JLabel getImg() {
-		return figure1;
-		
-	}
-	 */
+
 	public void figure1(){
 		label_figure1.setVisible(true);
 	}
-	
 	
 	public void figure2(){
 		label_figure2.setVisible(true);
@@ -166,12 +156,11 @@ public class WaitingRoom {
 		btnNewButton.setVisible(true);
 		//btnNewButton.setEnabled(true);
 	}
-
+	
 	public JButton getStartButton() {
 		return btnNewButton;
 	}
 	
-
 	public void setUserName1(String name) {
 		textField_User1.setText(name);
 	}
