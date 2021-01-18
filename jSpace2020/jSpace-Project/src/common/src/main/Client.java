@@ -174,10 +174,17 @@ public class Client {
                 try {
                     name = menu.getName();
                     roomID = menu.getRoomID();
-                    if (name.equals("") || roomID.equals("") || name.equals(null) || roomID.equals(null)) {
+                    if (name.equals("") || name.equals(null)  ) {
                         //TODO create popup
-                        System.out.println("Please enter a name and roomID");
-                    } else {
+                    	menu.missingName();
+                        System.out.println("Name is missing");
+                        
+                    } if (roomID.equals("") || roomID.equals(null)) {
+                    	menu.missingRoomID();
+                    	System.out.println("roomID is missing");
+                    	
+                    }
+                    if (!name.equals("") && !roomID.equals("") && !name.equals(null) && !roomID.equals(null) ) {
                         lobby.put("enter", name, roomID);
                         loginButtonClicked = true;
                     }

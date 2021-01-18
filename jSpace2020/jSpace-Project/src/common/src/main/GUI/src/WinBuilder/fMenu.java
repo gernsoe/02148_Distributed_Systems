@@ -17,6 +17,10 @@ public class fMenu {
 	private JTextField textField_Name;
 	private JTextField textField_RoomID;
 	private JButton btnNewButton;
+	private JLabel lbNameMissing;
+	private JLabel lblMissingRoomID;
+	private JLabel lblFullRoom;
+	private JLabel lblNewRoomID;
 
 	/**
 	 * Create the application.
@@ -60,14 +64,22 @@ public class fMenu {
 			}
 		});
 		
+
+		
 		btnNewButton.setBounds(447, 477, 117, 29);
 		frame.getContentPane().add(btnNewButton); 
-		//btnNewButton.addActionListener(new ActionListener());
 		
-		textField_RoomID = new JTextField();
-		textField_RoomID.setBounds(411, 398, 188, 26);
-		frame.getContentPane().add(textField_RoomID);
-		textField_RoomID.setColumns(10);
+		//Room is full
+		lblFullRoom = new JLabel("Room is full!!");
+		lblFullRoom.setBounds(457, 507, 142, 16);
+		frame.getContentPane().add(lblFullRoom);
+		lblFullRoom.setVisible(false);
+		
+		//New roomID 
+		lblNewRoomID = new JLabel("Please write new RoomID");
+		lblNewRoomID.setBounds(413, 425, 186, 16);
+		frame.getContentPane().add(lblNewRoomID);
+		lblNewRoomID.setVisible(false);
 		
 		//RoomID
 		JLabel roomIDLabel = new JLabel("RoomID"); 
@@ -75,7 +87,18 @@ public class fMenu {
 		roomIDLabel.setBounds(413, 380, 104, 16);
 		frame.getContentPane().add(roomIDLabel);
 		
-		JLabel nameLabel = new JLabel("Name"); //Name
+		textField_RoomID = new JTextField();
+		textField_RoomID.setBounds(411, 398, 188, 26);
+		frame.getContentPane().add(textField_RoomID);
+		textField_RoomID.setColumns(10);
+		
+		lblMissingRoomID = new JLabel("Please write RoomID");
+		lblMissingRoomID.setBounds(411, 425, 188, 16);
+		frame.getContentPane().add(lblMissingRoomID);
+		lblMissingRoomID.setVisible(false);
+		
+		//Name
+		JLabel nameLabel = new JLabel("Name"); 
 		nameLabel.setForeground(new Color(255, 255, 255));
 		nameLabel.setBounds(415, 300, 115, 16);
 		frame.getContentPane().add(nameLabel);
@@ -84,6 +107,12 @@ public class fMenu {
 		textField_Name.setBounds(411, 319, 188, 26);
 		frame.getContentPane().add(textField_Name);
 		textField_Name.setColumns(10);
+		
+		//Missing Name
+		lbNameMissing = new JLabel("Please write a name");
+		lbNameMissing.setBounds(415, 343, 168, 16);
+		frame.getContentPane().add(lbNameMissing);
+		lbNameMissing.setVisible(false);
 		
 		JLabel lblNewLabel_6 = new JLabel("");
 		Image img2 = new ImageIcon(this.getClass().getResource("/usnId.png")).getImage();
@@ -119,9 +148,27 @@ public class fMenu {
 		NewLabel_bg.setBounds(756, -14, 258, 724);
 		NewLabel_bg.setIcon(new ImageIcon(img));
 		frame.getContentPane().add(NewLabel_bg);
+		
+	
 	}
 	public void closeWindow() {
 		frame.setVisible(false);
+	}
+	
+	public void roomFull() {
+		lblFullRoom.setVisible(true);
+	}
+	
+	public void missingName() {
+		lbNameMissing.setVisible(true);
+	}
+	
+	public void pleaseNewRoomID() {
+		lblNewRoomID.setVisible(true);
+	}
+	
+	public void missingRoomID() {
+		lblMissingRoomID.setVisible(true);
 	}
 
 	public JButton getLoginButton() {
@@ -142,4 +189,5 @@ public class fMenu {
 	public String getRoomID() {
 		return textField_RoomID.getText();
 	}
+
 }

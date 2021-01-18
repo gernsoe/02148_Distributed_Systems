@@ -36,6 +36,7 @@ public class WaitingRoom {
 	private JPanel panelRoomID ;
 	private JLabel lblRoomID;
 	private String lRoomID;
+	private JLabel lblWaiting;
 
 	/**
 	 * Launch the application.
@@ -76,6 +77,12 @@ public class WaitingRoom {
 		frmWaitingRoom.getContentPane().setLayout(null);
 		frmWaitingRoom.setSize(1000,700);
 		frmWaitingRoom.setLocationRelativeTo(null);
+		
+		lblWaiting = new JLabel("Waiting for host to start game...");
+		lblWaiting.setFont(new Font("Lucida Grande", Font.BOLD | Font.ITALIC, 16));
+		lblWaiting.setBounds(391, 458, 278, 29);
+		frmWaitingRoom.getContentPane().add(lblWaiting);
+		lblWaiting.setVisible(false);
 		
 		//Room ID panel
 		lblRoomID = new JLabel();
@@ -169,6 +176,7 @@ public class WaitingRoom {
 		lblNewLabel_4.setBounds(760, 0, 320, 678);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_4);		
 		
+		
 
 	}
 
@@ -192,6 +200,11 @@ public class WaitingRoom {
 	public void createStartButton() {
 		btnStart.setVisible(true);
 		btnStart.setEnabled(true);
+	}
+
+	public void hostGame() {
+		lblWaiting.setVisible(true);
+	
 	}
 	
 	public JButton getStartButton() {
