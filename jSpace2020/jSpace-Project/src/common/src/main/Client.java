@@ -75,17 +75,23 @@ public class Client {
             // Check if client is a host
             if (permissions.equals("host")) {
                 wRoom.createStartButton();
+                //wRoom.createLeaveButton();
                 // Add functionallity to the start button
                 System.out.println("now has permissions");
                 startGameButton(wRoom, gameRoom);
+                
                 while (inLobby) {
                     wRoom.setUserName1(name);
+                    wRoom.figure1();
+                    wRoom.setRoomID("Welcome to room "+roomID);
 
                     if (player2 == null) {
                         Object[] playerJoined = gameRoom.getp(new ActualField(TO), new ActualField(permissions), new ActualField(PLAYER_JOINED), new FormalField(String.class));
                         if (playerJoined != null) {
                             player2 = (String) playerJoined[3];
                             wRoom.setUserName2(player2);
+                            wRoom.figure2();
+                            //wRoom.createLeaveButton();
                             System.out.println("Player 2 joined");
                         } 
                     }
@@ -105,9 +111,11 @@ public class Client {
                 Object[] lobbyStatus = gameRoom.get(new ActualField(TO), new ActualField(permissions), new ActualField(PLAYER_JOINED), new FormalField(String.class));
 
                 wRoom.setUserName1(name);
+                wRoom.figure1();
                 player1 = (String) lobbyStatus[3];
                 wRoom.setUserName2(player1);  // Set host name under sofa
-
+                wRoom.figure2();
+                
                 System.out.println("Waiting for host to start the game");
                 gameRoom.get(new ActualField(TO), new ActualField(permissions), new ActualField(GAME_STARTED));
                 enterGame(wRoom);
@@ -168,5 +176,14 @@ public class Client {
                 } catch (InterruptedException err) {}
             }
         });
+        /*waitingRoom.getLeaveButton().addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    
+                } catch (InterruptedException err) {}
+            }
+        });*/
     }
+    
+    
 }
