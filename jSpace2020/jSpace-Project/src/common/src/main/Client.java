@@ -111,9 +111,10 @@ public class Client {
                 Object[] lobbyStatus = gameRoom.get(new ActualField(TO), new ActualField(permissions), new ActualField(PLAYER_JOINED), new FormalField(String.class));
 
                 wRoom.setUserName1(name);
+                wRoom.figure1();
                 player1 = (String) lobbyStatus[3];
                 wRoom.setUserName2(player1);  // Set host name under sofa
-                wRoom.figure1();
+                wRoom.figure2();
 
                 System.out.println("Waiting for host to start the game");
                 gameRoom.get(new ActualField(TO), new ActualField(permissions), new ActualField(GAME_STARTED));
