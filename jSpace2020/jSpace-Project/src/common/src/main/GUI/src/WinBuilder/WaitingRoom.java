@@ -180,12 +180,20 @@ public class WaitingRoom {
 
 	}
 
-	public void figure1(){
-		label_figure1.setVisible(true);
+	public void toggleFigure1(){
+		if (label_figure1.isVisible()) {
+			label_figure1.setVisible(false); 
+		} else {
+			label_figure1.setVisible(true);
+		}
 	}
 	
-	public void figure2(){
-		label_figure2.setVisible(true);
+	public void toggleFigure2(){
+		if (label_figure2.isVisible()) {
+			label_figure2.setVisible(false); 
+		} else {
+			label_figure2.setVisible(true);
+		}
 	}
 	
 	public void createLeaveButton() {

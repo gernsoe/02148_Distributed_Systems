@@ -14,12 +14,13 @@ import java.net.UnknownHostException;
 public class Client {
     static String name, roomID, roomURI;
     static String otherPlayerName = null;
-    public static String permissions;
+    public static String myPermission;
     public static boolean loginButtonClicked = false;
     public static boolean startButtonClicked = false;
     public static boolean inLobby = true;
     public static boolean connected = true;
-    public static final String LEAVE_ROOM = "leave_room";
+    public static final String LEAVE_ROOM = "leave_room";   // used to signal that a player wants to leave a room
+    public static final String LEFT_ROOM = "left_room"; 	// used to signal when the player is out of the room
     public static final String READY_TO_PLAY = "ready_to_play";
     public static final String SETTINGS = "settings";
     public static final String PLAYER_JOINED = "player_joined";
@@ -29,6 +30,8 @@ public class Client {
     public static final String GAME_STARTED = "game_started";
     public static final String TO = "to";
     public static final String FROM = "from";
+    public static final String HOST = "host";
+    public static final String PARTICIPANT = "participant";
 
     //String host = "tcp://2.tcp.ngrok.io:10963/";
     public static final String host = "tcp://127.0.0.1:9001/";
@@ -82,86 +85,68 @@ public class Client {
     public static void preGameLobby() throws InterruptedException, UnknownHostException, IOException {
         gameRoom = new RemoteSpace(roomURI);
         gameRoom.put(FROM, name, READY_TO_PLAY);
-        permissions = (String) gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(PERMISSION), new FormalField(String.class))[3];
+        myPermission = (String) gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(PERMISSION), new FormalField(String.class))[3];
         
-        System.out.print(permissions);
         WaitingRoom wRoom = new WaitingRoom(name, roomID);
+        wRoom.createLeaveButton();
+        leaveRoomButton(wRoom);
 
         // Check if client is a host
-        if (permissions.equals("host")) {
+        if (myPermission.equals(HOST)) {
+
             // Add buttons visble to host
             wRoom.createStartButton();
-            wRoom.createLeaveButton();
-
-            // Add functionallity to the start button
-            System.out.println("now has permissions");
             startGameButton(wRoom);
-            leaveRoomButton(wRoom);
+            wRoom.setUserName1(name);
+            wRoom.toggleFigure1();
+            wRoom.setRoomID("Welcome to room "+roomID);
             
             while (inLobby) {
-                wRoom.setUserName1(name);
-                wRoom.figure1();
-                wRoom.setRoomID("Welcome to room "+roomID);
-
                 if (otherPlayerName == null) {
-                    Object[] playerJoined = gameRoom.getp(new ActualField(TO), new ActualField(permissions), new ActualField(PLAYER_JOINED), new FormalField(String.class));
+                    Object[] playerJoined = gameRoom.getp(new ActualField(TO), new ActualField(myPermission), new ActualField(PLAYER_JOINED), new FormalField(String.class));
                     if (playerJoined != null) {
                         otherPlayerName = (String) playerJoined[3];
                         wRoom.setUserName2(otherPlayerName);
-                        wRoom.figure2();
+                        wRoom.toggleFigure2();
                         //wRoom.createLeaveButton();
                         System.out.println("Player 2 joined");
                     } 
                 }
                 
-                Object[] gameStarted = gameRoom.getp(new ActualField(TO), new ActualField(permissions), new ActualField(GAME_STARTED));
-                if (gameStarted != null) {
-                    wRoom.closeWindow();
-                    gameLoop();
-                }
+                checkGameStarted(wRoom);
+                checkLeaveRoom(wRoom);
 
-                Object[] gameLeft = gameRoom.getp(new ActualField(TO), new ActualField(permissions), new ActualField(LEAVE_ROOM));
-                if (gameLeft != null) {
-                    wRoom.closeWindow();
-                    joinRoom();
-                }
-                
                 //Click a button to set settings
                 //gameRoom.put(name, SETTINGS);
             }
         
         // If client is not host
-        } else if (permissions.equals("participant")) {
+        } else if (myPermission.equals(PARTICIPANT)) {
             // Get host name
-            Object[] lobbyStatus = gameRoom.get(new ActualField(TO), new ActualField(permissions), new ActualField(PLAYER_JOINED), new FormalField(String.class));
+            Object[] lobbyStatus = gameRoom.get(new ActualField(TO), new ActualField(myPermission), new ActualField(PLAYER_JOINED), new FormalField(String.class));
 
             // Setup waiting room for participant
-            wRoom.createLeaveButton();
             wRoom.setUserName1(name);
-            wRoom.figure1();
+            wRoom.toggleFigure1();
             otherPlayerName = (String) lobbyStatus[3];
             wRoom.setUserName2(otherPlayerName);  // Set host name under sofa
-            wRoom.figure2();
+            wRoom.toggleFigure2();
             wRoom.hostGame();
             wRoom.setRoomID("Welcome to room "+roomID);
             
             System.out.println("Waiting for host to start the game");
-            gameRoom.get(new ActualField(TO), new ActualField(permissions), new ActualField(GAME_STARTED));
-            wRoom.closeWindow();
-            gameLoop();
+
+            while (inLobby) {
+                checkGameStarted(wRoom);
+                checkLeaveRoom(wRoom);
+            }   
         }
     }
 
     public static void gameLoop() throws InterruptedException {
         GameRoom gRoom = new GameRoom();
-        if (permissions.equals("host")) {
-            gRoom.setUserName1(name);
-            gRoom.setUserName2(otherPlayerName);
-        }
-        if (permissions.equals("participant")) {
-            gRoom.setUserName1(name);
-            gRoom.setUserName2(otherPlayerName);
-        }
+        gRoom.setUserName1(name);
+        gRoom.setUserName2(otherPlayerName);
 
         // Game loop
         while(connected) {
@@ -199,7 +184,7 @@ public class Client {
         wRoom.getStartButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    gameRoom.put(FROM, permissions, START_GAME);
+                    gameRoom.put(FROM, myPermission, START_GAME);
                 } catch (InterruptedException err) {}
             }
         });
@@ -209,7 +194,7 @@ public class Client {
         wRoom.getLeaveButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    gameRoom.put(FROM, permissions, LEAVE_ROOM);
+                    gameRoom.put(FROM, myPermission, LEAVE_ROOM);
                 } catch (InterruptedException err) {}
             }
         });
@@ -220,10 +205,54 @@ public class Client {
         roomID = null;
         roomURI = null;
         otherPlayerName = null;
-        permissions = null;
+        myPermission = null;
         loginButtonClicked = false;
         startButtonClicked = false;
         inLobby = true;
         connected = true;
+    }
+
+    public static void checkGameStarted(WaitingRoom wRoom) throws InterruptedException {
+        Object[] gameStarted = gameRoom.getp(new ActualField(TO), new ActualField(myPermission), new ActualField(GAME_STARTED));
+        if (gameStarted != null) {
+            wRoom.closeWindow();
+            gameLoop();
+        }
+    }
+
+    public static void checkLeaveRoom(WaitingRoom wRoom) throws InterruptedException, IOException {
+        Object[] gameLeft = gameRoom.getp(new ActualField(TO), new ActualField(myPermission), new ActualField(LEAVE_ROOM), new FormalField(String.class));
+        
+        if (gameLeft != null) {
+            String me = (String) gameLeft[1];
+            String whoLeft = (String) gameLeft[3];
+            switch (me) {
+                case HOST:
+                    switch (whoLeft) {
+                        case HOST:
+                            wRoom.closeWindow();
+                            gameRoom.put(FROM, myPermission, LEFT_ROOM);
+                            joinRoom();
+
+                            break;
+                        case PARTICIPANT:
+                            wRoom.toggleFigure2();
+                            wRoom.setUserName2("");
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+                case PARTICIPANT:
+                    wRoom.closeWindow();
+                    gameRoom.put(FROM, myPermission, LEFT_ROOM);
+                    joinRoom();
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
     }
 }

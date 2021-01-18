@@ -72,7 +72,7 @@ public class LevelHandler {
 	public Color getLevelColor(int i) {
 		i = i%2;
 		Color lightCyan = new Color(135, 206, 250);
-		Color[] colors = new Color[] {Color.white,lightCyan};
+		Color[] colors = new Color[] {Color.LIGHT_GRAY,lightCyan};
 		return colors[i];
 	}
 }

@@ -1,6 +1,7 @@
- package common.src.main;
+package common.src.main;
 
 import org.jspace.*;
+import java.util.ArrayList;
 
 	/*
 	 *  Server checks that the name is valid (not empty, unique and not too long) 
@@ -27,6 +28,7 @@ public class Server {
 	public static final String PARTICIPANT = "participant";
 
 	public static void main(String[] args) throws InterruptedException {
+
 		SpaceRepository repo = new SpaceRepository();
 		
 		// Users request to join room, server sends rooms
@@ -93,10 +95,17 @@ public class Server {
 			Object[] playerLeft = rooms.getp(new FormalField(String.class), new ActualField(LEFT_ROOM), new FormalField(String.class)); // (roomID, LEFT_ROOM, participant/host)
 
 			if (playerLeft != null) {
-				if (((String) playerLeft[2]).equals(HOST)) {
-					rooms.getp(new ActualField((String) playerLeft[0]), new FormalField(Integer.class), new FormalField(Integer.class));
-				} else if (((String) playerLeft[2]).equals(PARTICIPANT)) {
 
+				// Delete the room 
+				if (((String) playerLeft[2]).equals(HOST)) {
+					rooms.getp(new ActualField((String) playerLeft[0]), new FormalField(Integer.class), new FormalField(Integer.class)); 
+				} 
+
+				// Decrement the player counter
+				else if (((String) playerLeft[2]).equals(PARTICIPANT)) {
+					Object[] roomToChange = rooms.getp(new ActualField((String) playerLeft[0]), new FormalField(Integer.class), new FormalField(Integer.class));
+					int updatedPlayerCount = (int) roomToChange[2] - 1;
+					rooms.put((String) roomToChange[0], (int) roomToChange[1], updatedPlayerCount);
 				}
 			}
 			rooms.put(LOCK);	// Release mutual exclusion
@@ -151,9 +160,9 @@ class roomHandler implements Runnable {
 				// Get instruction (name, instruction) - where an instruction is either ready, start or leave room
 				Object[] waitingRoomInstruction = gameRoom.get(new ActualField(FROM), new FormalField(String.class), new FormalField(String.class));
 				String who = (String) waitingRoomInstruction[1];
-				String instruction = (String) waitingRoomInstruction[2];
+				String singlePlayerInstruction = (String) waitingRoomInstruction[2];
 
-				switch (instruction) {
+				switch (singlePlayerInstruction) {
 					case READY_TO_PLAY:	// Player 2 joined
 						player2 = who;
 						System.out.println(player2 + " is ready to play!!!");
@@ -162,45 +171,68 @@ class roomHandler implements Runnable {
 						gameRoom.put(TO, HOST, PLAYER_JOINED, player2);
 						gameRoom.put(TO, player2, PERMISSION, PARTICIPANT); // Tell player 2 that he's participant
 						gameRoom.put(TO, PARTICIPANT, PLAYER_JOINED, player1);
-						String start_settings_inst = (String) gameRoom.get(new ActualField(FROM), new ActualField(HOST), new FormalField(String.class))[2];
-
-						switch (start_settings_inst) {
-							case START_GAME:	
-								System.out.println("Starting the game");
-								gameRoom.put(TO, HOST, GAME_STARTED);			//Player one
-								gameRoom.put(TO, PARTICIPANT, GAME_STARTED); 	//Player two
-								inLobby = false;
+						Object[] start_settings_inst = gameRoom.get(new ActualField(FROM), new FormalField(String.class), new FormalField(String.class));
+						String fromWho = (String) start_settings_inst[1];
+						String multiPlayerInstruction = (String) start_settings_inst[2];
+						
+						switch (fromWho) {
+							case HOST:
+								switch (multiPlayerInstruction) {
+									case START_GAME:	
+										System.out.println("Starting the game");
+										gameRoom.put(TO, HOST, GAME_STARTED);			//Player one
+										gameRoom.put(TO, PARTICIPANT, GAME_STARTED); 	//Player two
+										inLobby = false;
+										break;
+									
+									case SETTINGS:
+										// Implement settings
+									System.out.println("Implement settings");
+										break;
+		
+									case LEAVE_ROOM:	// Host leaves room when it's full
+										gameRoom.put(TO, HOST, LEAVE_ROOM, HOST);
+										gameRoom.put(TO, PARTICIPANT, LEAVE_ROOM, HOST);
+										gameRoom.get(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(LEFT_ROOM));
+										gameRoom.get(new ActualField(FROM), new ActualField(HOST), new ActualField(LEFT_ROOM));
+										rooms.put(roomID, LEFT_ROOM, PARTICIPANT);
+										rooms.put(roomID, LEFT_ROOM, HOST);
+										Thread.interrupted();										
+										break;
+		
+									default:
+										System.out.println("Invalid command");
+										break;
+								}
 								break;
 							
-							case SETTINGS:
-								// Implement settings
-							System.out.println("Implement settings");
+							case PARTICIPANT:	// Participant leave room
+								gameRoom.put(TO, HOST, LEAVE_ROOM, PARTICIPANT);
+								gameRoom.put(TO, PARTICIPANT, LEAVE_ROOM, PARTICIPANT);
+								gameRoom.get(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(LEFT_ROOM));
+								rooms.put(roomID, LEFT_ROOM, PARTICIPANT);
+								Thread.interrupted();
 								break;
-
-							case LEAVE_ROOM:
-
-								break;
-
+								
 							default:
-								System.out.println("Invalid command");
+								System.out.println("Not a valid user");
 								break;
 						}
-
+						
 						break;
-					case START_GAME:	// When player1 is alone
+					case START_GAME:	// When host is alone
 						gameRoom.put(TO, HOST, GAME_STARTED);
 						System.out.println("Starting the game");
 						inLobby = false;
 
 						break;
-					case LEAVE_ROOM:
-						gameRoom.put(TO, HOST, LEAVE_ROOM, PARTICIPANT);
-						gameRoom.put(TO, PARTICIPANT, LEAVE_ROOM, PARTICIPANT);
-						gameRoom.get(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(LEFT_ROOM));
-						rooms.get(new ActualField(LOCK));
-						rooms.put(roomID, LEFT_ROOM, PARTICIPANT);
-						rooms.put(LOCK);
+					case LEAVE_ROOM:	// Leave room when host is alone
+						gameRoom.put(TO, HOST, LEAVE_ROOM, HOST);
+						gameRoom.get(new ActualField(FROM), new ActualField(HOST), new ActualField(LEFT_ROOM));
+						rooms.put(roomID, LEFT_ROOM, HOST);
+						Thread.interrupted();
 						break;
+
 					default:
 						System.out.println("Invalid command");
 						break;
