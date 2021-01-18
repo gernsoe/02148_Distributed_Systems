@@ -28,7 +28,9 @@ public class WaitingRoom {
 	private String permission;
 	private JLabel textField_User2, textField_User1;
 	private JButton btnNewButton;
-	
+	private JLabel figure1;
+	JLabel label_figure1 = new JLabel("");
+	JLabel label_figure2 = new JLabel("");
 
 	/**
 	 * Launch the application.
@@ -54,22 +56,21 @@ public class WaitingRoom {
 		this.roomID = roomID;
 		frmWaitingRoom.setVisible(true);
 		//startWaiting();
+		label_figure1.setVisible(false);
+		label_figure2.setVisible(false);
 		
 	}
-
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frmWaitingRoom = new JFrame();
-		
 		frmWaitingRoom.setTitle("Waiting Room");
 		frmWaitingRoom.setBounds(100, 100, 782, 546);
 		frmWaitingRoom.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmWaitingRoom.getContentPane().setLayout(null);
 		frmWaitingRoom.setSize(1000,700);
 		frmWaitingRoom.setLocationRelativeTo(null);
-		
 		
 		//Logo
 		JLabel lblNewLabel_3 = new JLabel();
@@ -83,9 +84,25 @@ public class WaitingRoom {
 		btnNewButton.setVisible(false);
 		btnNewButton.setEnabled(false);
 		frmWaitingRoom.getContentPane().add(btnNewButton);
+		
+		//Character 1
 		lblNewLabel_3.setIcon(new ImageIcon(img2));
 		lblNewLabel_3.setBounds(261, 44, 544, 158);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_3);
+		
+		//Figure 1
+		Image imgFigure1 = new ImageIcon(this.getClass().getResource("/figure1_front.png")).getImage();
+		label_figure1.setIcon(new ImageIcon(imgFigure1));
+		label_figure1.setBounds(146, 402, 96, 130);
+		frmWaitingRoom.getContentPane().add(label_figure1);
+		label_figure1.setVisible(false);
+		
+		//Character 2
+		Image imgFigure2 = new ImageIcon(this.getClass().getResource("/figure2_front.png")).getImage();
+		label_figure2.setBounds(760, 375, 88, 175);
+		frmWaitingRoom.getContentPane().add(label_figure2);
+		label_figure2.setIcon(new ImageIcon(imgFigure2));
+		
 
 		//User texfields
 		textField_User2 = new JLabel();
@@ -125,7 +142,24 @@ public class WaitingRoom {
 		frmWaitingRoom.getContentPane().add(lblNewLabel_4);
 		
 	}
-
+	/*
+	public void figure1() {
+		figure1.setVisible(true);
+	}
+	public JLabel getImg() {
+		return figure1;
+		
+	}
+	 */
+	public void figure1(){
+		label_figure1.setVisible(true);
+	}
+	
+	
+	public void figure2(){
+		label_figure2.setVisible(true);
+	}
+	
 	public void createStartButton() {
 		//Button
 		System.out.println("Button created");
@@ -136,6 +170,7 @@ public class WaitingRoom {
 	public JButton getStartButton() {
 		return btnNewButton;
 	}
+	
 
 	public void setUserName1(String name) {
 		textField_User1.setText(name);

@@ -14,7 +14,7 @@ public class Map {
 	Arrow arrow;
 	Player players[] = new Player[playerCount];
 
-	public Map (int borderWidth, int borderHeight, int[] bubbleCounts, int[] bubbleSizes, String playerName1, String playerName2, int playerHeight, double speedX, double speedY, int hearts) {
+	public Map (int borderWidth, int borderHeight, int[] bubbleCounts, int[] bubbleSizes, String playerName1, String playerName2, int playerHeight, double speedX, double speedY, int hearts, int scores) {
 		this.borderHeight = borderHeight;
 		this.borderWidth = borderWidth;
 		this.speedX = speedX;
@@ -22,12 +22,12 @@ public class Map {
 		
 		if (!playerName2.equals("")) {
 			playerCount = 2;
-			players[1] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName2, playerHeight, hearts);
+			players[1] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName2, playerHeight, hearts, scores);
 		}
 		
 		
 		// Add players and spawn players and bubbles
-		players[0] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts);
+		players[0] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts, scores);
 		
 		
 		

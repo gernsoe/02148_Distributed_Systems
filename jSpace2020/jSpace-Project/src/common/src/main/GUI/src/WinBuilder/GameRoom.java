@@ -27,9 +27,9 @@ import javax.swing.SwingConstants;
 public class GameRoom implements KeyListener, ActionListener, WindowListener {
 	
 	private Timer timer;
-	private int delay = 17, playerHeight = 24, timeLeftForInvincibility1 = (1000/delay)*3, 
+	private int delay = 17, playerHeight = 48, timeLeftForInvincibility1 = (1000/delay)*3, 
 			timeLeftForInvincibility2 = (1000/delay)*3;
-	static int score1 = 0, score2 = 0, level = 1;
+	int score, level = 1, hearts = 3;
 	private JFrame frame;
 	private JPanel panel;
 	private boolean left1, left2, right1, right2;
@@ -37,7 +37,7 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 	private int borderWidth = 800, borderHeight = 600;
 	private JLabel lblNewLabel_1, lblNewLabel_3, lblNewLabel, Label_level;
 	private JLabel textField_player1, textField_player2, Player1Heart1, Player1Heart2, Player1Heart3,
-		Player2Heart1, Player2Heart2, Player2Heart3, Label_leveltext, Player2Label, Player1Label;
+		Player2Heart1, Player2Heart2, Player2Heart3, Label_leveltext, Player2Label, Player1Label, score_1, score_2;
 
 	/**
 	 * Create the application.
@@ -53,7 +53,7 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 	private void initialize() {
 		// Add game elements
 	
-		game = new LevelHandler(level, borderWidth, borderHeight, "Name", "", playerHeight, 3);
+		game = new LevelHandler(level, borderWidth, borderHeight, "Name", "", playerHeight, hearts, score);
 		
 		// Add GUI
 
@@ -114,12 +114,16 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 				// Bubble
 				for(int i = 0; i < game.getBubbles().size(); i++) {
 					
-					// Get color from bubble
+					// Get color from bubble and make it move
 					g.setColor(game.getBubbles().get(i).getColor());
+					game.getBubbles().get(i).move();
+					g.fillOval((int)Math.round(game.getBubbles().get(i).getPos().getX()), (int)Math.round(game.getBubbles().get(i).getPos().getY()), game.getBubbles().get(i).getSize(), game.getBubbles().get(i).getSize());
 					
 					// Bubble collision with player
 					if(game.getPlayer1().isAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getShape())) {
 						// Lose life if player gets hit and restart level, if dead then stop game
+						System.out.println("bubble shape" + game.getBubbles().get(i).getShape().getBounds2D());
+						System.out.println("player shape" + game.getPlayer1().getShape().toString());
 						if (game.getPlayer1().getHearts() == 3) {
 							Player1Heart3.setVisible(false);
 						} 
@@ -134,9 +138,8 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 							timer.stop();
 						} else {
 							try {
-								game.getBubbles().get(i).move();
 								Thread.sleep(3000);
-								game.getCurrentLevel().makeLevel(level,game.getPlayer1().getHearts());
+								game.getCurrentLevel().makeLevel(level,game.getPlayer1().getHearts(),game.getPlayer1().getScore());
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
@@ -149,14 +152,11 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 						if (game.getBubbles().get(i).getSize() > 20) {
 							game.getBubbles().addAll(game.getBubbles().get(i).addSplitBubbles());
 						}
+						game.getPlayer1().setScore(game.getPlayer1().getScore()+1);
+						score_1.setText("" + game.getPlayer1().getScore());
 						game.getBubbles().remove(i);
 						game.getPlayer1().getArrow().setAliveTo(false);
-					} else {
-						int size = game.getBubbles().get(i).getSize();
-				
-						g.fillOval((int)game.getBubbles().get(i).getPos().getX(), (int)game.getBubbles().get(i).getPos().getY(), size, size);
-					}
-					game.getBubbles().get(i).move();			
+					}	
 				}
 			}
 		};
@@ -210,13 +210,13 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 		Player1Label.setForeground(Color.red);
 		
 		// Add scores
-		JLabel score_1 = new JLabel();
-		score_1.setText("" + score1);
+		score_1 = new JLabel();
+		score_1.setText("" + game.getPlayer1().getScore());
 		score_1.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		panel_3.add(score_1);
 		
-		JLabel score_2 = new JLabel();
-		score_2.setText("" + score2);
+		score_2 = new JLabel();
+		score_2.setText("?");
 		score_2.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		panel_4.add(score_2);
 		
@@ -321,19 +321,18 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 	public void actionPerformed(ActionEvent e) {
 		timer.start();
 		
+		// When the level is cleared, make a new level
+		if (game.getBubbles().isEmpty()) {
+			game.makeLevel(++level,game.getPlayer1().getHearts(),game.getPlayer1().getScore());
+			Label_leveltext.setText("" + level);
+		}
+		panel.repaint();
 		// Keep moving the player 1
 		if (left1) {
 			game.getPlayer1().goLeft();
 		} else if (right1) {
 			game.getPlayer1().goRight();
 		}
-		
-		// When the level is cleared, make a new level
-		if (game.getBubbles().isEmpty()) {
-			game.makeLevel(++level,game.getPlayer1().getHearts());
-			Label_leveltext.setText("" + level);
-		}
-		panel.repaint();
 	}
 
 	public void setUserName1(String name) {
