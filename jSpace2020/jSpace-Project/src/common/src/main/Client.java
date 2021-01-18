@@ -85,12 +85,13 @@ public class Client {
                 startGameButton(wRoom, gameRoom);
                 while (inLobby) {
                     wRoom.setUserName1(name);
-
+                    wRoom.figure1();
                     if (player2 == null) {
                         Object[] playerJoined = gameRoom.getp(new ActualField(TO), new ActualField(permissions), new ActualField(PLAYER_JOINED), new FormalField(String.class));
                         if (playerJoined != null) {
                             player2 = (String) playerJoined[3];
                             wRoom.setUserName2(player2);
+                            wRoom.figure2();
                             System.out.println("Player 2 joined");
                         } 
                     }
@@ -112,6 +113,7 @@ public class Client {
                 wRoom.setUserName1(name);
                 player1 = (String) lobbyStatus[3];
                 wRoom.setUserName2(player1);  // Set host name under sofa
+                wRoom.figure1();
 
                 System.out.println("Waiting for host to start the game");
                 gameRoom.get(new ActualField(TO), new ActualField(permissions), new ActualField(GAME_STARTED));
@@ -125,6 +127,7 @@ public class Client {
             if (permissions.equals("host")) {
                 gRoom.setUserName1(name);
                 gRoom.setUserName2(player2);
+                
             }
             if (permissions.equals("participant")) {
                 gRoom.setUserName1(name);
