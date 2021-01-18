@@ -114,12 +114,13 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 				// Bubble
 				for(int i = 0; i < game.getBubbles().size(); i++) {
 					
-					// Get color from bubble
+					// Get color from bubble and make it move
 					g.setColor(game.getBubbles().get(i).getColor());
+					game.getBubbles().get(i).move();
+					g.fillOval((int)Math.round(game.getBubbles().get(i).getPos().getX()), (int)Math.round(game.getBubbles().get(i).getPos().getY()), game.getBubbles().get(i).getSize(), game.getBubbles().get(i).getSize());
 					
 					// Bubble collision with player
-					if(game.getPlayer1().isAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getShape()) && 
-							game.getBubbles().get(i).getShape().getBounds2D().intersects(game.getPlayer1().getShape().getBounds2D())) {
+					if(game.getPlayer1().isAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getShape())) {
 						// Lose life if player gets hit and restart level, if dead then stop game
 						System.out.println("bubble shape" + game.getBubbles().get(i).getShape().getBounds2D());
 						System.out.println("player shape" + game.getPlayer1().getShape().toString());
@@ -137,7 +138,6 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 							timer.stop();
 						} else {
 							try {
-								game.getBubbles().get(i).move();
 								Thread.sleep(3000);
 								game.getCurrentLevel().makeLevel(level,game.getPlayer1().getHearts());
 							} catch (InterruptedException e) {
@@ -154,12 +154,7 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 						}
 						game.getBubbles().remove(i);
 						game.getPlayer1().getArrow().setAliveTo(false);
-					} else {
-						int size = game.getBubbles().get(i).getSize();
-				
-						g.fillOval((int)game.getBubbles().get(i).getPos().getX(), (int)game.getBubbles().get(i).getPos().getY(), size, size);
-					}
-					game.getBubbles().get(i).move();			
+					}	
 				}
 			}
 		};
@@ -324,19 +319,18 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 	public void actionPerformed(ActionEvent e) {
 		timer.start();
 		
-		// Keep moving the player 1
-		if (left1) {
-			game.getPlayer1().goLeft();
-		} else if (right1) {
-			game.getPlayer1().goRight();
-		}
-		
 		// When the level is cleared, make a new level
 		if (game.getBubbles().isEmpty()) {
 			game.makeLevel(++level,game.getPlayer1().getHearts());
 			Label_leveltext.setText("" + level);
 		}
 		panel.repaint();
+		// Keep moving the player 1
+		if (left1) {
+			game.getPlayer1().goLeft();
+		} else if (right1) {
+			game.getPlayer1().goRight();
+		}
 	}
 
 	public void setUserName1(String name) {

@@ -28,6 +28,7 @@ public class WaitingRoom {
 	private String permission;
 	private JLabel textField_User2, textField_User1;
 	private JButton btnNewButton;
+	private JLabel figure1;
 	
 
 	/**
@@ -81,8 +82,18 @@ public class WaitingRoom {
 		});
 		btnNewButton.setBounds(438, 282, 117, 29);
 		btnNewButton.setVisible(false);
-		btnNewButton.setEnabled(false);
+		//btnNewButton.setEnabled(false);
 		frmWaitingRoom.getContentPane().add(btnNewButton);
+		
+		//Character 1
+		/*
+		figure1.setVisible(false);
+		Image character1 = new ImageIcon(this.getClass().getResource("/figure1.png")).getImage();
+		figure1.setIcon(new ImageIcon(character1));
+		figure1.setBounds(91, 350, 203, 166);
+		frmWaitingRoom.getContentPane().add(figure1);
+		*/
+		
 		lblNewLabel_3.setIcon(new ImageIcon(img2));
 		lblNewLabel_3.setBounds(261, 44, 544, 158);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_3);
@@ -125,13 +136,23 @@ public class WaitingRoom {
 		frmWaitingRoom.getContentPane().add(lblNewLabel_4);
 		
 	}
-
+	/*
+	public void figure1() {
+		figure1.setVisible(true);
+	}
+	public JLabel getImg() {
+		return figure1;
+		
+	}
+	 */
 	public void createStartButton() {
 		//Button
 		System.out.println("Button created");
 		btnNewButton.setVisible(true);
-		btnNewButton.setEnabled(true);
+		//btnNewButton.setEnabled(true);
 	}
+	
+
 
 	public JButton getStartButton() {
 		return btnNewButton;
