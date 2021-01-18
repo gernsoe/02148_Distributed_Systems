@@ -6,12 +6,9 @@ import common.src.main.GUI.src.WinBuilder.GameRoom;
 import common.src.main.GUI.src.WinBuilder.WaitingRoom;
 import common.src.main.GUI.src.WinBuilder.fMenu;
 
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 
 public class Client {
@@ -34,11 +31,9 @@ public class Client {
     public static final String TO = "to";
     public static final String FROM = "from";
 
-
-	
-
 	public static void main(String[] argv) throws InterruptedException, UnknownHostException, IOException {
 
+        //String host = "tcp://4.tcp.ngrok.io:13172/";
         String host = "tcp://127.0.0.1:9001/";
         String lobbyURI = host + "lobby?keep";
         RemoteSpace lobby = new RemoteSpace(lobbyURI);
@@ -85,13 +80,12 @@ public class Client {
                 startGameButton(wRoom, gameRoom);
                 while (inLobby) {
                     wRoom.setUserName1(name);
-                    wRoom.figure1();
+
                     if (player2 == null) {
                         Object[] playerJoined = gameRoom.getp(new ActualField(TO), new ActualField(permissions), new ActualField(PLAYER_JOINED), new FormalField(String.class));
                         if (playerJoined != null) {
                             player2 = (String) playerJoined[3];
                             wRoom.setUserName2(player2);
-                            wRoom.figure2();
                             System.out.println("Player 2 joined");
                         } 
                     }
@@ -111,10 +105,8 @@ public class Client {
                 Object[] lobbyStatus = gameRoom.get(new ActualField(TO), new ActualField(permissions), new ActualField(PLAYER_JOINED), new FormalField(String.class));
 
                 wRoom.setUserName1(name);
-                wRoom.figure1();
                 player1 = (String) lobbyStatus[3];
                 wRoom.setUserName2(player1);  // Set host name under sofa
-                wRoom.figure2();
 
                 System.out.println("Waiting for host to start the game");
                 gameRoom.get(new ActualField(TO), new ActualField(permissions), new ActualField(GAME_STARTED));
@@ -128,7 +120,6 @@ public class Client {
             if (permissions.equals("host")) {
                 gRoom.setUserName1(name);
                 gRoom.setUserName2(player2);
-                
             }
             if (permissions.equals("participant")) {
                 gRoom.setUserName1(name);
