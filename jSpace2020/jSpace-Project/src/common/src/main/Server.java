@@ -93,7 +93,11 @@ public class Server {
 			Object[] playerLeft = rooms.getp(new FormalField(String.class), new ActualField(LEFT_ROOM), new FormalField(String.class)); // (roomID, LEFT_ROOM, participant/host)
 
 			if (playerLeft != null) {
-				
+				if (((String) playerLeft[2]).equals(HOST)) {
+					rooms.getp(new ActualField((String) playerLeft[0]), new FormalField(Integer.class), new FormalField(Integer.class));
+				} else if (((String) playerLeft[2]).equals(PARTICIPANT)) {
+
+				}
 			}
 			rooms.put(LOCK);	// Release mutual exclusion
 		}
