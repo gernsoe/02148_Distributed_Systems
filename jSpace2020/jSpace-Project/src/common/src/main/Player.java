@@ -10,15 +10,16 @@ public class Player {
 	// Player position
 	Point player;
 	Arrow arrow;
-	int hearts;
+	int hearts, scores;
 	
 	// Size of player
 	private int playerHeight, playerID, borderWidth, stepSize = 2, playerWidth;
 	String playerName;
 	
 	// borderHeight is not
-	public Player(Point playerPos, int borderWidth, String playerName, int playerHeight, int hearts) {
+	public Player(Point playerPos, int borderWidth, String playerName, int playerHeight, int hearts, int scores) {
 		this.playerHeight = playerHeight;
+		this.scores = scores;
 		this.hearts = hearts;
 		playerWidth = (playerHeight/3)*2;
 		this.player = playerPos;
@@ -35,7 +36,7 @@ public class Player {
 	}
 	
 	public void goLeft() {
-		if (player.getX() - playerWidth >= 0 & isAlive) {
+		if (player.getX() >= 0 & isAlive) {
 			player.setX(player.getX() - stepSize);
 			// System.out.println("Going left at " + player.toString());
 		}
@@ -123,6 +124,14 @@ public class Player {
 		if (hearts == 0) {
 			setAlive(false);
 		}
+	}
+	
+	public void setScore(int score) {
+		scores = score;
+	}
+	
+	public int getScore() {
+		return scores;
 	}
 	
 	public int getHearts() {

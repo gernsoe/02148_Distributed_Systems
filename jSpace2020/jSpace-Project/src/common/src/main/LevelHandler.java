@@ -13,7 +13,7 @@ public class LevelHandler {
 	int[] bubbleSizes = new int[] {20,30,45,68,80,100,130,160,200,270}; 
 	
 	
-	public LevelHandler(int level, int bWidth, int bHeight, String player1, String player2, int pHeight, int hearts) {
+	public LevelHandler(int level, int bWidth, int bHeight, String player1, String player2, int pHeight, int hearts, int scores) {
 		this.level = level;
 		this.bWidth = bWidth;
 		this.bHeight = bHeight;
@@ -21,10 +21,10 @@ public class LevelHandler {
 		this.player2 = player2;
 		this.pHeight = pHeight;
 		
-		makeLevel(level, hearts);
+		makeLevel(level, hearts, scores);
 	}
 
-	public void makeLevel(int level, int hearts) {
+	public void makeLevel(int level, int hearts, int scores) {
 		// Default speed
 		speedX = 1;
 		speedY = 0;
@@ -45,9 +45,11 @@ public class LevelHandler {
 			bubbleCounts = new int[] {0,0,0,0,0,0,1,0,0,0};
 		} else if (level == 8) {
 			bubbleCounts = new int[] {0,0,0,0,0,0,0,0,0,1};
+		} else {
+			bubbleCounts = new int[] {(int)(Math.round(Math.random()*4)),(int)(Math.round(Math.random()*2)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1))};
 		}
 		
-		game = new Map(bWidth, bHeight, bubbleCounts, bubbleSizes, player1, player2, pHeight, speedX, speedY, hearts);
+		game = new Map(bWidth, bHeight, bubbleCounts, bubbleSizes, player1, player2, pHeight, speedX, speedY, hearts, scores);
 	}
 	
 	public Player getPlayer1() {
