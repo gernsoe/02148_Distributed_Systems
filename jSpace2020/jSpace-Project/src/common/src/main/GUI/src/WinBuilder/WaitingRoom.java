@@ -28,7 +28,7 @@ public class WaitingRoom {
 	private String roomURI;
 	private String permission;
 	private JLabel textField_User2, textField_User1;
-	private JButton btnNewButton;
+	private JButton btnStart;
 	private JLabel label_figure1;
 
 	private JLabel label_figure2;
@@ -95,26 +95,21 @@ public class WaitingRoom {
 		//Leave Room
 		btnLeave = new JButton("Leave Room");
 		btnLeave.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-		btnLeave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		btnLeave.setBounds(438, 325, 117, 29);
 		btnLeave.setVisible(false);
-		btnLeave.setEnabled(false);frmWaitingRoom.getContentPane().add(btnLeave);
+		btnLeave.setEnabled(false);
+		frmWaitingRoom.getContentPane().add(btnLeave);
 		
 		//Logo
 		JLabel lblNewLabel_3 = new JLabel();
 		Image img2 = new ImageIcon(this.getClass().getResource("/BubShooter.png")).getImage();
 		
-		btnNewButton = new JButton("Start Game");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {}
-		});
-		btnNewButton.setBounds(438, 282, 117, 29);
-		btnNewButton.setVisible(false);
-		btnNewButton.setEnabled(false);
-		frmWaitingRoom.getContentPane().add(btnNewButton);
+		btnStart = new JButton("Start Game");
+		btnLeave.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+		btnStart.setBounds(438, 282, 117, 29);
+		btnStart.setVisible(false);
+		btnStart.setEnabled(false);
+		frmWaitingRoom.getContentPane().add(btnStart);
 		
 		//Character 1
 		lblNewLabel_3.setIcon(new ImageIcon(img2));
@@ -195,14 +190,12 @@ public class WaitingRoom {
 	}
 	
 	public void createStartButton() {
-		//Button
-		System.out.println("Button created");
-		btnNewButton.setVisible(true);
-		btnNewButton.setEnabled(true);
+		btnStart.setVisible(true);
+		btnStart.setEnabled(true);
 	}
 	
 	public JButton getStartButton() {
-		return btnNewButton;
+		return btnStart;
 	}
 	
 	public void setRoomID(String lRoomID) {
