@@ -33,7 +33,7 @@ public class Client {
 
 	public static void main(String[] argv) throws InterruptedException, UnknownHostException, IOException {
 
-        //String host = "tcp://4.tcp.ngrok.io:13172/";
+        //String host = "tcp://2.tcp.ngrok.io:10963/";
         String host = "tcp://127.0.0.1:9001/";
         String lobbyURI = host + "lobby?keep";
         RemoteSpace lobby = new RemoteSpace(lobbyURI);
