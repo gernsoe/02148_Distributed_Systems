@@ -125,7 +125,7 @@ public class WaitingRoom {
 		
 		//Figure 1
 		label_figure1 = new JLabel("");
-		Image imgFigure1 = new ImageIcon(this.getClass().getResource("/figure1_front.png")).getImage();
+		Image imgFigure1 = new ImageIcon(this.getClass().getResource("/front1.png")).getImage();
 		label_figure1.setIcon(new ImageIcon(imgFigure1));
 		label_figure1.setBounds(146, 402, 96, 130);
 		frmWaitingRoom.getContentPane().add(label_figure1);
@@ -133,7 +133,7 @@ public class WaitingRoom {
 		
 		//Character 2
 		label_figure2 = new JLabel("");
-		Image imgFigure2 = new ImageIcon(this.getClass().getResource("/figure2_front.png")).getImage();
+		Image imgFigure2 = new ImageIcon(this.getClass().getResource("/front2.png")).getImage();
 		label_figure2.setBounds(760, 375, 88, 175);
 		frmWaitingRoom.getContentPane().add(label_figure2);
 		label_figure2.setIcon(new ImageIcon(imgFigure2));
