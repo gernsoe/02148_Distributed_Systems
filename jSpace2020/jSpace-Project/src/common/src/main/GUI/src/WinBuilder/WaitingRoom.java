@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import java.awt.Color;
 
 public class WaitingRoom {
 
@@ -27,10 +28,15 @@ public class WaitingRoom {
 	private String roomURI;
 	private String permission;
 	private JLabel textField_User2, textField_User1;
-	private JButton btnNewButton;
-	private JLabel figure1;
-	JLabel label_figure1 = new JLabel("");
-	JLabel label_figure2 = new JLabel("");
+	private JButton btnStart;
+	private JLabel label_figure1;
+
+	private JLabel label_figure2;
+	private JButton btnLeave;
+	private JPanel panelRoomID ;
+	private JLabel lblRoomID;
+	private String lRoomID;
+	private JLabel lblWaiting;
 
 	/**
 	 * Launch the application.
@@ -72,33 +78,62 @@ public class WaitingRoom {
 		frmWaitingRoom.setSize(1000,700);
 		frmWaitingRoom.setLocationRelativeTo(null);
 		
+		lblWaiting = new JLabel("Waiting for host to start game...");
+		lblWaiting.setFont(new Font("Lucida Grande", Font.BOLD | Font.ITALIC, 16));
+		lblWaiting.setBounds(391, 458, 278, 29);
+		frmWaitingRoom.getContentPane().add(lblWaiting);
+		lblWaiting.setVisible(false);
+		
+		//Room ID panel
+		lblRoomID = new JLabel();
+		lblRoomID.setBounds(6, 6, 176, 39);
+		lblRoomID.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+		lblRoomID.setHorizontalAlignment(SwingConstants.CENTER);
+	
+		panelRoomID = new JPanel();
+		panelRoomID.setBackground(new Color(255, 255, 255));
+		panelRoomID .setBounds(414, 375, 188, 51);
+		frmWaitingRoom.getContentPane().add(panelRoomID );
+		panelRoomID .setLayout(null);
+		panelRoomID.add(lblRoomID);
+		
+		
+	
+		//Leave Room
+		btnLeave = new JButton("Leave Room");
+		btnLeave.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+		btnLeave.setBounds(438, 325, 117, 29);
+		btnLeave.setVisible(false);
+		btnLeave.setEnabled(false);
+		frmWaitingRoom.getContentPane().add(btnLeave);
+		
 		//Logo
 		JLabel lblNewLabel_3 = new JLabel();
 		Image img2 = new ImageIcon(this.getClass().getResource("/BubShooter.png")).getImage();
 		
-		btnNewButton = new JButton("Start Game");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {}
-		});
-		btnNewButton.setBounds(438, 282, 117, 29);
-		btnNewButton.setVisible(false);
-		//btnNewButton.setEnabled(false);
-		frmWaitingRoom.getContentPane().add(btnNewButton);
+		btnStart = new JButton("Start Game");
+		btnLeave.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+		btnStart.setBounds(438, 282, 117, 29);
+		btnStart.setVisible(false);
+		btnStart.setEnabled(false);
+		frmWaitingRoom.getContentPane().add(btnStart);
 		
 		//Character 1
 		lblNewLabel_3.setIcon(new ImageIcon(img2));
-		lblNewLabel_3.setBounds(261, 44, 544, 158);
+		lblNewLabel_3.setBounds(304, 44, 544, 158);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_3);
 		
 		//Figure 1
-		Image imgFigure1 = new ImageIcon(this.getClass().getResource("/figure1_front.png")).getImage();
+		label_figure1 = new JLabel("");
+		Image imgFigure1 = new ImageIcon(this.getClass().getResource("/front1.png")).getImage();
 		label_figure1.setIcon(new ImageIcon(imgFigure1));
 		label_figure1.setBounds(146, 402, 96, 130);
 		frmWaitingRoom.getContentPane().add(label_figure1);
 		label_figure1.setVisible(false);
 		
 		//Character 2
-		Image imgFigure2 = new ImageIcon(this.getClass().getResource("/figure2_front.png")).getImage();
+		label_figure2 = new JLabel("");
+		Image imgFigure2 = new ImageIcon(this.getClass().getResource("/front2.png")).getImage();
 		label_figure2.setBounds(760, 375, 88, 175);
 		frmWaitingRoom.getContentPane().add(label_figure2);
 		label_figure2.setIcon(new ImageIcon(imgFigure2));
@@ -139,39 +174,47 @@ public class WaitingRoom {
 		JLabel lblNewLabel_4 = new JLabel("");
 		lblNewLabel_4.setIcon(new ImageIcon(img));
 		lblNewLabel_4.setBounds(760, 0, 320, 678);
-		frmWaitingRoom.getContentPane().add(lblNewLabel_4);
+		frmWaitingRoom.getContentPane().add(lblNewLabel_4);		
 		
-	}
-	/*
-	public void figure1() {
-		figure1.setVisible(true);
-	}
-	public JLabel getImg() {
-		return figure1;
 		
+
 	}
-	 */
+
 	public void figure1(){
 		label_figure1.setVisible(true);
 	}
-	
 	
 	public void figure2(){
 		label_figure2.setVisible(true);
 	}
 	
-	public void createStartButton() {
-		//Button
-		System.out.println("Button created");
-		btnNewButton.setVisible(true);
-		//btnNewButton.setEnabled(true);
-	}
-
-	public JButton getStartButton() {
-		return btnNewButton;
+	public void createLeaveButton() {
+		btnLeave.setVisible(true);
+		btnLeave.setEnabled(true);
 	}
 	
+	public JButton getLeaveButton() {
+		return btnLeave;
+	}
+	
+	public void createStartButton() {
+		btnStart.setVisible(true);
+		btnStart.setEnabled(true);
+	}
 
+	public void hostGame() {
+		lblWaiting.setVisible(true);
+	
+	}
+	
+	public JButton getStartButton() {
+		return btnStart;
+	}
+	
+	public void setRoomID(String lRoomID) {
+		lblRoomID.setText(lRoomID);
+	}
+	
 	public void setUserName1(String name) {
 		textField_User1.setText(name);
 	}

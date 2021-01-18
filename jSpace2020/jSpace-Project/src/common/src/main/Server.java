@@ -21,12 +21,18 @@ import org.jspace.*;
 
 public class Server {
 	
+	public static final String LOCK = "lock";
+	public static final String LEFT_ROOM = "left_room";  // used to signal when the player is out of the room
+	public static final String HOST = "host";
+	public static final String PARTICIPANT = "participant";
+
 	public static void main(String[] args) throws InterruptedException {
 		SpaceRepository repo = new SpaceRepository();
 		
 		// Users request to join room, server sends rooms
 		Space lobby = new SequentialSpace();
 		
+		//String host = "tcp://2.tcp.ngrok.io:10963/";
 		String host = "tcp://127.0.0.1:9001/";
 		String repoURI = host + "?keep";
 		
@@ -35,7 +41,8 @@ public class Server {
 		System.out.println("Opened gate at uri " + repoURI);
 		
 		// Used to keep track of active rooms (server side only)
-		Space rooms = new SequentialSpace(); // (roomID, roomCounter, playerCount)
+		Space rooms = new SequentialSpace(); 	// (roomID, roomCounter, playerCount)
+		rooms.put(LOCK);						// Add lock for mutual exclusion
 		String roomURI;
 		
         int roomCounter = 0;		// Used to identify rooms
@@ -51,6 +58,7 @@ public class Server {
 			
 			System.out.println(who + " wants to join room: " + roomID);
 			
+			rooms.get(new ActualField(LOCK)); // Get mutual exclusion
 			// Get room (non-blocking) and determine if a new room should be made
 			Object[] getRoom = rooms.getp(new ActualField(roomID), new FormalField(Integer.class), new FormalField(Integer.class));
 			
@@ -74,13 +82,24 @@ public class Server {
 				roomURI = host + "game" + roomCounter + "?keep";        // fx. tcp://127.0.0.1:9001/game0?keep
 				rooms.put(roomID, roomCounter, playerCount);
 				// Create thread to take care of the new game room
-                new Thread(new roomHandler(roomID, roomCounter, roomURI, repo)).start();
+                new Thread(new roomHandler(roomID, roomCounter, roomURI, repo, rooms)).start();
                 roomCounter++;
                 
                 // Join room
                 System.out.println("Sending user: " + who + " to game room: " + roomCounter);
                 lobby.put("roomURI", who, roomID, roomURI);
-            }
+			}
+
+			Object[] playerLeft = rooms.getp(new FormalField(String.class), new ActualField(LEFT_ROOM), new FormalField(String.class)); // (roomID, LEFT_ROOM, participant/host)
+
+			if (playerLeft != null) {
+				if (((String) playerLeft[2]).equals(HOST)) {
+					rooms.getp(new ActualField((String) playerLeft[0]), new FormalField(Integer.class), new FormalField(Integer.class));
+				} else if (((String) playerLeft[2]).equals(PARTICIPANT)) {
+
+				}
+			}
+			rooms.put(LOCK);	// Release mutual exclusion
 		}
 	}
 }
@@ -89,12 +108,14 @@ class roomHandler implements Runnable {
     private String roomID;
 	private String roomURI;
 	private Space gameRoom;
+	private Space rooms;
 	private boolean connected = true;
 	private boolean inLobby = true;
 	private String player1;
 	private String player2;
 	
-	public static final String LEAVE_ROOM = "leave_room";
+	public static final String LEAVE_ROOM = "leave_room";	// used to signal that a player wants to leave a room
+	public static final String LEFT_ROOM = "left_room"; 	// used to signal when the player is out of the room
     public static final String READY_TO_PLAY = "ready_to_play";
     public static final String SETTINGS = "settings";
     public static final String PLAYER_JOINED = "player_joined";
@@ -106,10 +127,12 @@ class roomHandler implements Runnable {
 	public static final String FROM = "from";
 	public static final String HOST = "host";
 	public static final String PARTICIPANT = "participant";
+	public static final String LOCK = "lock";
 
-	public roomHandler(String roomID, int roomCounter, String roomURI, SpaceRepository repo) {
+	public roomHandler(String roomID, int roomCounter, String roomURI, SpaceRepository repo, Space rooms) {
         this.roomID = roomID;
-        this.roomURI = roomURI;
+		this.roomURI = roomURI;
+		this.rooms = rooms;
         
         gameRoom = new SequentialSpace(); 
         repo.add("game" + roomCounter, gameRoom);
@@ -125,42 +148,62 @@ class roomHandler implements Runnable {
 			gameRoom.put(TO, player1, PERMISSION, HOST);
 
 			while (inLobby) {
-				// Get instruction (name, instruction) - where an instruction is either ready or start
-				Object[] initGameInstruction = gameRoom.get(new ActualField(FROM), new FormalField(String.class), new FormalField(String.class));
-				String who = (String) initGameInstruction[1];
-				String instruction = (String) initGameInstruction[2];
+				// Get instruction (name, instruction) - where an instruction is either ready, start or leave room
+				Object[] waitingRoomInstruction = gameRoom.get(new ActualField(FROM), new FormalField(String.class), new FormalField(String.class));
+				String who = (String) waitingRoomInstruction[1];
+				String instruction = (String) waitingRoomInstruction[2];
 
-				// Player 2 joins
-				if (instruction.equals(READY_TO_PLAY)) {
-					player2 = who;
-					System.out.println(player2 + " is ready to play!!!");
+				switch (instruction) {
+					case READY_TO_PLAY:	// Player 2 joined
+						player2 = who;
+						System.out.println(player2 + " is ready to play!!!");
+	
+						// Signal to player1 that someone joined
+						gameRoom.put(TO, HOST, PLAYER_JOINED, player2);
+						gameRoom.put(TO, player2, PERMISSION, PARTICIPANT); // Tell player 2 that he's participant
+						gameRoom.put(TO, PARTICIPANT, PLAYER_JOINED, player1);
+						String start_settings_inst = (String) gameRoom.get(new ActualField(FROM), new ActualField(HOST), new FormalField(String.class))[2];
 
-					// Signal to player1 that someone joined
-					gameRoom.put(TO, HOST, PLAYER_JOINED, player2);
-					gameRoom.put(TO, player2, PERMISSION, PARTICIPANT); // Tell player 2 that he's participant
-					gameRoom.put(TO, PARTICIPANT, PLAYER_JOINED, player1);
-					String start_settings_inst = (String) gameRoom.get(new ActualField(FROM), new ActualField(HOST), new FormalField(String.class))[2];
+						switch (start_settings_inst) {
+							case START_GAME:	
+								System.out.println("Starting the game");
+								gameRoom.put(TO, HOST, GAME_STARTED);			//Player one
+								gameRoom.put(TO, PARTICIPANT, GAME_STARTED); 	//Player two
+								inLobby = false;
+								break;
+							
+							case SETTINGS:
+								// Implement settings
+							System.out.println("Implement settings");
+								break;
 
-					// Host starts game / wants to see settings
-					if (start_settings_inst.equals(START_GAME)) {
+							case LEAVE_ROOM:
+
+								break;
+
+							default:
+								System.out.println("Invalid command");
+								break;
+						}
+
+						break;
+					case START_GAME:	// When player1 is alone
+						gameRoom.put(TO, HOST, GAME_STARTED);
 						System.out.println("Starting the game");
-						gameRoom.put(TO, HOST, GAME_STARTED);			//Player one
-						gameRoom.put(TO, PARTICIPANT, GAME_STARTED); 	//Player two
 						inLobby = false;
-					} else if (start_settings_inst.equals(SETTINGS)) {
-						// Implement settings
-						System.out.println("Implement settings");
-					} else {
-						System.out.println("No valid command found");
-					}
 
-				// Player 1 starts game alone
-				} else if (instruction.equals(START_GAME)) {
-					gameRoom.put(TO, HOST, GAME_STARTED);
-					System.out.println("Starting the game");
-					inLobby = false;
-				} else {
-					System.out.println("Invalid command.");
+						break;
+					case LEAVE_ROOM:
+						gameRoom.put(TO, HOST, LEAVE_ROOM, PARTICIPANT);
+						gameRoom.put(TO, PARTICIPANT, LEAVE_ROOM, PARTICIPANT);
+						gameRoom.get(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(LEFT_ROOM));
+						rooms.get(new ActualField(LOCK));
+						rooms.put(roomID, LEFT_ROOM, PARTICIPANT);
+						rooms.put(LOCK);
+						break;
+					default:
+						System.out.println("Invalid command");
+						break;
 				}
 			}
 
@@ -170,7 +213,6 @@ class roomHandler implements Runnable {
 				gameRoom.get(new ActualField("TEST"));
 			}
 
-			
 		} catch (InterruptedException e) {
 			System.out.println(e.getStackTrace());
 		}
