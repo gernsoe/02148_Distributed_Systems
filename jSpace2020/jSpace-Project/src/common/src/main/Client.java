@@ -142,6 +142,8 @@ public class Client {
             otherPlayerName = (String) lobbyStatus[3];
             wRoom.setUserName2(otherPlayerName);  // Set host name under sofa
             wRoom.figure2();
+            wRoom.hostGame();
+            wRoom.setRoomID("Welcome to room "+roomID);
             
             System.out.println("Waiting for host to start the game");
             gameRoom.get(new ActualField(TO), new ActualField(permissions), new ActualField(GAME_STARTED));
