@@ -56,6 +56,8 @@ public class Client {
                     // Create popup window
                     System.out.println("Room is full");
                     menu.clearIDField();
+                    menu.roomFull();
+                    menu.pleaseNewRoomID();
                 } else {
                     enterPreGameLobby(menu);
                     break;
@@ -115,7 +117,10 @@ public class Client {
                 player1 = (String) lobbyStatus[3];
                 wRoom.setUserName2(player1);  // Set host name under sofa
                 wRoom.figure2();
-                
+                wRoom.setRoomID("Welcome to room "+roomID);
+                wRoom.hostGame();
+
+              
                 System.out.println("Waiting for host to start the game");
                 gameRoom.get(new ActualField(TO), new ActualField(permissions), new ActualField(GAME_STARTED));
                 enterGame(wRoom);
@@ -157,10 +162,17 @@ public class Client {
                 try {
                     name = menu.getName();
                     roomID = menu.getRoomID();
-                    if (name.equals("") || roomID.equals("") || name.equals(null) || roomID.equals(null)) {
+                    if (name.equals("") || name.equals(null)  ) {
                         //TODO create popup
-                        System.out.println("Please enter a name and roomID");
-                    } else {
+                    	menu.missingName();
+                        System.out.println("Name is missing");
+                        
+                    } if (roomID.equals("") || roomID.equals(null)) {
+                    	menu.missingRoomID();
+                    	System.out.println("roomID is missing");
+                    	
+                    }
+                    if (!name.equals("") && !roomID.equals("") && !name.equals(null) && !roomID.equals(null) ) {
                         lobby.put("enter", name, roomID);
                         loginButtonClicked = true;
                     }
