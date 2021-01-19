@@ -130,8 +130,6 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		panel.setBounds(100, 0, 800, 600);
 		panel.setBackground(new Color(135, 206, 235));
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel.setFocusable(true);
-		panel.requestFocusInWindow();
 		panel.setPreferredSize(new Dimension(borderWidth,borderHeight));
 		frame.getContentPane().add(panel);
 		panel.addKeyListener(this);
@@ -273,6 +271,8 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		lblNewLabel_1.setIcon(new ImageIcon(img));
 		
 		timer = new Timer(delay,this);
+		panel.setFocusable(true);
+		panel.requestFocusInWindow();
 	}
 
 	@Override
