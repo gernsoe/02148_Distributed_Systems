@@ -15,6 +15,7 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import javax.swing.Timer;
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -130,8 +131,6 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		panel.setBounds(100, 0, 800, 600);
 		panel.setBackground(new Color(135, 206, 235));
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel.setFocusable(true);
-		
 		panel.setPreferredSize(new Dimension(borderWidth,borderHeight));
 		frame.getContentPane().add(panel);
 		panel.addKeyListener(this);
@@ -273,6 +272,8 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		lblNewLabel_1.setIcon(new ImageIcon(img));
 		
 		timer = new Timer(delay,this);
+		panel.setFocusable(true);
+		panel.requestFocusInWindow();
 	}
 
 	@Override
@@ -281,35 +282,42 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
-		case KeyEvent.VK_RIGHT:
-			if (!shooting) {
-				right1 = true;
-			}
-			break;
-		case KeyEvent.VK_LEFT:
-			if (!shooting) {
-				left1 = true;	
-			}
-			break;
-		case KeyEvent.VK_SPACE:
-			if (!game.getPlayer1().getArrowIsAlive()) {
-				shooting = true;
-				game.getPlayer1().makeArrow();
-				moveDelay = (68/delay);
-			}
-			break;
+			case KeyEvent.VK_RIGHT:
+				System.out.println("right click");
+				if (!shooting) {
+					
+					right1 = true;
+				}
+				break;
+			case KeyEvent.VK_LEFT:
+				System.out.println("left click");
+				if (!shooting) {
+					
+					left1 = true;	
+				}
+				break;
+			case KeyEvent.VK_SPACE:
+				if (!game.getPlayer1().getArrowIsAlive()) {
+					shooting = true;
+					game.getPlayer1().makeArrow();
+					moveDelay = (68/delay);
+				}
+				break;
+			default:
+				System.out.println("key not recognized");
+				break;
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		switch (e.getKeyCode()) {
-		case KeyEvent.VK_RIGHT:
-			right1 = false;
-			break;
-		case KeyEvent.VK_LEFT:
-			left1 = false;
-			break;
+			case KeyEvent.VK_RIGHT:
+				right1 = false;
+				break;
+			case KeyEvent.VK_LEFT:
+				left1 = false;
+				break;
 		}
 	}
 
@@ -440,7 +448,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		timer.start();
 		// Redraw bubbles, players and arrows
 		panel.repaint();
 		
