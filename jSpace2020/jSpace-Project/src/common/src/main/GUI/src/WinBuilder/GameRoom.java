@@ -118,8 +118,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				
 				// Player 2
 				
-				
-				
+	
 				// Bubble
 				for(int i = 0; i < game.getBubbles().size(); i++) {
 					// Get color from bubble and draw its movement

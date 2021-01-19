@@ -176,8 +176,10 @@ public class Client {
     		// Send bubbles
     		gameRoom.put(FROM, HOST, BUBBLES, json);
     		
-    		// Get approved by server to start game
-    		gameRoom.getp(new ActualField(TO), new ActualField(HOST), new ActualField(STARTMAP));
+    		// Get approved by server to start game, if two players
+    		if (!otherPlayerName.equals(null)) {
+    			gameRoom.get(new ActualField(TO), new ActualField(HOST), new ActualField(STARTMAP));
+    		}
     	} else if (myPermission.equals(PARTICIPANT)) {
     		// Receive bubbles from host
     		Object[] getBubbles = gameRoom.get(new ActualField(FROM), new ActualField(HOST), new ActualField(BUBBLES), new FormalField(String.class));
