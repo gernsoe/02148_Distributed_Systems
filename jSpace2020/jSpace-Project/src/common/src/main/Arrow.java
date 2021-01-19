@@ -8,7 +8,7 @@ public class Arrow {
 	int speed = 6;
 	Point arrow;
 	int width = 2, height = 0;
-	boolean alive;
+	boolean alive = false;
 	
 	public Arrow(Point arrowPos, int playerHeight) {
 		arrow = arrowPos;

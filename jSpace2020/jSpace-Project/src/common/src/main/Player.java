@@ -77,11 +77,11 @@ public class Player {
 		return player.getY();
 	}
 	
-	public void setX(double x) {
+	public void setX(int x) {
 		player.setX(x);
 	}
 	
-	public void setY(double y) {
+	public void setY(int y) {
 		player.setY(y);
 	}
 	

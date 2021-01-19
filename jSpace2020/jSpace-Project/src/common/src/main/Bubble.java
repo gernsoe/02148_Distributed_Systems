@@ -8,11 +8,11 @@ public class Bubble {
     public static final double GRAVITY = 0.05;
     private int size; 
     int borderHeight, borderWidth; 
-    private Color color;
+    private int color;
     private double speedX = 1, speedY = 0; 
     private Point bubble;
 
-    public Bubble(int size, Color color, Point pos, int borderHeight, int borderWidth, double speedX, double speedY) {
+    public Bubble(int size, int color, Point pos, int borderHeight, int borderWidth, double speedX, double speedY) {
         this.size = size;
         this.color = color;
         this.speedX = speedX;
@@ -71,6 +71,8 @@ public class Bubble {
     }
     
     public Color getColor() {
-    	return color;
+    	Color[] colors = new Color[] {Color.red, Color.orange, Color.yellow, Color.green, Color.cyan, Color.blue, Color.pink, Color.magenta, Color.DARK_GRAY, Color.black};
+    	return colors[color];
     }
+  
  }
