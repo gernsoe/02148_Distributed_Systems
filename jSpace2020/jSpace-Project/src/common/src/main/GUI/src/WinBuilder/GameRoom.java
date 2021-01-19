@@ -44,7 +44,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	 * @param actionListener 
 	 */
 	public GameRoom() {
-		game = new LevelHandler(borderWidth, borderHeight, "Name", "", playerHeight);
+		game = new LevelHandler(borderWidth, borderHeight, "Name", "d", playerHeight);
 		frame.setVisible(true);
 	}
 
