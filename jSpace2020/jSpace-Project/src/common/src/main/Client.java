@@ -43,6 +43,7 @@ public class Client {
     public static final String HOST = "host";
     public static final String PARTICIPANT = "participant";
     public static final String PLAYER = "player";
+    public static final String ARROW = "arrow";
     public static final String PLAYERSHOOT = "playershoot";
     public static final String BUBBLES = "bubbles";
     public static final String STARTMAP = "startmap";
@@ -163,21 +164,21 @@ public class Client {
     public static void gameLoop() throws InterruptedException {
     	gRoom = new GameRoom();
     	Gson gson = new Gson();
+    	JsonParser parser = new JsonParser();
     	
     	if (myPermission.equals(HOST)) {
     		gRoom.initializeAsHost();
     		ArrayList<Bubble> bubbles = gRoom.getGame().getBubbles();
     		String json = gson.toJson(bubbles);
+    		// Send bubbles
     		gameRoom.put(FROM, HOST, BUBBLES, json);
     		
-    		// send bubbles to participant
-    		// gameRoom.put(fields)
+    		// Get approved by server to start game
     		gameRoom.get(new ActualField(TO), new ActualField(HOST), new ActualField(STARTMAP));
-    		gRoom.getTimer().start();
     	} else if (myPermission.equals(PARTICIPANT)) {
-    		// Receive bubles from host
+    		// Receive bubbles from host
     		Object[] getBubbles = gameRoom.get(new ActualField(FROM), new ActualField(HOST), new ActualField(BUBBLES), new FormalField(String.class));
-    		JsonParser parser = new JsonParser();
+    	
     		String json = (String) getBubbles[3];
     		
     		ArrayList<Bubble> bubbles = new ArrayList<Bubble>();
@@ -188,8 +189,9 @@ public class Client {
     		}
     		gRoom.initializeAsParticipant(bubbles);
     		gameRoom.put(FROM, PARTICIPANT, GOTMAP);
+    		
+    		// Get approved by server to start game
     		gameRoom.get(new ActualField(TO), new ActualField(PARTICIPANT), new ActualField(STARTMAP));
-    		gRoom.getTimer().start();
     	}
     	
         gRoom.setUserName1(name);
@@ -198,52 +200,45 @@ public class Client {
         // Start timer
         gRoom.getTimer().start();
         
-
-        LevelHandler game = gRoom.getGame();
-
-
+        // Player infos from this client
+        Player player1 = gRoom.getGame().getPlayer1();
+        String jsonPlayer = gson.toJson(player1);
+        
         // Game loop
         while(connected) {
-            // System.out.println("Entered game loop");
+            System.out.println("Entered game loop");
             
-            // Send player movement information (Only X coordinate is needed)
+            // Send player movement information
             if (gRoom.getPlayerRight() || gRoom.getPlayerLeft()) {
-            	gameRoom.put(FROM, name, PLAYER, gRoom.getGame().getPlayer1().getPos().getX());
+            	gameRoom.put(FROM, name, PLAYER, jsonPlayer);
             }
             
-            // Receive other player movement information
-           /* otherPlayerInfo = gameRoom.getp(new ActualField(TO), new ActualField(otherPlayerName), new ActualField(PLAYERMOVE));
-            if (otherPlayerInfo != null) {
-            	gRoom.getGame().getPlayer2().setX((int)otherPlayerInfo[3]);;
-            }*/
+            // Get player movement from other player
+            Object[] otherPlayer = gameRoom.getp(new ActualField(FROM), new ActualField(otherPlayerName), new ActualField(PLAYER), new FormalField(String.class));
+            if (otherPlayer != null) {
+                String jsonOtherPlayer = (String) otherPlayer[3];
+                JsonObject player2 = parser.parse(jsonOtherPlayer).getAsJsonObject();
+                Point player2pos = gson.fromJson(player2.get("player"), Point.class);
+                
+                // Set other players position
+                gRoom.getGame().getPlayer2().setX(player2pos.getX());
+            }
             
             // Arrow shooting from player, send boolean, so other player can make arrow
-            if (gRoom.getGame().getPlayer1().getArrowIsAlive()) {
-            	gameRoom.put(FROM, name, PLAYERSHOOT, gRoom.getGame().getPlayer1().getArrow().isAlive());
+            if (player1.getArrowIsAlive()) {
+            	Arrow p1arrow = player1.getArrow();
+            	gameRoom.put(FROM, name, PLAYERSHOOT, p1arrow.getX());
             }
             
-            // Receive other player movement
-            
-            // Send bubbles movement information, if host
-            for (Bubble bubble: gRoom.getGame().getBubbles()) {
-            	 gameRoom.put(FROM, name, BUBBLES, bubble.getPos().getX(), bubble.getPos().getY(), bubble.getSize());
+            // Receive information, when other player shoot
+            Object[] otherArrow = gameRoom.getp(new ActualField(FROM),new ActualField(otherPlayerName), new ActualField(ARROW), new FormalField(Boolean.class));
+            if (otherArrow != null && (boolean) otherArrow[3]) {
+            	 gRoom.getGame().getPlayer2().makeArrow();
             }
+           
+            // Send player collision with bubble
             
             
-           // otherPlayerInfo = gameRoom.get(new ActualField(TO));
-        
-        
-            System.out.println("Entered game loop");
-
-            Bubble testBubble = game.getBubbles().get(0);
-            Bubble testBubble1 = game.getBubbles().get(1);
-          
-            String json = gson.toJson(testBubble);
-            String json1 = gson.toJson(testBubble1);
-            gameRoom.put("newBubble", json);
-            gameRoom.put("newBubble", json1);
-            
-            gameRoom.get(new ActualField("TEST"));
         }  
     }
     

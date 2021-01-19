@@ -245,7 +245,7 @@ class roomHandler implements Runnable {
 				// Server only needs to end the game
 				
 				
-				Object[] testBubble = gameRoom.get(new ActualField("newBubble"), new FormalField(String.class));
+				/*Object[] testBubble = gameRoom.get(new ActualField("newBubble"), new FormalField(String.class));
 				String json = (String) testBubble[1];
 
 				JsonObject newBubble = parser.parse(json).getAsJsonObject();
@@ -254,7 +254,7 @@ class roomHandler implements Runnable {
 				
 				System.out.println(json);
 				System.out.println("Size " + size);
-				System.out.println("Bubble pos: " + bubble.toString());
+				System.out.println("Bubble pos: " + bubble.toString());*/
 			}
 
 		} catch (InterruptedException e) {
