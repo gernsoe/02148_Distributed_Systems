@@ -131,6 +131,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		panel.setBackground(new Color(135, 206, 235));
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel.setFocusable(true);
+		panel.requestFocusInWindow();
 		panel.setPreferredSize(new Dimension(borderWidth,borderHeight));
 		frame.getContentPane().add(panel);
 		panel.addKeyListener(this);
@@ -280,23 +281,30 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
-		case KeyEvent.VK_RIGHT:
-			if (!shooting) {
-				right1 = true;
-			}
-			break;
-		case KeyEvent.VK_LEFT:
-			if (!shooting) {
-				left1 = true;	
-			}
-			break;
-		case KeyEvent.VK_SPACE:
-			if (!game.getPlayer1().getArrowIsAlive()) {
-				shooting = true;
-				game.getPlayer1().makeArrow();
-				moveDelay = (68/delay);
-			}
-			break;
+			case KeyEvent.VK_RIGHT:
+				System.out.println("right click");
+				if (!shooting) {
+					
+					right1 = true;
+				}
+				break;
+			case KeyEvent.VK_LEFT:
+				System.out.println("left click");
+				if (!shooting) {
+					
+					left1 = true;	
+				}
+				break;
+			case KeyEvent.VK_SPACE:
+				if (!game.getPlayer1().getArrowIsAlive()) {
+					shooting = true;
+					game.getPlayer1().makeArrow();
+					moveDelay = (68/delay);
+				}
+				break;
+			default:
+				System.out.println("key not recognized");
+				break;
 		}
 	}
 
@@ -439,7 +447,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		timer.start();
 		// Redraw bubbles, players and arrows
 		panel.repaint();
 		

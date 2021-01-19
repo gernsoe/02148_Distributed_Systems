@@ -31,7 +31,8 @@ public class Client {
     public static boolean startButtonClicked = false;
     public static boolean backToMenuButtonClicked = false;
     public static boolean inLobby = true;
-    public static boolean connected = true;
+    public static boolean multiConnected = false;
+    public static boolean singleConnected = false;
     public static final String LEAVE_ROOM = "leave_room";   // used to signal that a player wants to leave a room
     public static final String LEFT_ROOM = "left_room"; 	// used to signal when the player is out of the room
     public static final String READY_TO_PLAY = "ready_to_play";
@@ -177,9 +178,12 @@ public class Client {
     		gameRoom.put(FROM, HOST, BUBBLES, json);
     		
     		// Get approved by server to start game, if two players
-    		if (!otherPlayerName.equals(null)) {
-    			gameRoom.get(new ActualField(TO), new ActualField(HOST), new ActualField(STARTMAP));
-    		}
+    		if (otherPlayerName != null) {
+                gameRoom.get(new ActualField(TO), new ActualField(HOST), new ActualField(STARTMAP));
+                multiConnected = true;
+    		} else {
+                singleConnected = true;
+            }
     	} else if (myPermission.equals(PARTICIPANT)) {
     		// Receive bubbles from host
     		Object[] getBubbles = gameRoom.get(new ActualField(FROM), new ActualField(HOST), new ActualField(BUBBLES), new FormalField(String.class));
@@ -196,7 +200,8 @@ public class Client {
     		gameRoom.put(FROM, PARTICIPANT, GOTMAP);
     		
     		// Get approved by server to start game
-    		gameRoom.get(new ActualField(TO), new ActualField(PARTICIPANT), new ActualField(STARTMAP));
+            gameRoom.get(new ActualField(TO), new ActualField(PARTICIPANT), new ActualField(STARTMAP));
+            multiConnected = true;
     	}
     	
         gRoom.setUserName1(name);
@@ -218,8 +223,8 @@ public class Client {
         int score2 = game.getPlayer2().getScore();
         endScreen(level, score1, score2);
         */
-        // Game loop
-        while(connected) {
+        // Game loop - multiplayer
+        while(multiConnected) {
             System.out.println("Entered game loop");
             
             // Send player movement information
@@ -248,6 +253,11 @@ public class Client {
             Object[] otherArrow = gameRoom.getp(new ActualField(FROM),new ActualField(otherPlayerName), new ActualField(ARROW), new FormalField(Boolean.class));
             if (otherArrow != null && (boolean) otherArrow[3]) {
             	 gRoom.getGame().getPlayer2().makeArrow(); 
+            }
+            
+            // Game loop - single player
+            while (singleConnected) {
+                gameRoom.get(new ActualField("singleplayergameroom"));
             }
            
             // Send player collision with bubble
@@ -353,7 +363,8 @@ public class Client {
         loginButtonClicked = false;
         startButtonClicked = false;
         inLobby = true;
-        connected = true;
+        multiConnected = false;
+        singleConnected = false;
     }
 
     public static void checkGameStarted(WaitingRoom wRoom) throws InterruptedException {
