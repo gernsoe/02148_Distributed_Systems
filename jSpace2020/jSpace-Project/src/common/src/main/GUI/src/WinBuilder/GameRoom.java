@@ -44,8 +44,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	 * @param actionListener 
 	 */
 	public GameRoom() {
-		game = new LevelHandler(borderWidth, borderHeight, "Name", "", playerHeight);
-		frame.setVisible(true);
+		game = new LevelHandler(borderWidth, borderHeight, "Name", "Name1", playerHeight);
 	}
 
 	/**
@@ -60,14 +59,15 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	public void initializeAsParticipant(ArrayList<Bubble> bubbles) {
 		game.joinLevel(level, hearts, score, bubbles);
 		initialize();
+
 	}
 	
 	private void initialize() {
 		// Add game elements
 
 		// Add GUI
-
 		frame = new JFrame("Game Room");
+		frame.setVisible(true);
 
 		frame.getContentPane().setBackground(new Color(135, 206, 250));
 		frame.getContentPane().setPreferredSize(new Dimension(1000,700));

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Map {
 	
-	private int playerCount = 1, borderHeight, borderWidth;
+	private int playerCount = 2, borderHeight, borderWidth;
 	double speedX, speedY;
 	// Changed later to ball/bubbles class
 	ArrayList<Bubble> bubbles;
