@@ -17,12 +17,12 @@ public class Player {
 	String playerName;
 	
 	// borderHeight is not
-	public Player(Point playerPos, int borderWidth, String playerName, int playerHeight, int hearts, int scores) {
+	public Player(Point player, int borderWidth, String playerName, int playerHeight, int hearts, int scores) {
 		this.playerHeight = playerHeight;
 		this.scores = scores;
 		this.hearts = hearts;
 		playerWidth = (playerHeight/3)*2;
-		this.player = playerPos;
+		this.player = player;
 		this.playerName = playerName;
 		this.borderWidth = borderWidth;
 	}
@@ -30,7 +30,7 @@ public class Player {
 	// Player movement and collision with wall
 	public void goRight() {
 		if (player.getX() + (stepSize + playerWidth) <= borderWidth & isAlive) {
-			// System.out.println("Going right at " + player.toString());
+			System.out.println("Going right at " + player.toString());
 			player.setX(player.getX() + stepSize);
 		}
 	}
@@ -38,7 +38,7 @@ public class Player {
 	public void goLeft() {
 		if (player.getX() >= 0 & isAlive) {
 			player.setX(player.getX() - stepSize);
-			// System.out.println("Going left at " + player.toString());
+			System.out.println("Going left at " + player.toString());
 		}
 	}
 	
@@ -77,11 +77,11 @@ public class Player {
 		return player.getY();
 	}
 	
-	public void setX(int x) {
+	public void setX(double x) {
 		player.setX(x);
 	}
 	
-	public void setY(int y) {
+	public void setY(double y) {
 		player.setY(y);
 	}
 	

@@ -15,6 +15,7 @@ public class endScreen {
 
 	private JFrame frmEndScreen;
 	private JLabel score_1, score_2, actualLevelLabel;
+	private JButton btnNewButton, btnNewButton_1;
 
 	/**
 	 * Launch the application.
@@ -100,12 +101,16 @@ public class endScreen {
 		frmEndScreen.getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JButton btnNewButton = new JButton("Restart");
+		btnNewButton = new JButton("Restart");
 		btnNewButton.setBounds(116, 126, 88, 29);
+		btnNewButton.setVisible(false);
+		btnNewButton.setEnabled(false);
 		panel.add(btnNewButton);
 		
-		JButton btnNewButton_1 = new JButton("Back to Menu");
+		btnNewButton_1 = new JButton("Back to Menu");
 		btnNewButton_1.setBounds(100, 169, 128, 29);
+		btnNewButton_1.setVisible(false);
+		btnNewButton_1.setEnabled(false);
 		panel.add(btnNewButton_1);
 
 		// Level number
@@ -125,8 +130,6 @@ public class endScreen {
 		lblNewLabel_4.setBounds(137, 252, 80, 16);
 		panel.add(lblNewLabel_4);
 		
-
-
 		
 		JLabel lblNewLabel = new JLabel("");
 		Image img = new ImageIcon(this.getClass().getResource("/bg.png")).getImage();
@@ -158,5 +161,22 @@ public class endScreen {
 	public void setLevel(int level) {
 		actualLevelLabel.setText("" + level);
 		actualLevelLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+	}
+	public void closeWindow() {
+		frmEndScreen.setVisible(false);
+	}
+
+	public void createResetButton() {
+		btnNewButton.setVisible(true);
+		btnNewButton.setEnabled(true);
+	}
+
+	public void createBackButton() {
+		btnNewButton_1.setVisible(true);
+		btnNewButton_1.setEnabled(true);
+	}
+
+	public JButton getBackButton() {
+		return btnNewButton_1;
 	}
 }

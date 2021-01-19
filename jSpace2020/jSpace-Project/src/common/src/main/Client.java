@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.EnumSet;
 
 import javax.swing.Timer;
 
@@ -28,8 +29,10 @@ public class Client {
     public static String myPermission;
     public static boolean loginButtonClicked = false;
     public static boolean startButtonClicked = false;
+    public static boolean backToMenuButtonClicked = false;
     public static boolean inLobby = true;
-    public static boolean connected = true;
+    public static boolean multiConnected = false;
+    public static boolean singleConnected = false;
     public static final String LEAVE_ROOM = "leave_room";   // used to signal that a player wants to leave a room
     public static final String LEFT_ROOM = "left_room"; 	// used to signal when the player is out of the room
     public static final String READY_TO_PLAY = "ready_to_play";
@@ -44,6 +47,7 @@ public class Client {
     public static final String HOST = "host";
     public static final String PARTICIPANT = "participant";
     public static final String PLAYER = "player";
+    public static final String ARROW = "arrow";
     public static final String PLAYERSHOOT = "playershoot";
     public static final String BUBBLES = "bubbles";
     public static final String STARTMAP = "startmap";
@@ -67,32 +71,8 @@ public class Client {
             preGameLobby();
 
             gameLoop();
-            
+
         } catch (InterruptedException e) {}
-    }
-
-    public static void endScreen(int level, int player1Score, int player2Score) throws InterruptedException, UnknownHostException, IOException {
-        endScreen eScreen = new endScreen();
-        eScreen.setScore(myPermission, player1Score);
-        if (otherPlayerName != null) {
-            eScreen.setScore(myPermission, player2Score);
-        }
-        eScreen.setLevel(level);
-
-        switch (myPermission) {
-            case HOST:
-                
-
-                break;
-            
-            case PARTICIPANT:
-
-                break;
-
-            default:
-                System.out.println("No permission");
-                break;
-        }
     }
 
     public static void joinRoom() throws InterruptedException, UnknownHostException, IOException {
@@ -188,21 +168,26 @@ public class Client {
     public static void gameLoop() throws InterruptedException {
     	gRoom = new GameRoom();
     	Gson gson = new Gson();
+    	JsonParser parser = new JsonParser();
     	
     	if (myPermission.equals(HOST)) {
     		gRoom.initializeAsHost();
     		ArrayList<Bubble> bubbles = gRoom.getGame().getBubbles();
     		String json = gson.toJson(bubbles);
+    		// Send bubbles
     		gameRoom.put(FROM, HOST, BUBBLES, json);
     		
-    		// send bubbles to participant
-    		// gameRoom.put(fields)
-    		gameRoom.get(new ActualField(TO), new ActualField(HOST), new ActualField(STARTMAP));
-    		gRoom.getTimer().start();
+    		// Get approved by server to start game, if two players
+    		if (otherPlayerName != null) {
+                gameRoom.get(new ActualField(TO), new ActualField(HOST), new ActualField(STARTMAP));
+                multiConnected = true;
+    		} else {
+                singleConnected = true;
+            }
     	} else if (myPermission.equals(PARTICIPANT)) {
-    		// Receive bubles from host
+    		// Receive bubbles from host
     		Object[] getBubbles = gameRoom.get(new ActualField(FROM), new ActualField(HOST), new ActualField(BUBBLES), new FormalField(String.class));
-    		JsonParser parser = new JsonParser();
+    	
     		String json = (String) getBubbles[3];
     		
     		ArrayList<Bubble> bubbles = new ArrayList<Bubble>();
@@ -213,8 +198,10 @@ public class Client {
     		}
     		gRoom.initializeAsParticipant(bubbles);
     		gameRoom.put(FROM, PARTICIPANT, GOTMAP);
-    		gameRoom.get(new ActualField(TO), new ActualField(PARTICIPANT), new ActualField(STARTMAP));
-    		gRoom.getTimer().start();
+    		
+    		// Get approved by server to start game
+            gameRoom.get(new ActualField(TO), new ActualField(PARTICIPANT), new ActualField(STARTMAP));
+            multiConnected = true;
     	}
     	
         gRoom.setUserName1(name);
@@ -223,8 +210,12 @@ public class Client {
         // Start timer
         gRoom.getTimer().start();
         
+        // Player infos from this client
+        Player player1 = gRoom.getGame().getPlayer1();
+        String jsonPlayer = gson.toJson(player1);
+        
 
-        LevelHandler game = gRoom.getGame();
+        // LevelHandler game = gRoom.getGame();
 
         /*
         int level = game.getCurrentLevel();
@@ -232,38 +223,54 @@ public class Client {
         int score2 = game.getPlayer2().getScore();
         endScreen(level, score1, score2);
         */
-        // Game loop
-        while(connected) {
-            // System.out.println("Entered game loop");
+        // Game loop - multiplayer
+        while(multiConnected) {
+            System.out.println("Entered game loop");
             
-            // Send player movement information (Only X coordinate is needed)
+            // Send player movement information
             if (gRoom.getPlayerRight() || gRoom.getPlayerLeft()) {
-            	gameRoom.put(FROM, name, PLAYER, gRoom.getGame().getPlayer1().getPos().getX());
+            	gameRoom.put(FROM, name, PLAYER, jsonPlayer);
             }
             
-            // Receive other player movement information
-           /* otherPlayerInfo = gameRoom.getp(new ActualField(TO), new ActualField(otherPlayerName), new ActualField(PLAYERMOVE));
-            if (otherPlayerInfo != null) {
-            	gRoom.getGame().getPlayer2().setX((int)otherPlayerInfo[3]);;
-            }*/
+            // Get player movement from other player
+            Object[] otherPlayer = gameRoom.getp(new ActualField(FROM), new ActualField(otherPlayerName), new ActualField(PLAYER), new FormalField(String.class));
+            if (otherPlayer != null) {
+                String jsonOtherPlayer = (String) otherPlayer[3];
+                JsonObject player2 = parser.parse(jsonOtherPlayer).getAsJsonObject();
+                Point player2pos = gson.fromJson(player2.get("player"), Point.class);
+                
+                // Set other players position
+                gRoom.getGame().getPlayer2().setX(player2pos.getX());
+            }
             
             // Arrow shooting from player, send boolean, so other player can make arrow
-            if (gRoom.getGame().getPlayer1().getArrowIsAlive()) {
-            	gameRoom.put(FROM, name, PLAYERSHOOT, gRoom.getGame().getPlayer1().getArrow().isAlive());
+            if (player1.getArrowIsAlive()) {
+            	Arrow p1arrow = player1.getArrow();
+            	gameRoom.put(FROM, name, PLAYERSHOOT, p1arrow.getX());
             }
             
-            // Receive other player movement
-            
-            // Send bubbles movement information, if host
-            for (Bubble bubble: gRoom.getGame().getBubbles()) {
-            	 gameRoom.put(FROM, name, BUBBLES, bubble.getPos().getX(), bubble.getPos().getY(), bubble.getSize());
+            // Receive information, when other player shoot
+            Object[] otherArrow = gameRoom.getp(new ActualField(FROM),new ActualField(otherPlayerName), new ActualField(ARROW), new FormalField(Boolean.class));
+            if (otherArrow != null && (boolean) otherArrow[3]) {
+            	 gRoom.getGame().getPlayer2().makeArrow(); 
             }
             
+            // Game loop - single player
+            while (singleConnected) {
+                gameRoom.get(new ActualField("singleplayergameroom"));
+            }
+           
+            // Send player collision with bubble
             
+            
+
            // otherPlayerInfo = gameRoom.get(new ActualField(TO));
-        
+
             //endScreen(1, 50, 100);
+            /*System.out.println("Entered game loop");
+=======
             System.out.println("Entered game loop");
+>>>>>>> branch 'master' of https://github.com/gernsoe/02148_Game_Repo
 
             Bubble testBubble = game.getBubbles().get(0);
             Bubble testBubble1 = game.getBubbles().get(1);
@@ -273,8 +280,25 @@ public class Client {
             gameRoom.put("newBubble", json);
             gameRoom.put("newBubble", json1);
             
-            gameRoom.get(new ActualField("TEST"));
+            gameRoom.get(new ActualField("TEST"));*/
         }  
+    }
+
+    public static void endScreen(int level, int player1Score, int player2Score) throws InterruptedException, UnknownHostException, IOException {
+        endScreen eScreen = new endScreen();
+        eScreen.setScore(myPermission, player1Score);
+        if (otherPlayerName != null) {
+            eScreen.setScore(myPermission, player2Score);
+        }
+        eScreen.setLevel(level);
+
+        eScreen.createBackButton();
+        backToMenuButton(eScreen);
+        while (!backToMenuButtonClicked) {
+            Thread.sleep(500);
+        }
+        eScreen.closeWindow();
+        joinRoom();
     }
     
     public static void loginButton(fMenu menu, Space lobby) throws InterruptedException{
@@ -322,6 +346,14 @@ public class Client {
         });
     }
 
+    public static void backToMenuButton(endScreen eScreen) {
+        eScreen.getBackButton().addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                backToMenuButtonClicked = true;
+            }
+        });
+    }
+
     public static void resetVariables() {
         name = null;
         roomID = null;
@@ -331,7 +363,8 @@ public class Client {
         loginButtonClicked = false;
         startButtonClicked = false;
         inLobby = true;
-        connected = true;
+        multiConnected = false;
+        singleConnected = false;
     }
 
     public static void checkGameStarted(WaitingRoom wRoom) throws InterruptedException {

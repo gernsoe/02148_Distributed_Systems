@@ -14,13 +14,12 @@ public class Map {
 	public Map (int borderWidth, int borderHeight) {
 		this.borderHeight = borderHeight;
 		this.borderWidth = borderWidth;
+		players = new Player[playerCount];
 	}
 	
 	public void makePlayers(String playerName1, String playerName2, int playerHeight, int hearts, int scores) {
 		// Add players 
 		if (!playerName2.equals("")) {
-			playerCount = 2;
-			players = new Player[playerCount];
 			players[1] = new Player(new Point(borderWidth/2+playerHeight/3,borderHeight-playerHeight),borderWidth, playerName2, playerHeight, hearts, scores);
 		}
 		
@@ -28,8 +27,6 @@ public class Map {
 	}
 	
 	public void addPlayers(String playerName1, String playerName2, int playerHeight, int hearts, int scores) {
-		playerCount = 2;
-		players = new Player[playerCount];
 		players[0] = new Player(new Point(borderWidth/2+playerHeight/3,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts, scores);
 		players[1] = new Player(new Point(borderWidth/2-playerHeight/3,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts, scores);
 	}
