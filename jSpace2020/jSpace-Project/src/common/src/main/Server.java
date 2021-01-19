@@ -2,11 +2,9 @@ package common.src.main;
 
 import org.jspace.*;
 
-import common.src.main.GUI.src.WinBuilder.GameRoom;
-
-import java.util.ArrayList;
-
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 	/*
 	 *  Server checks that the name is valid (not empty, unique and not too long) 
@@ -226,10 +224,22 @@ class roomHandler implements Runnable {
 				}
 			}
 
+			Gson gson = new Gson();
+			JsonParser parser = new JsonParser();
 			// Game loop
 			while (connected) {
 				System.out.println("Entered game loop");
-				gameRoom.get(new ActualField("TEST"));
+				
+				Object[] testBubble = gameRoom.get(new ActualField("newBubble"), new FormalField(String.class));
+				String json = (String) testBubble[1];
+
+				JsonObject newBubble = parser.parse(json).getAsJsonObject();
+				int size = gson.fromJson(newBubble.get("size"), int.class);
+				Point bubble = gson.fromJson(newBubble.get("bubble"), Point.class);
+				
+				System.out.println(json);
+				System.out.println("Size " + size);
+				System.out.println("Bubble pos: " + bubble.toString());
 			}
 
 		} catch (InterruptedException e) {
