@@ -63,6 +63,11 @@ public class Client {
 
         try {
             joinRoom();
+
+            preGameLobby();
+
+            gameLoop();
+            
         } catch (InterruptedException e) {}
     }
 
@@ -114,7 +119,7 @@ public class Client {
             } else {
                 menu.closeWindow();
                 System.out.println("Joining game room: " + roomID);
-                preGameLobby();
+                break;
             }
         }
     }
