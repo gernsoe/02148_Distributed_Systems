@@ -177,7 +177,7 @@ public class Client {
     		gameRoom.put(FROM, HOST, BUBBLES, json);
     		
     		// Get approved by server to start game, if two players
-    		if (!otherPlayerName.equals(null)) {
+    		if (otherPlayerName != null) {
     			gameRoom.get(new ActualField(TO), new ActualField(HOST), new ActualField(STARTMAP));
     		}
     	} else if (myPermission.equals(PARTICIPANT)) {

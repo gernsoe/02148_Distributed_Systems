@@ -59,7 +59,6 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	public void initializeAsParticipant(ArrayList<Bubble> bubbles) {
 		game.joinLevel(level, hearts, score, bubbles);
 		initialize();
-
 	}
 	
 	private void initialize() {
@@ -97,6 +96,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
 				
+				
 				// Background
 				g.setColor(game.getLevelColor(level));
 				g.fillRect(0,0,borderWidth,borderHeight);
@@ -131,6 +131,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		panel.setBackground(new Color(135, 206, 235));
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel.setFocusable(true);
+		
 		panel.setPreferredSize(new Dimension(borderWidth,borderHeight));
 		frame.getContentPane().add(panel);
 		panel.addKeyListener(this);
