@@ -51,14 +51,14 @@ public class Help {
 		
 		//Buttons
 		JLabel buttons = new JLabel();
-		buttons.setBounds(332, 0, 138, 102);
+		buttons.setBounds(294, 25, 138, 102);
 		Image btn = new ImageIcon(this.getClass().getResource("/btn.png")).getImage();
 		buttons.setIcon(new ImageIcon(btn));
 		frmHelp.getContentPane().add(buttons);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(255, 255, 255));
-		panel.setBounds(349, 171, 154, 77);
+		panel.setBounds(288, 171, 138, 77);
 		frmHelp.getContentPane().add(panel);
 		panel.setLayout(null);
 		
