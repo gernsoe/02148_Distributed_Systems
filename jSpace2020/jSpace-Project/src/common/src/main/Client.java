@@ -77,7 +77,7 @@ public class Client {
         switch (myPermission) {
             case HOST:
                 
-            
+
                 break;
             
             case PARTICIPANT:
@@ -123,8 +123,6 @@ public class Client {
         gameRoom = new RemoteSpace(roomURI);
         gameRoom.put(FROM, name, READY_TO_PLAY);
         myPermission = (String) gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(PERMISSION), new FormalField(String.class))[3];
-        
-        endScreen(1, 50, 100);
 
         WaitingRoom wRoom = new WaitingRoom(name, roomID);
         wRoom.createLeaveButton();
@@ -259,7 +257,7 @@ public class Client {
             
            // otherPlayerInfo = gameRoom.get(new ActualField(TO));
         
-        
+            //endScreen(1, 50, 100);
             System.out.println("Entered game loop");
 
             Bubble testBubble = game.getBubbles().get(0);

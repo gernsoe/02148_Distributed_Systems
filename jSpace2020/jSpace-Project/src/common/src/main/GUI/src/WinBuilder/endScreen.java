@@ -90,6 +90,10 @@ public class endScreen {
 		panel_2.setBackground(new Color(255, 255, 255));
 		panel_2.add(score_2);
 		
+		JLabel lblNewLabel_8 = new JLabel("New label");
+		lblNewLabel_8.setBounds(76, 33, 80, 16);
+		panel_3.add(lblNewLabel_8);
+		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(220, 20, 60));
 		panel.setBounds(339, 176, 324, 370);
@@ -120,6 +124,9 @@ public class endScreen {
 		lblNewLabel_4.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 		lblNewLabel_4.setBounds(137, 252, 80, 16);
 		panel.add(lblNewLabel_4);
+		
+
+
 		
 		JLabel lblNewLabel = new JLabel("");
 		Image img = new ImageIcon(this.getClass().getResource("/bg.png")).getImage();
