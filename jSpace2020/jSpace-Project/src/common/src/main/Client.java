@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import com.google.gson.Gson;
+
 public class Client {
     static String name, roomID, roomURI;
     static String otherPlayerName = null;
@@ -147,10 +149,20 @@ public class Client {
         GameRoom gRoom = new GameRoom();
         gRoom.setUserName1(name);
         gRoom.setUserName2(otherPlayerName);
+        LevelHandler game = gRoom.getGame();
 
         // Game loop
         while(connected) {
             System.out.println("Entered game loop");
+
+            Bubble testBubble = game.getBubbles().get(0);
+            Bubble testBubble1 = game.getBubbles().get(1);
+            Gson gson = new Gson();
+            String json = gson.toJson(testBubble);
+            String json1 = gson.toJson(testBubble1);
+            gameRoom.put("newBubble", json);
+            gameRoom.put("newBubble", json1);
+            
             gameRoom.get(new ActualField("TEST"));
         }  
     }

@@ -29,7 +29,7 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 	private Timer timer;
 	private int delay = 17, playerHeight = 48, timeLeftForInvincibility1 = (1000/delay)*3, 
 			timeLeftForInvincibility2 = (1000/delay)*3, moveDelay = 0;
-	int score, level = 1, hearts = 3;
+	int score, level = 5, hearts = 3;
 	private JFrame frame;
 	private JPanel panel;
 	private boolean left1, left2, right1, right2, shooting;
@@ -356,6 +356,10 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 
 	public void setUserName2(String name) {
 		Player2Label.setText(name);
+	}
+
+	public LevelHandler getGame() {
+		return game;
 	}
 
 	@Override
