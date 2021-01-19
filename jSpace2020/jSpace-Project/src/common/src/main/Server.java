@@ -125,7 +125,7 @@ class roomHandler implements Runnable {
     public static final String PLAYER = "player";
     public static final String PLAYERSHOOT = "playershoot";
     public static final String BUBBLES = "bubbles";
-    public static final String MAP = "map";
+    public static final String GOTMAP = "gotmap";
     public static final String STARTMAP = "startmap";
 
 	public roomHandler(String roomID, int roomCounter, String roomURI, SpaceRepository repo, Space rooms) {
@@ -229,9 +229,9 @@ class roomHandler implements Runnable {
 				}
 			}
 			// When the participant has received the map, start game on both
-			/*gameRoom.get(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(MAP));
+			gameRoom.get(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(GOTMAP));
 			gameRoom.put(TO, HOST, STARTMAP);
-			gameRoom.put(TO, PARTICIPANT, STARTMAP);*/
+			gameRoom.put(TO, PARTICIPANT, STARTMAP);
 			
 
 			Gson gson = new Gson();

@@ -11,10 +11,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import javax.swing.Timer;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 
 public class Client {
@@ -42,6 +46,7 @@ public class Client {
     public static final String PLAYERSHOOT = "playershoot";
     public static final String BUBBLES = "bubbles";
     public static final String STARTMAP = "startmap";
+    public static final String GOTMAP = "gotmap";
 
     //String host = "tcp://2.tcp.ngrok.io:10963/";
     public static final String host = "tcp://127.0.0.1:9001/";
@@ -157,21 +162,35 @@ public class Client {
 
     public static void gameLoop() throws InterruptedException {
     	gRoom = new GameRoom();
+    	Gson gson = new Gson();
     	
-    	/*if (myPermission.equals(HOST)) {
+    	if (myPermission.equals(HOST)) {
     		gRoom.initializeAsHost();
+    		ArrayList<Bubble> bubbles = gRoom.getGame().getBubbles();
+    		String json = gson.toJson(bubbles);
+    		gameRoom.put(FROM, HOST, BUBBLES, json);
+    		
     		// send bubbles to participant
     		// gameRoom.put(fields)
     		gameRoom.get(new ActualField(TO), new ActualField(HOST), new ActualField(STARTMAP));
     		gRoom.getTimer().start();
     	} else if (myPermission.equals(PARTICIPANT)) {
     		// Receive bubles from host
-    		// gameRoom.get(fields)
-    		// gRoom.intializeAsParticipant(bubbles);
-    		// gameRoom.put(FROM, PARTICIPANT, );
+    		Object[] getBubbles = gameRoom.get(new ActualField(FROM), new ActualField(HOST), new ActualField(BUBBLES), new FormalField(String.class));
+    		JsonParser parser = new JsonParser();
+    		String json = (String) getBubbles[3];
+    		
+    		ArrayList<Bubble> bubbles = new ArrayList<Bubble>();
+    		JsonArray bubbleList = parser.parse(json).getAsJsonArray();
+    		for(int i = 0; i < bubbleList.size(); i++) {
+    			Bubble bubble = gson.fromJson(bubbleList.get(i), Bubble.class);
+    			bubbles.add(bubble);
+    		}
+    		gRoom.initializeAsParticipant(bubbles);
+    		gameRoom.put(FROM, PARTICIPANT, GOTMAP);
     		gameRoom.get(new ActualField(TO), new ActualField(PARTICIPANT), new ActualField(STARTMAP));
     		gRoom.getTimer().start();
-    	}*/
+    	}
     	
         gRoom.setUserName1(name);
         gRoom.setUserName2(otherPlayerName);
@@ -218,7 +237,7 @@ public class Client {
 
             Bubble testBubble = game.getBubbles().get(0);
             Bubble testBubble1 = game.getBubbles().get(1);
-            Gson gson = new Gson();
+          
             String json = gson.toJson(testBubble);
             String json1 = gson.toJson(testBubble1);
             gameRoom.put("newBubble", json);
