@@ -95,8 +95,8 @@ public class WaitingRoom {
 		frmWaitingRoom.getContentPane().add(lblWaiting);
 		lblWaiting.setVisible(false);
 	
-		
-	
+
+
 		
 		//Room ID panel
 		lblRoomID = new JLabel();
@@ -126,7 +126,7 @@ public class WaitingRoom {
 		Image img2 = new ImageIcon(this.getClass().getResource("/BubShooter.png")).getImage();
 		
 		btnStart = new JButton("Start Game");
-		btnLeave.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+		btnStart.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 		btnStart.setBounds(438, 282, 117, 29);
 		btnStart.setVisible(false);
 		btnStart.setEnabled(false);
@@ -151,7 +151,6 @@ public class WaitingRoom {
 		label_figure2.setBounds(760, 375, 88, 175);
 		frmWaitingRoom.getContentPane().add(label_figure2);
 		label_figure2.setIcon(new ImageIcon(imgFigure2));
-		
 
 		//User texfields
 		textField_User2 = new JLabel();

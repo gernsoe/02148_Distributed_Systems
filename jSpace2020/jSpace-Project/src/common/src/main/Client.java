@@ -69,7 +69,25 @@ public class Client {
     public static void endScreen(int level, int player1Score, int player2Score) throws InterruptedException, UnknownHostException, IOException {
         endScreen eScreen = new endScreen();
         eScreen.setScore(myPermission, player1Score);
+        if (otherPlayerName != null) {
+            eScreen.setScore(myPermission, player2Score);
+        }
+        eScreen.setLevel(level);
 
+        switch (myPermission) {
+            case HOST:
+                
+            
+                break;
+            
+            case PARTICIPANT:
+
+                break;
+
+            default:
+                System.out.println("No permission");
+                break;
+        }
     }
 
     public static void joinRoom() throws InterruptedException, UnknownHostException, IOException {
@@ -84,7 +102,6 @@ public class Client {
             while (!loginButtonClicked) {
                 Thread.sleep(500);
             }
-            //endScreen(1, 50, 100);
 
             // Name might be redundant (consider removing)
             Object[] response = lobby.get(new ActualField("roomURI"), new ActualField(name), new ActualField(roomID), new FormalField(String.class));
@@ -107,6 +124,8 @@ public class Client {
         gameRoom.put(FROM, name, READY_TO_PLAY);
         myPermission = (String) gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(PERMISSION), new FormalField(String.class))[3];
         
+        endScreen(1, 50, 100);
+
         WaitingRoom wRoom = new WaitingRoom(name, roomID);
         wRoom.createLeaveButton();
         leaveRoomButton(wRoom);
