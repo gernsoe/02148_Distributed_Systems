@@ -52,14 +52,14 @@ public class Settings {
 		frmSetting.setTitle("Setting");
 		frmSetting.getContentPane().setBackground(new Color(218, 165, 32));
 		frmSetting.getContentPane().setLayout(null);
-		
+		frmSetting.setLocationRelativeTo(null);
 		
 		//Amount of lives
 		JPanel panel = new JPanel();
 		panel.setBounds(136, 62, 222, 73);
 		frmSetting.getContentPane().add(panel);
 		panel.setLayout(null);
-		frmSetting.setLocationRelativeTo(null);
+		
 		
 		//CheckBoxes
 		JRadioButton checkBox1 = new JRadioButton("1");
