@@ -6,6 +6,7 @@ import org.jspace.*;
 
 import common.src.main.GUI.src.WinBuilder.GameRoom;
 import common.src.main.GUI.src.WinBuilder.WaitingRoom;
+import common.src.main.GUI.src.WinBuilder.endScreen;
 import common.src.main.GUI.src.WinBuilder.fMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -62,12 +63,13 @@ public class Client {
 
         try {
             joinRoom();
-            
-            preGameLobby();
-
-            gameLoop(); 
-            
         } catch (InterruptedException e) {}
+    }
+
+    public static void endScreen(int level, int player1Score, int player2Score) throws InterruptedException, UnknownHostException, IOException {
+        endScreen eScreen = new endScreen();
+        eScreen.setScore(myPermission, player1Score);
+
     }
 
     public static void joinRoom() throws InterruptedException, UnknownHostException, IOException {
@@ -82,6 +84,7 @@ public class Client {
             while (!loginButtonClicked) {
                 Thread.sleep(500);
             }
+            //endScreen(1, 50, 100);
 
             // Name might be redundant (consider removing)
             Object[] response = lobby.get(new ActualField("roomURI"), new ActualField(name), new ActualField(roomID), new FormalField(String.class));
@@ -201,7 +204,12 @@ public class Client {
 
         LevelHandler game = gRoom.getGame();
 
-
+        /*
+        int level = game.getCurrentLevel();
+        int score1 = game.getPlayer1().getScore();
+        int score2 = game.getPlayer2().getScore();
+        endScreen(level, score1, score2);
+        */
         // Game loop
         while(connected) {
             // System.out.println("Entered game loop");
