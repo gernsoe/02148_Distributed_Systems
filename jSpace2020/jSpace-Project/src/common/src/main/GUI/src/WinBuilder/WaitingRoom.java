@@ -95,6 +95,7 @@ public class WaitingRoom {
 		lblWaiting.setVisible(false);
 		
 		
+		
 	
 		//Leave Room
 		btnLeave = new JButton("Leave Room");
@@ -109,7 +110,7 @@ public class WaitingRoom {
 		Image img2 = new ImageIcon(this.getClass().getResource("/BubShooter.png")).getImage();
 		
 		btnStart = new JButton("Start Game");
-		btnLeave.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+		btnStart.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 		btnStart.setBounds(438, 282, 117, 29);
 		btnStart.setVisible(false);
 		btnStart.setEnabled(false);
@@ -134,7 +135,6 @@ public class WaitingRoom {
 		label_figure2.setBounds(760, 375, 88, 175);
 		frmWaitingRoom.getContentPane().add(label_figure2);
 		label_figure2.setIcon(new ImageIcon(imgFigure2));
-		
 
 		//User texfields
 		textField_User2 = new JLabel();
@@ -169,6 +169,14 @@ public class WaitingRoom {
 		settings = new JMenu("Settings");
 		//mnNewMenu.setBounds(868, 0, 124, 19);
 		menuBar.add(settings);
+		JMenuItem itemSet = new JMenuItem("Settings");
+		settings.add(itemSet);
+		
+		itemSet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Settings.SettingScreen();	
+			}
+		});
 		
 
 		//MENU - Help 
@@ -183,48 +191,6 @@ public class WaitingRoom {
 			}
 		});
 		
-	
-		//MENU Amount of lives
-		JMenu lives = new JMenu("Amount of lives");
-		settings.add(lives);
-		JMenuItem lives1 = new JMenuItem("1");
-		JMenuItem lives2 = new JMenuItem("2");
-		JMenuItem lives3 = new JMenuItem("3");
-		JMenuItem lives4 = new JMenuItem("4");
-		JMenuItem lives5 = new JMenuItem("5");
-		lives.add(lives1);
-		lives.add(lives2);
-		lives.add(lives3);
-		lives.add(lives4);
-		lives.add(lives5);
-		lives1 .addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		
-		//MENU - Levels
-		JMenu levels = new JMenu("Levels");
-		settings.add(levels);
-		JMenuItem levels1 = new JMenuItem("1");
-		JMenuItem levels2 = new JMenuItem("2");
-		JMenuItem levels3 = new JMenuItem("3");
-		JMenuItem levels4 = new JMenuItem("4");
-		JMenuItem levels5 = new JMenuItem("5");
-		JMenuItem levels6 = new JMenuItem("6");
-		JMenuItem levels7 = new JMenuItem("7");
-		JMenuItem levels8 = new JMenuItem("8");
-		JMenuItem levels9 = new JMenuItem("9");
-		JMenuItem levels10 = new JMenuItem("10");
-		levels.add(levels1);
-		levels.add(levels2);
-		levels.add(levels3);
-		levels.add(levels4);
-		levels.add(levels5);
-		levels.add(levels6);
-		levels.add(levels7);
-		levels.add(levels8);
-		levels.add(levels9);
-		levels.add(levels10);
 		
 		//Room ID label
 		lblRoomID = new JLabel();
