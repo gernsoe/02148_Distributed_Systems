@@ -43,7 +43,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	 * Create the application.
 	 * @param actionListener 
 	 */
-	public GameRoom(String who) {
+	public GameRoom() {
 		game = new LevelHandler(borderWidth, borderHeight, "Name", "", playerHeight);
 		initializeAsHost();
 		frame.setVisible(true);
@@ -434,7 +434,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		game.getPlayer2().getArrow().updatePos();
 		} */
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		

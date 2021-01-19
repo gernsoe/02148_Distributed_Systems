@@ -14,6 +14,9 @@ import java.net.UnknownHostException;
 
 import javax.swing.Timer;
 
+import com.google.gson.Gson;
+
+
 public class Client {
     static String name, roomID, roomURI;
     static String otherPlayerName = null;
@@ -153,7 +156,7 @@ public class Client {
     }
 
     public static void gameLoop() throws InterruptedException {
-    	gRoom = new GameRoom(myPermission);
+    	gRoom = new GameRoom();
     	
     	/*if (myPermission.equals(HOST)) {
     		gRoom.initializeAsHost();
@@ -176,6 +179,10 @@ public class Client {
         // Start timer
         gRoom.getTimer().start();
         
+
+        LevelHandler game = gRoom.getGame();
+
+
         // Game loop
         while(connected) {
             // System.out.println("Entered game loop");
@@ -206,7 +213,19 @@ public class Client {
             
            // otherPlayerInfo = gameRoom.get(new ActualField(TO));
         
-        }
+        
+            System.out.println("Entered game loop");
+
+            Bubble testBubble = game.getBubbles().get(0);
+            Bubble testBubble1 = game.getBubbles().get(1);
+            Gson gson = new Gson();
+            String json = gson.toJson(testBubble);
+            String json1 = gson.toJson(testBubble1);
+            gameRoom.put("newBubble", json);
+            gameRoom.put("newBubble", json1);
+            
+            gameRoom.get(new ActualField("TEST"));
+        }  
     }
     
     public static void loginButton(fMenu menu, Space lobby) throws InterruptedException{
@@ -292,6 +311,7 @@ public class Client {
                         case PARTICIPANT:
                             wRoom.toggleFigure2();
                             wRoom.setUserName2("");
+                            otherPlayerName = null;
                             break;
                         default:
                             break;
