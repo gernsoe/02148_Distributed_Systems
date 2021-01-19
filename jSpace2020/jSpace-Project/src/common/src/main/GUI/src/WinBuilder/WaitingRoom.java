@@ -40,7 +40,6 @@ public class WaitingRoom {
 
 	private JLabel label_figure2;
 	private JButton btnLeave;
-	private JPanel panelRoomID ;
 	private JLabel lblRoomID;
 	private String lRoomID;
 	private JLabel lblWaiting;
@@ -94,22 +93,6 @@ public class WaitingRoom {
 		lblWaiting.setBounds(391, 458, 278, 29);
 		frmWaitingRoom.getContentPane().add(lblWaiting);
 		lblWaiting.setVisible(false);
-	
-		
-	
-		
-		//Room ID panel
-		lblRoomID = new JLabel();
-		lblRoomID.setBounds(6, 6, 176, 39);
-		lblRoomID.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-		lblRoomID.setHorizontalAlignment(SwingConstants.CENTER);
-	
-		panelRoomID = new JPanel();
-		panelRoomID.setBackground(new Color(255, 255, 255));
-		panelRoomID .setBounds(414, 375, 188, 51);
-		frmWaitingRoom.getContentPane().add(panelRoomID );
-		panelRoomID .setLayout(null);
-		panelRoomID.add(lblRoomID);
 		
 		
 	
@@ -139,7 +122,7 @@ public class WaitingRoom {
 		
 		//Figure 1
 		label_figure1 = new JLabel("");
-		Image imgFigure1 = new ImageIcon(this.getClass().getResource("/front1.png")).getImage();
+		Image imgFigure1 = new ImageIcon(this.getClass().getResource("/f1.png")).getImage();
 		label_figure1.setIcon(new ImageIcon(imgFigure1));
 		label_figure1.setBounds(146, 402, 96, 130);
 		frmWaitingRoom.getContentPane().add(label_figure1);
@@ -147,7 +130,7 @@ public class WaitingRoom {
 		
 		//Character 2
 		label_figure2 = new JLabel("");
-		Image imgFigure2 = new ImageIcon(this.getClass().getResource("/front2.png")).getImage();
+		Image imgFigure2 = new ImageIcon(this.getClass().getResource("/f2.png")).getImage();
 		label_figure2.setBounds(760, 375, 88, 175);
 		frmWaitingRoom.getContentPane().add(label_figure2);
 		label_figure2.setIcon(new ImageIcon(imgFigure2));
@@ -179,7 +162,7 @@ public class WaitingRoom {
 	
 		//Menu Bar
 		menuBar = new JMenuBar();
-		menuBar.setBounds(868, 0, 132, 22);
+		menuBar.setBounds(0, 0, 132, 22);
 		frmWaitingRoom.getContentPane().add(menuBar);
 		
 		//MENU - Settings
@@ -243,6 +226,13 @@ public class WaitingRoom {
 		levels.add(levels9);
 		levels.add(levels10);
 		
+		//Room ID label
+		lblRoomID = new JLabel();
+		lblRoomID.setBounds(391, 375, 239, 39);
+		frmWaitingRoom.getContentPane().add(lblRoomID);
+		lblRoomID.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		lblRoomID.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		
 		//Background
 		Image img = new ImageIcon(this.getClass().getResource("/bg.png")).getImage();
@@ -257,6 +247,10 @@ public class WaitingRoom {
 		lblNewLabel_4.setBounds(760, 0, 320, 678);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_4);		
 		
+			
+		
+			
+
 
 
 	}
