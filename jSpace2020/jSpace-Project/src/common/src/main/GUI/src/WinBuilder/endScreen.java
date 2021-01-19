@@ -14,10 +14,10 @@ import java.awt.Font;
 public class endScreen {
 
 	private JFrame frmEndScreen;
+	private JLabel score_1, score_2, actualLevelLabel;
 
 	/**
 	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -43,6 +43,7 @@ public class endScreen {
 	 */
 	private void initialize() {
 		frmEndScreen = new JFrame();
+		frmEndScreen.setVisible(true);
 		frmEndScreen.setTitle("End Screen");
 		frmEndScreen.setBounds(100, 100, 450, 300);
 		frmEndScreen.setSize(1000,700);
@@ -66,21 +67,28 @@ public class endScreen {
 		lblNewLabel_5.setBounds(6, 33, 71, 16);
 		panel_3.add(lblNewLabel_5);
 		lblNewLabel_5.setForeground(new Color(255, 255, 255));
+
+		score_1 = new JLabel("0");
+		score_2 = new JLabel("0");
 		
+		// Player1 score
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(76, 33, 80, 16);
 		panel_3.add(panel_1);
 		panel_1.setBackground(new Color(255, 255, 255));
-		
+		panel_1.add(score_1);
+
 		JLabel lblNewLabel_6 = new JLabel("PLAYER 2");
 		lblNewLabel_6.setBounds(6, 75, 61, 16);
 		panel_3.add(lblNewLabel_6);
 		lblNewLabel_6.setForeground(new Color(255, 255, 255));
 		
+		// Player2 score
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(76, 75, 80, 16);
 		panel_3.add(panel_2);
 		panel_2.setBackground(new Color(255, 255, 255));
+		panel_2.add(score_2);
 		
 		JLabel lblNewLabel_8 = new JLabel("New label");
 		lblNewLabel_8.setBounds(76, 33, 80, 16);
@@ -99,7 +107,12 @@ public class endScreen {
 		JButton btnNewButton_1 = new JButton("Back to Menu");
 		btnNewButton_1.setBounds(100, 169, 128, 29);
 		panel.add(btnNewButton_1);
-		
+
+		// Level number
+		actualLevelLabel = new JLabel("");
+		panel.add(actualLevelLabel);
+
+		// "Level" text
 		JLabel lblNewLabel_3 = new JLabel("");
 		lblNewLabel_3.setBounds(128, 261, 61, 60);
 		Image img1 = new ImageIcon(this.getClass().getResource("/level.png")).getImage();
@@ -130,7 +143,20 @@ public class endScreen {
 		lblNewLabel_2.setIcon(new ImageIcon(img));
 		frmEndScreen.getContentPane().add(lblNewLabel_2);
 	
-		
-		
+	}
+
+	public void setScore(String player, int score) {
+		if (player.equals("host")) {
+			score_1.setText("" + score);
+			score_1.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+		} else if (player.equals("participant")) {
+			score_2.setText("" + score);
+			score_2.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+		}
+	}
+
+	public void setLevel(int level) {
+		actualLevelLabel.setText("" + level);
+		actualLevelLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 	}
 }

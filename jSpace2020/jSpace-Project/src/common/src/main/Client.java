@@ -6,6 +6,7 @@ import org.jspace.*;
 
 import common.src.main.GUI.src.WinBuilder.GameRoom;
 import common.src.main.GUI.src.WinBuilder.WaitingRoom;
+import common.src.main.GUI.src.WinBuilder.endScreen;
 import common.src.main.GUI.src.WinBuilder.fMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -62,12 +63,36 @@ public class Client {
 
         try {
             joinRoom();
-            
+
             preGameLobby();
 
-            gameLoop(); 
+            gameLoop();
             
         } catch (InterruptedException e) {}
+    }
+
+    public static void endScreen(int level, int player1Score, int player2Score) throws InterruptedException, UnknownHostException, IOException {
+        endScreen eScreen = new endScreen();
+        eScreen.setScore(myPermission, player1Score);
+        if (otherPlayerName != null) {
+            eScreen.setScore(myPermission, player2Score);
+        }
+        eScreen.setLevel(level);
+
+        switch (myPermission) {
+            case HOST:
+                
+
+                break;
+            
+            case PARTICIPANT:
+
+                break;
+
+            default:
+                System.out.println("No permission");
+                break;
+        }
     }
 
     public static void joinRoom() throws InterruptedException, UnknownHostException, IOException {
@@ -94,7 +119,7 @@ public class Client {
             } else {
                 menu.closeWindow();
                 System.out.println("Joining game room: " + roomID);
-                preGameLobby();
+                break;
             }
         }
     }
@@ -103,7 +128,7 @@ public class Client {
         gameRoom = new RemoteSpace(roomURI);
         gameRoom.put(FROM, name, READY_TO_PLAY);
         myPermission = (String) gameRoom.get(new ActualField(TO), new ActualField(name), new ActualField(PERMISSION), new FormalField(String.class))[3];
-        
+
         WaitingRoom wRoom = new WaitingRoom(name, roomID);
         wRoom.createLeaveButton();
         leaveRoomButton(wRoom);
@@ -201,7 +226,12 @@ public class Client {
 
         LevelHandler game = gRoom.getGame();
 
-
+        /*
+        int level = game.getCurrentLevel();
+        int score1 = game.getPlayer1().getScore();
+        int score2 = game.getPlayer2().getScore();
+        endScreen(level, score1, score2);
+        */
         // Game loop
         while(connected) {
             // System.out.println("Entered game loop");
@@ -232,7 +262,7 @@ public class Client {
             
            // otherPlayerInfo = gameRoom.get(new ActualField(TO));
         
-        
+            //endScreen(1, 50, 100);
             System.out.println("Entered game loop");
 
             Bubble testBubble = game.getBubbles().get(0);
