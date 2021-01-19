@@ -80,7 +80,6 @@ public class Map {
 	}
 	
     public void setListOfBubbles(ArrayList<Bubble> bubbles) {
-    	bubbles = new ArrayList<Bubble>();
     	this.bubbles = bubbles;
     }
 }
