@@ -238,6 +238,7 @@ public class Client {
                         case PARTICIPANT:
                             wRoom.toggleFigure2();
                             wRoom.setUserName2("");
+                            otherPlayerName = null;
                             break;
                         default:
                             break;

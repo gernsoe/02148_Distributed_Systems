@@ -1,7 +1,12 @@
 package common.src.main;
 
 import org.jspace.*;
+
+import common.src.main.GUI.src.WinBuilder.GameRoom;
+
 import java.util.ArrayList;
+
+import com.google.gson.JsonObject;
 
 	/*
 	 *  Server checks that the name is valid (not empty, unique and not too long) 
@@ -23,14 +28,13 @@ import java.util.ArrayList;
 public class Server {
 	
 	public static final String LOCK = "lock";
-	public static final String LEFT_ROOM = "left_room";  // used to signal when the player is out of the room
 	public static final String HOST = "host";
+	public static final String LEFT_ROOM = "left_room";  // used to signal when the player is out of the room
 	public static final String PARTICIPANT = "participant";
 
 	public static void main(String[] args) throws InterruptedException {
 
 		SpaceRepository repo = new SpaceRepository();
-		
 		// Users request to join room, server sends rooms
 		Space lobby = new SequentialSpace();
 		
@@ -46,8 +50,9 @@ public class Server {
 		Space rooms = new SequentialSpace(); 	// (roomID, roomCounter, playerCount)
 		rooms.put(LOCK);						// Add lock for mutual exclusion
 		String roomURI;
+		int roomCounter = 0;		// Used to identify rooms
 		
-        int roomCounter = 0;		// Used to identify rooms
+		new Thread(new leaveRoomHandler(rooms)).start();
         
 		while(true) {
 			int playerCount = 1;	// Players in a specific room
@@ -61,15 +66,14 @@ public class Server {
 			System.out.println(who + " wants to join room: " + roomID);
 			
 			rooms.get(new ActualField(LOCK)); // Get mutual exclusion
-			// Get room (non-blocking) and determine if a new room should be made
-			Object[] getRoom = rooms.getp(new ActualField(roomID), new FormalField(Integer.class), new FormalField(Integer.class));
+			Object[] getRoom = rooms.getp(new ActualField(roomID), new FormalField(Integer.class), new FormalField(Integer.class)); // (roomID, roomCounter, playerCount)
 			
-			if (getRoom != null) {			// Room was found
+			// Decide what room to put the new player in.
+			if (getRoom != null) {
 				playerCount = (int) getRoom[2];
-				if (playerCount >= 2) { 	// Room is full
+				if (playerCount >= 2) {
 					System.out.println("Room is full. Please enter new roomID");
-					// Sending empty uri back, so client knows the room was full
-					lobby.put("roomURI", who, roomID, "");	
+					lobby.put("roomURI", who, roomID, "");	// Sending empty uri back, so client knows the room was full
 				} else {
 					// Join room	
 					roomURI = host + "game" + (int) getRoom[1] + "?keep";   // fx. tcp://127.0.0.1:9001/game0?keep
@@ -80,33 +84,16 @@ public class Server {
 				// Put the updated room back
 				rooms.put(roomID, (int) getRoom[1], playerCount);
 			} else {
-				System.out.println("Creating new room with ID: " + roomID + " for: " + who);
-				roomURI = host + "game" + roomCounter + "?keep";        // fx. tcp://127.0.0.1:9001/game0?keep
-				rooms.put(roomID, roomCounter, playerCount);
 				// Create thread to take care of the new game room
+				System.out.println("Creating new room with ID: " + roomID + " for: " + who);
+				roomURI = host + "game" + roomCounter + "?keep";   // fx. tcp://127.0.0.1:9001/game0?keep
+				rooms.put(roomID, roomCounter, playerCount);
                 new Thread(new roomHandler(roomID, roomCounter, roomURI, repo, rooms)).start();
                 roomCounter++;
                 
                 // Join room
                 System.out.println("Sending user: " + who + " to game room: " + roomCounter);
                 lobby.put("roomURI", who, roomID, roomURI);
-			}
-
-			Object[] playerLeft = rooms.getp(new FormalField(String.class), new ActualField(LEFT_ROOM), new FormalField(String.class)); // (roomID, LEFT_ROOM, participant/host)
-
-			if (playerLeft != null) {
-
-				// Delete the room 
-				if (((String) playerLeft[2]).equals(HOST)) {
-					rooms.getp(new ActualField((String) playerLeft[0]), new FormalField(Integer.class), new FormalField(Integer.class)); 
-				} 
-
-				// Decrement the player counter
-				else if (((String) playerLeft[2]).equals(PARTICIPANT)) {
-					Object[] roomToChange = rooms.getp(new ActualField((String) playerLeft[0]), new FormalField(Integer.class), new FormalField(Integer.class));
-					int updatedPlayerCount = (int) roomToChange[2] - 1;
-					rooms.put((String) roomToChange[0], (int) roomToChange[1], updatedPlayerCount);
-				}
 			}
 			rooms.put(LOCK);	// Release mutual exclusion
 		}
@@ -249,4 +236,39 @@ class roomHandler implements Runnable {
 			System.out.println(e.getStackTrace());
 		}
     }
+}
+
+class leaveRoomHandler implements Runnable {
+	private Space rooms;
+
+	public static final String LOCK = "lock";
+	public static final String HOST = "host";
+	public static final String LEFT_ROOM = "left_room"; 	// used to signal when the player is out of the room
+	public static final String PARTICIPANT = "participant";
+
+	public leaveRoomHandler(Space rooms) {
+		this.rooms = rooms;
+	}
+
+	public void run() {
+		try {
+			while (true) {
+				Object[] playerLeft = rooms.get(new FormalField(String.class), new ActualField(LEFT_ROOM), new FormalField(String.class)); // (roomID, LEFT_ROOM, participant/host)
+				rooms.get(new ActualField(LOCK));
+
+				// Delete the room 
+				if (((String) playerLeft[2]).equals(HOST)) {
+					rooms.getp(new ActualField((String) playerLeft[0]), new FormalField(Integer.class), new FormalField(Integer.class)); 
+				} 
+
+				// Decrement the player counter
+				else if (((String) playerLeft[2]).equals(PARTICIPANT)) {
+					Object[] roomToChange = rooms.getp(new ActualField((String) playerLeft[0]), new FormalField(Integer.class), new FormalField(Integer.class));
+					int updatedPlayerCount = (int) roomToChange[2] - 1;
+					rooms.put((String) roomToChange[0], (int) roomToChange[1], updatedPlayerCount);
+				}
+				rooms.put(LOCK);
+			}
+		} catch (InterruptedException e) {}
+	}
 }
