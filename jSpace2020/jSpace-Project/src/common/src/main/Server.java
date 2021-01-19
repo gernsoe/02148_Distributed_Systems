@@ -257,6 +257,8 @@ class roomHandler implements Runnable {
 				System.out.println("Bubble pos: " + bubble.toString());*/
 			}
 
+			// Delete room after game ends
+
 		} catch (InterruptedException e) {
 			System.out.println(e.getStackTrace());
 		}

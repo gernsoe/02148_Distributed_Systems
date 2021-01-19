@@ -366,6 +366,10 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 			game.getPlayer1().goRight();
 		} 
 	}
+
+	public void closeWindow() {
+		frame.setVisible(false);
+	}
 	
 	public void checkLevel() {
 		// When the level is cleared, make a new level
