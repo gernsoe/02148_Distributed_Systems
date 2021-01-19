@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.EnumSet;
 
 import javax.swing.Timer;
 
@@ -28,6 +29,7 @@ public class Client {
     public static String myPermission;
     public static boolean loginButtonClicked = false;
     public static boolean startButtonClicked = false;
+    public static boolean backToMenuButtonClicked = false;
     public static boolean inLobby = true;
     public static boolean connected = true;
     public static final String LEAVE_ROOM = "leave_room";   // used to signal that a player wants to leave a room
@@ -67,32 +69,8 @@ public class Client {
             preGameLobby();
 
             gameLoop();
-            
+
         } catch (InterruptedException e) {}
-    }
-
-    public static void endScreen(int level, int player1Score, int player2Score) throws InterruptedException, UnknownHostException, IOException {
-        endScreen eScreen = new endScreen();
-        eScreen.setScore(myPermission, player1Score);
-        if (otherPlayerName != null) {
-            eScreen.setScore(myPermission, player2Score);
-        }
-        eScreen.setLevel(level);
-
-        switch (myPermission) {
-            case HOST:
-                
-
-                break;
-            
-            case PARTICIPANT:
-
-                break;
-
-            default:
-                System.out.println("No permission");
-                break;
-        }
     }
 
     public static void joinRoom() throws InterruptedException, UnknownHostException, IOException {
@@ -262,7 +240,6 @@ public class Client {
             
            // otherPlayerInfo = gameRoom.get(new ActualField(TO));
         
-            //endScreen(1, 50, 100);
             System.out.println("Entered game loop");
 
             Bubble testBubble = game.getBubbles().get(0);
@@ -275,6 +252,23 @@ public class Client {
             
             gameRoom.get(new ActualField("TEST"));
         }  
+    }
+
+    public static void endScreen(int level, int player1Score, int player2Score) throws InterruptedException, UnknownHostException, IOException {
+        endScreen eScreen = new endScreen();
+        eScreen.setScore(myPermission, player1Score);
+        if (otherPlayerName != null) {
+            eScreen.setScore(myPermission, player2Score);
+        }
+        eScreen.setLevel(level);
+
+        eScreen.createBackButton();
+        backToMenuButton(eScreen);
+        while (!backToMenuButtonClicked) {
+            Thread.sleep(500);
+        }
+        eScreen.closeWindow();
+        joinRoom();
     }
     
     public static void loginButton(fMenu menu, Space lobby) throws InterruptedException{
@@ -318,6 +312,14 @@ public class Client {
                 try {
                     gameRoom.put(FROM, myPermission, LEAVE_ROOM);
                 } catch (InterruptedException err) {}
+            }
+        });
+    }
+
+    public static void backToMenuButton(endScreen eScreen) {
+        eScreen.getBackButton().addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                backToMenuButtonClicked = true;
             }
         });
     }
