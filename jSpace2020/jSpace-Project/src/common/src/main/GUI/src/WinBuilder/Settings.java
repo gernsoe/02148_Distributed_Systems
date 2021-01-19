@@ -15,10 +15,11 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JButton;
 
 public class Settings {
 
-	private JFrame frame;
+	private JFrame frmSetting;
 
 	/**
 	 * Launch the application.
@@ -28,7 +29,7 @@ public class Settings {
 			public void run() {
 				try {
 					Settings window = new Settings();
-					window.frame.setVisible(true);
+					window.frmSetting.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -47,17 +48,18 @@ public class Settings {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(218, 165, 32));
-		frame.getContentPane().setLayout(null);
+		frmSetting = new JFrame();
+		frmSetting.setTitle("Setting");
+		frmSetting.getContentPane().setBackground(new Color(218, 165, 32));
+		frmSetting.getContentPane().setLayout(null);
 		
 		
 		//Amount of lives
 		JPanel panel = new JPanel();
 		panel.setBounds(136, 62, 222, 73);
-		frame.getContentPane().add(panel);
+		frmSetting.getContentPane().add(panel);
 		panel.setLayout(null);
-		frame.setLocationRelativeTo(null);
+		frmSetting.setLocationRelativeTo(null);
 		
 		//CheckBoxes
 		JRadioButton checkBox1 = new JRadioButton("1");
@@ -92,11 +94,11 @@ public class Settings {
 		lblNewLabel_1.setBackground(new Color(255, 255, 255));
 		lblNewLabel_1.setFont(new Font("Lucida Grande", Font.BOLD, 20));
 		lblNewLabel_1.setBounds(210, 0, 102, 33);
-		frame.getContentPane().add(lblNewLabel_1);
+		frmSetting.getContentPane().add(lblNewLabel_1);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(35, 162, 431, 83);
-		frame.getContentPane().add(panel_1);
+		frmSetting.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Level");
@@ -145,18 +147,24 @@ public class Settings {
 		checkLevel10.setBounds(375, 41, 58, 23);
 		panel_1.add(checkLevel10);
 		
+		//Save Settings
+		JButton btnNewButton = new JButton("Save");
+		btnNewButton.setBounds(181, 279, 136, 29);
+		frmSetting.getContentPane().add(btnNewButton);
 		
 		//Background
 		JLabel background = new JLabel("");
 		background.setBounds(-6, 0, 517, 344);
-		frame.getContentPane().add(background);
+		frmSetting.getContentPane().add(background);
 		Image img = new ImageIcon(this.getClass().getResource("/bg.png")).getImage();
 		background.setIcon(new ImageIcon(img));
+		
+		
 	
 		
 		
 
-		frame.setBounds(100, 100, 491, 352);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmSetting.setBounds(100, 100, 491, 352);
+		frmSetting.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 }
