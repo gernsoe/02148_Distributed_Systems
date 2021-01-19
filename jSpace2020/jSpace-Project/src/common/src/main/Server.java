@@ -137,6 +137,11 @@ class roomHandler implements Runnable {
 	public static final String HOST = "host";
 	public static final String PARTICIPANT = "participant";
 	public static final String LOCK = "lock";
+    public static final String PLAYER = "player";
+    public static final String PLAYERSHOOT = "playershoot";
+    public static final String BUBBLES = "bubbles";
+    public static final String MAP = "map";
+    public static final String STARTMAP = "startmap";
 
 	public roomHandler(String roomID, int roomCounter, String roomURI, SpaceRepository repo, Space rooms) {
         this.roomID = roomID;
@@ -238,11 +243,19 @@ class roomHandler implements Runnable {
 						break;
 				}
 			}
-
+			// When the participant has received the map, start game on both
+			/*gameRoom.get(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(MAP));
+			gameRoom.put(TO, HOST, STARTMAP);
+			gameRoom.put(TO, PARTICIPANT, STARTMAP);*/
+			
 			// Game loop
 			while (connected) {
 				System.out.println("Entered game loop");
-				gameRoom.get(new ActualField("TEST"));
+				
+				
+				// Server only needs to end the game
+				
+				
 			}
 
 		} catch (InterruptedException e) {

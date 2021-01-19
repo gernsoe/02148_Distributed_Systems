@@ -12,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
 
 import javax.swing.Timer;
 import javax.swing.ImageIcon;
@@ -19,42 +20,52 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-
+import common.src.main.Bubble;
 import common.src.main.LevelHandler;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-public class GameRoom implements KeyListener, ActionListener, WindowListener {
+public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	
 	private Timer timer;
-	private int delay = 17, playerHeight = 48, timeLeftForInvincibility1 = (1000/delay)*3, 
-			timeLeftForInvincibility2 = (1000/delay)*3, moveDelay = 0;
-	int score, level = 1, hearts = 3;
+	private int delay = 17, playerHeight = 48, moveDelay = 0;
+	int score, level = 9, hearts = 3;
 	private JFrame frame;
 	private JPanel panel;
 	private boolean left1, left2, right1, right2, shooting;
 	private LevelHandler game;
 	private int borderWidth = 800, borderHeight = 600;
 	private JLabel lblNewLabel_1, lblNewLabel_3, lblNewLabel, Label_level;
-	private JLabel textField_player1, textField_player2, Player1Heart1, Player1Heart2, Player1Heart3,
-		Player2Heart1, Player2Heart2, Player2Heart3, Label_leveltext, Player2Label, Player1Label, score_1, score_2;
+	private JLabel  Player1Heart1, Player1Heart2, Player1Heart3, Player1Heart4, Player1Heart5,
+		Player2Heart1, Player2Heart2, Player2Heart3, Player2Heart4, Player2Heart5, Label_leveltext, Player2Label, Player1Label, score_1, score_2;
 
 	/**
 	 * Create the application.
+	 * @param actionListener 
 	 */
-	public GameRoom() {
-		initialize();
+	public GameRoom(String who) {
+		game = new LevelHandler(borderWidth, borderHeight, "Name", "", playerHeight);
+		initializeAsHost();
 		frame.setVisible(true);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	
+	public void initializeAsHost() {
+		game.makeLevel(level, hearts, score);
+		initialize();
+	}
+	
+	public void initializeAsParticipant(ArrayList<Bubble> bubbles) {
+		game.joinLevel(level, hearts, score, bubbles);
+		initialize();
+	}
+	
 	private void initialize() {
 		// Add game elements
-	
-		game = new LevelHandler(level, borderWidth, borderHeight, "Name", "", playerHeight, hearts, score);
-		
+
 		// Add GUI
 
 		frame = new JFrame("Game Room");
@@ -95,7 +106,6 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 				if (game.getPlayer1().getArrowIsAlive()) {
 					g.setColor(Color.black);
 					g.fillRect((int)game.getPlayer1().getArrow().getX(), (int)game.getPlayer1().getArrow().getY(), game.getPlayer1().getArrow().getArrowWidth(), game.getPlayer1().getArrow().getArrowHeight());
-					game.getPlayer1().getArrow().updatePos();
 				}
 				
 				// Player 1
@@ -113,50 +123,9 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 				
 				// Bubble
 				for(int i = 0; i < game.getBubbles().size(); i++) {
-					
-					// Get color from bubble and make it move
+					// Get color from bubble and draw its movement
 					g.setColor(game.getBubbles().get(i).getColor());
-					game.getBubbles().get(i).move();
 					g.fillOval((int)Math.round(game.getBubbles().get(i).getPos().getX()), (int)Math.round(game.getBubbles().get(i).getPos().getY()), game.getBubbles().get(i).getSize(), game.getBubbles().get(i).getSize());
-					
-					// Bubble collision with player
-					if(game.getPlayer1().isAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getShape())) {
-						// Lose life if player gets hit and restart level, if dead then stop game
-						System.out.println("bubble shape" + game.getBubbles().get(i).getShape().getBounds2D());
-						System.out.println("player shape" + game.getPlayer1().getShape().toString());
-						if (game.getPlayer1().getHearts() == 3) {
-							Player1Heart3.setVisible(false);
-						} 
-						if (game.getPlayer1().getHearts() == 2) {
-							Player1Heart2.setVisible(false);
-						}
-						if (game.getPlayer1().getHearts() == 1) {
-							Player1Heart1.setVisible(false);
-						}
-						game.getPlayer1().loseHeart();
-						if (!game.getPlayer1().isAlive()) {
-							timer.stop();
-						} else {
-							try {
-								Thread.sleep(3000);
-								game.getCurrentLevel().makeLevel(level,game.getPlayer1().getHearts(),game.getPlayer1().getScore());
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-					
-					
-					// Bubble collision with arrow
-					if(game.getPlayer1().getArrowIsAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getArrow().getShape())) {
-						if (game.getBubbles().get(i).getSize() > 20) {
-							game.getBubbles().addAll(game.getBubbles().get(i).addSplitBubbles());
-						}
-						game.getPlayer1().setScore(game.getPlayer1().getScore()+1);
-						score_1.setText("" + game.getPlayer1().getScore());
-						game.getBubbles().remove(i);
-						game.getPlayer1().getArrow().setAliveTo(false);
-					}	
 				}
 			}
 		};
@@ -197,15 +166,22 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 		JPanel panel_3 = new JPanel();
 		panel_3.setBounds(270,610,70,30);
 		
+		// Player 2to score
 		JPanel panel_4 = new JPanel();
 		panel_4.setBounds(660,610,70,30);
+		frame.getContentPane().add(panel_4);
 		
-		// Filler text for now
+		score_2 = new JLabel();
+		score_2.setText("?");
+		score_2.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		panel_4.add(score_2);
+		
+		
 		Player2Label.setForeground(Color.green);
 		frame.getContentPane().add(panel_2);
 		frame.getContentPane().add(panel_1);
 		frame.getContentPane().add(panel_3);
-		frame.getContentPane().add(panel_4);
+		
 		
 		Player1Label.setForeground(Color.red);
 		
@@ -214,11 +190,6 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 		score_1.setText("" + game.getPlayer1().getScore());
 		score_1.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		panel_3.add(score_1);
-		
-		score_2 = new JLabel();
-		score_2.setText("?");
-		score_2.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
-		panel_4.add(score_2);
 		
 		// Hearts of player 1
 		Player1Heart1 = new JLabel();
@@ -236,6 +207,16 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 		frame.getContentPane().add(Player1Heart3);
 		Player1Heart3.setIcon(new ImageIcon(imgHeart));
 		
+		Player1Heart4 = new JLabel();
+		Player1Heart4.setBounds(205, 650, 32, 32);
+		frame.getContentPane().add(Player1Heart4);
+		Player1Heart4.setIcon(new ImageIcon(imgHeart));
+		
+		Player1Heart5 = new JLabel();
+		Player1Heart5.setBounds(240, 650, 32, 32);
+		frame.getContentPane().add(Player1Heart5);
+		Player1Heart5.setIcon(new ImageIcon(imgHeart));
+		
 		// Hearts of player 2
 		Player2Heart1 = new JLabel();
 		Player2Heart1.setBounds(865, 650, 32, 32);
@@ -251,6 +232,16 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 		Player2Heart3.setBounds(795, 650, 32, 32);
 		frame.getContentPane().add(Player2Heart3);
 		Player2Heart3.setIcon(new ImageIcon(imgHeart));
+		
+		Player2Heart4 = new JLabel();
+		Player2Heart4.setBounds(760, 650, 32, 32);
+		frame.getContentPane().add(Player2Heart4);
+		Player2Heart4.setIcon(new ImageIcon(imgHeart));
+		
+		Player2Heart5 = new JLabel();
+		Player2Heart5.setBounds(725, 650, 32, 32);
+		frame.getContentPane().add(Player2Heart5);
+		Player2Heart5.setIcon(new ImageIcon(imgHeart));
 		
 		// Add labels
 		Label_leveltext = new JLabel("");
@@ -281,9 +272,8 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 		frame.getContentPane().add(lblNewLabel_1);
 		
 		lblNewLabel_1.setIcon(new ImageIcon(img));
-	
-		timer = new Timer(delay, this);
-		timer.start();
+		
+		timer = new Timer(delay,this);
 	}
 
 	@Override
@@ -294,13 +284,11 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_RIGHT:
 			if (!shooting) {
-				game.getPlayer1().goRight();
 				right1 = true;
 			}
 			break;
 		case KeyEvent.VK_LEFT:
 			if (!shooting) {
-				game.getPlayer1().goLeft();
 				left1 = true;	
 			}
 			break;
@@ -308,7 +296,7 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 			if (!game.getPlayer1().getArrowIsAlive()) {
 				shooting = true;
 				game.getPlayer1().makeArrow();
-				moveDelay = (50/delay);
+				moveDelay = (68/delay);
 			}
 			break;
 		}
@@ -326,18 +314,48 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 		}
 	}
 
+	public void setUserName1(String name) {
+		Player1Label.setText(name);
+	}
+
+	public void setUserName2(String name) {
+		Player2Label.setText(name);
+	}
+
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		timer.start();
-		
-		// When the level is cleared, make a new level
-		if (game.getBubbles().isEmpty()) {
-			game.makeLevel(++level,game.getPlayer1().getHearts(),game.getPlayer1().getScore());
-			Label_leveltext.setText("" + level);
-		}
-		panel.repaint();
-		
-		// Keep moving the player 1
+	public void windowOpened(WindowEvent e) {}
+
+	@Override
+	public void windowClosing(WindowEvent e) {}
+
+	@Override
+	public void windowClosed(WindowEvent e) {}
+
+	@Override
+	public void windowIconified(WindowEvent e) {}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {}
+
+	@Override
+	public void windowActivated(WindowEvent e) {}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {}
+	
+	public LevelHandler getGame() {
+		return game;
+	}
+	
+	public Timer getTimer() {
+		return timer;
+	}
+	
+	public int getDelay() {
+		return delay;
+	}
+	
+	public void updateP1() {
 		if (shooting) {
 			moveDelay--;
 			if (moveDelay == 0) {
@@ -349,54 +367,98 @@ public class GameRoom implements KeyListener, ActionListener, WindowListener {
 			game.getPlayer1().goRight();
 		} 
 	}
-
-	public void setUserName1(String name) {
-		Player1Label.setText(name);
+	
+	public void checkLevel() {
+		// When the level is cleared, make a new level
+		if (game.getBubbles().isEmpty()) {
+			game.makeLevel(level, game.getPlayer1().getHearts(),game.getPlayer1().getScore());
+			Label_leveltext.setText("" + level);
+		}
 	}
+	
+	public void updateBubbles() {
+		for(int i = 0; i < game.getBubbles().size(); i++) {
+			
+			// Move bubbles
+			game.getBubbles().get(i).move();
+			
+			// Bubble collision with player
+			if(game.getPlayer1().isAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getShape())) {
+				// Lose life if player gets hit and restart level, if dead then stop game
+				System.out.println("bubble shape" + game.getBubbles().get(i).getShape().getBounds2D());
+				System.out.println("player shape" + game.getPlayer1().getShape().toString());
+				if (game.getPlayer1().getHearts() == 1) {
+					Player1Heart1.setVisible(false);
+				} else if (game.getPlayer1().getHearts() == 2) {
+					Player1Heart2.setVisible(false);
+				} else if (game.getPlayer1().getHearts() == 3) {
+					Player1Heart3.setVisible(false);
+				} else if (game.getPlayer1().getHearts() == 4) {
+					Player1Heart4.setVisible(false);
+				} else if (game.getPlayer1().getHearts() == 5) {
+					Player1Heart5.setVisible(false);
+				}
 
-	public void setUserName2(String name) {
-		Player2Label.setText(name);
+				game.getPlayer1().loseHeart();
+				if (!game.getPlayer1().isAlive()) {
+					timer.stop();
+				} else {
+					try {
+						Thread.sleep(3000);
+						game.getCurrentLevel().makeLevel(level,game.getPlayer1().getHearts(),game.getPlayer1().getScore());
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			
+			// Bubble collision with arrow
+			if(game.getPlayer1().getArrowIsAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getArrow().getShape())) {
+				if (game.getBubbles().get(i).getSize() > 20) {
+					game.getBubbles().addAll(game.getBubbles().get(i).addSplitBubbles());
+				}
+				game.getPlayer1().setScore(game.getPlayer1().getScore()+1);
+				score_1.setText("" + game.getPlayer1().getScore());
+				game.getBubbles().remove(i);
+				game.getPlayer1().getArrow().setAliveTo(false);
+			}	
+		}
 	}
-
+	
+	public void updateArrows() {
+		if (game.getPlayer1().getArrowIsAlive()) {
+		game.getPlayer1().getArrow().updatePos();
+		}
+		/* if (game.getPlayer2().getArrowIsAlive()) {
+		game.getPlayer2().getArrow().updatePos();
+		} */
+	}
+	
 	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent e) {
 		
+		// Redraw bubbles, players and arrows
+		panel.repaint();
+		
+		// Player movement
+		updateP1();
+		
+		// Update arrows
+		updateArrows();
+		
+		// Bubble movement and collisions
+		updateBubbles();
+		
+		// Level Status
+		checkLevel();
 	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
+	
+	public boolean getPlayerLeft() {
+		return left1;
 	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
+	
+	public boolean getPlayerRight() {
+		return right1;
 	}
 }

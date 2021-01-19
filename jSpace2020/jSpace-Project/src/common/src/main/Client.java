@@ -2,14 +2,17 @@ package common.src.main;
 
 import org.jspace.*;
 
+
+
 import common.src.main.GUI.src.WinBuilder.GameRoom;
 import common.src.main.GUI.src.WinBuilder.WaitingRoom;
 import common.src.main.GUI.src.WinBuilder.fMenu;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
+
+import javax.swing.Timer;
 
 public class Client {
     static String name, roomID, roomURI;
@@ -32,12 +35,18 @@ public class Client {
     public static final String FROM = "from";
     public static final String HOST = "host";
     public static final String PARTICIPANT = "participant";
+    public static final String PLAYER = "player";
+    public static final String PLAYERSHOOT = "playershoot";
+    public static final String BUBBLES = "bubbles";
+    public static final String STARTMAP = "startmap";
 
     //String host = "tcp://2.tcp.ngrok.io:10963/";
     public static final String host = "tcp://127.0.0.1:9001/";
     public static final String lobbyURI = host + "lobby?keep";
     public static RemoteSpace lobby;
     public static RemoteSpace gameRoom;
+    public static GameRoom gRoom;
+    static Timer timer;
 
 	public static void main(String[] argv) throws InterruptedException, UnknownHostException, IOException {
 
@@ -54,7 +63,7 @@ public class Client {
     }
 
     public static void joinRoom() throws InterruptedException, UnknownHostException, IOException {
-        resetVariables();   //Reset variables if user laves room
+        resetVariables();   //Reset variables if user leaves room
 
         fMenu menu = new fMenu();
         loginButton(menu, lobby);
@@ -144,15 +153,60 @@ public class Client {
     }
 
     public static void gameLoop() throws InterruptedException {
-        GameRoom gRoom = new GameRoom();
+    	gRoom = new GameRoom(myPermission);
+    	
+    	/*if (myPermission.equals(HOST)) {
+    		gRoom.initializeAsHost();
+    		// send bubbles to participant
+    		// gameRoom.put(fields)
+    		gameRoom.get(new ActualField(TO), new ActualField(HOST), new ActualField(STARTMAP));
+    		gRoom.getTimer().start();
+    	} else if (myPermission.equals(PARTICIPANT)) {
+    		// Receive bubles from host
+    		// gameRoom.get(fields)
+    		// gRoom.intializeAsParticipant(bubbles);
+    		// gameRoom.put(FROM, PARTICIPANT, );
+    		gameRoom.get(new ActualField(TO), new ActualField(PARTICIPANT), new ActualField(STARTMAP));
+    		gRoom.getTimer().start();
+    	}*/
+    	
         gRoom.setUserName1(name);
         gRoom.setUserName2(otherPlayerName);
-
+        
+        // Start timer
+        gRoom.getTimer().start();
+        
         // Game loop
         while(connected) {
-            System.out.println("Entered game loop");
-            gameRoom.get(new ActualField("TEST"));
-        }  
+            // System.out.println("Entered game loop");
+            
+            // Send player movement information (Only X coordinate is needed)
+            if (gRoom.getPlayerRight() || gRoom.getPlayerLeft()) {
+            	gameRoom.put(FROM, name, PLAYER, gRoom.getGame().getPlayer1().getPos().getX());
+            }
+            
+            // Receive other player movement information
+           /* otherPlayerInfo = gameRoom.getp(new ActualField(TO), new ActualField(otherPlayerName), new ActualField(PLAYERMOVE));
+            if (otherPlayerInfo != null) {
+            	gRoom.getGame().getPlayer2().setX((int)otherPlayerInfo[3]);;
+            }*/
+            
+            // Arrow shooting from player, send boolean, so other player can make arrow
+            if (gRoom.getGame().getPlayer1().getArrowIsAlive()) {
+            	gameRoom.put(FROM, name, PLAYERSHOOT, gRoom.getGame().getPlayer1().getArrow().isAlive());
+            }
+            
+            // Receive other player movement
+            
+            // Send bubbles movement information, if host
+            for (Bubble bubble: gRoom.getGame().getBubbles()) {
+            	 gameRoom.put(FROM, name, BUBBLES, bubble.getPos().getX(), bubble.getPos().getY(), bubble.getSize());
+            }
+            
+            
+           // otherPlayerInfo = gameRoom.get(new ActualField(TO));
+        
+        }
     }
     
     public static void loginButton(fMenu menu, Space lobby) throws InterruptedException{

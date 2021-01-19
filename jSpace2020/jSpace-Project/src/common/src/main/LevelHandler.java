@@ -8,26 +8,23 @@ public class LevelHandler {
 	Map game;
 	String player1, player2;
 	int timer, level, bWidth, bHeight, pHeight;
-	double speedX, speedY;
 	int[] bubbleCounts;
 	int[] bubbleSizes = new int[] {20,30,45,68,80,100,130,160,200,270}; 
 	
 	
-	public LevelHandler(int level, int bWidth, int bHeight, String player1, String player2, int pHeight, int hearts, int scores) {
-		this.level = level;
+	public LevelHandler(int bWidth, int bHeight, String player1, String player2, int pHeight) {
+		game = new Map(bWidth, bHeight);
 		this.bWidth = bWidth;
-		this.bHeight = bHeight;
 		this.player1 = player1;
 		this.player2 = player2;
+		this.bHeight = bHeight;
 		this.pHeight = pHeight;
-		
-		makeLevel(level, hearts, scores);
 	}
 
 	public void makeLevel(int level, int hearts, int scores) {
 		// Default speed
-		speedX = 1;
-		speedY = 0;
+		double speedX = 1;
+		double speedY = 0;
 		if (level == 1) {
 			bubbleCounts = new int[] {0,1,0,0,0,0,0,0,0,0};
 		} else if (level == 2) {
@@ -42,14 +39,17 @@ public class LevelHandler {
 		} else if (level == 6) {
 			bubbleCounts = new int[] {0,0,2,0,1,0,0,0,0,0};
 		} else if (level == 7) {
-			bubbleCounts = new int[] {0,0,0,0,0,0,1,0,0,0};
+			bubbleCounts = new int[] {0,0,0,0,2,1,0,0,0,0};
 		} else if (level == 8) {
+			bubbleCounts = new int[] {0,0,0,0,0,0,2,0,0,0};
+		} else if (level == 9) {
+			bubbleCounts = new int[] {0,10,0,2,0,0,0,0,0,0};
+		} else if (level == 10) {
 			bubbleCounts = new int[] {0,0,0,0,0,0,0,0,0,1};
-		} else {
-			bubbleCounts = new int[] {(int)(Math.round(Math.random()*4)),(int)(Math.round(Math.random()*2)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1)),(int)(Math.round(Math.random()*1))};
 		}
-		
-		game = new Map(bWidth, bHeight, bubbleCounts, bubbleSizes, player1, player2, pHeight, speedX, speedY, hearts, scores);
+
+		game.makeMap(bubbleCounts, bubbleSizes, speedX, speedY);
+		game.makePlayers(player1, player2, pHeight, hearts, scores);
 	}
 	
 	public Player getPlayer1() {
@@ -64,6 +64,10 @@ public class LevelHandler {
 		return game.getBubbles();
 	}
 	
+	public Map getMap() {
+		return game.getMap();
+	}
+	
 	public LevelHandler getCurrentLevel() {
 		return this;
 	}
@@ -74,5 +78,10 @@ public class LevelHandler {
 		Color lightCyan = new Color(135, 206, 250);
 		Color[] colors = new Color[] {Color.LIGHT_GRAY,lightCyan};
 		return colors[i];
+	}
+	
+	public void joinLevel(int level, int hearts, int scores, ArrayList<Bubble> bubbles) {
+		game.addPlayers(player1, player2, pHeight, hearts, scores);
+		game.setListOfBubbles(bubbles);
 	}
 }

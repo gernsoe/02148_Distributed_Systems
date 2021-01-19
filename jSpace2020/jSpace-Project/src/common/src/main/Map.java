@@ -1,36 +1,38 @@
 package common.src.main;
 
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Map {
 	
 	private int playerCount = 1, borderHeight, borderWidth;
 	double speedX, speedY;
 	// Changed later to ball/bubbles class
-	private float r, g, b;
 	ArrayList<Bubble> bubbles;
 	Arrow arrow;
 	Player players[] = new Player[playerCount];
 
-	public Map (int borderWidth, int borderHeight, int[] bubbleCounts, int[] bubbleSizes, String playerName1, String playerName2, int playerHeight, double speedX, double speedY, int hearts, int scores) {
+	public Map (int borderWidth, int borderHeight) {
 		this.borderHeight = borderHeight;
 		this.borderWidth = borderWidth;
-		this.speedX = speedX;
-		this.speedY = speedY;
-		
+	}
+	
+	public void makePlayers(String playerName1, String playerName2, int playerHeight, int hearts, int scores) {
+		// Add players 
 		if (!playerName2.equals("")) {
 			playerCount = 2;
-			players[1] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName2, playerHeight, hearts, scores);
+			players[1] = new Player(new Point(borderWidth/2+playerHeight/3,borderHeight-playerHeight),borderWidth, playerName2, playerHeight, hearts, scores);
 		}
 		
-		
-		// Add players and spawn players and bubbles
-		players[0] = new Player(new Point(borderWidth/2,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts, scores);
-		
-		
-		
+		players[0] = new Player(new Point(borderWidth/2-playerHeight/3,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts, scores);
+	}
+	
+	public void addPlayers(String playerName1, String playerName2, int playerHeight, int hearts, int scores) {
+		playerCount = 2;
+		players[0] = new Player(new Point(borderWidth/2+playerHeight/3,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts, scores);
+		players[1] = new Player(new Point(borderWidth/2-playerHeight/3,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts, scores);
+	}
+	
+	public void makeMap(int bubbleCounts[], int bubbleSize[], double speedX, double speedY) {
 		// Add bubbles
 		bubbles = new ArrayList<Bubble>();
 		for (int i = 0; i < bubbleCounts.length; i++) {
@@ -38,32 +40,26 @@ public class Map {
 			//g = rand.nextFloat();
 			//b = rand.nextFloat();
 			if (i % 2 == 0) {
-				makeBubbles(i,bubbleSizes[i],bubbleCounts[i],bubbleSizes[i]);
+				makeBubbles(i,bubbleCounts[i],bubbleSize[i], speedX, speedY);
 			} else {
-				makeBubbles(i,bubbleSizes[i],bubbleCounts[i],bubbleSizes[i]);
+				makeBubbles(i,bubbleCounts[i],bubbleSize[i], speedX, speedY);
 			}
 		}
 	}
 	
-	public void makeBubbles(int colorID, int size, int amount, int bubbleSize) {
+	public void makeBubbles(int colorID, int amount, int bubbleSize, double speedX, double speedY) {
 		for (int i = 0; i < amount; i++) {
 			int randomX = (int) (Math.random() * (borderWidth-bubbleSize));
 			int randomY = (int) (Math.random() * (500-bubbleSize));
 			if (i%2 == 0) {
-				bubbles.add(new Bubble(size, getColor(colorID), new Point(randomX,randomY), borderHeight, borderWidth, speedX, speedY));
+				bubbles.add(new Bubble(bubbleSize, colorID, new Point(randomX,randomY), borderHeight, borderWidth, speedX, speedY));
 			} else {
-				bubbles.add(new Bubble(size, getColor(colorID), new Point(randomX,randomY), borderHeight, borderWidth, -speedX, speedY));
+				bubbles.add(new Bubble(bubbleSize, colorID, new Point(randomX,randomY), borderHeight, borderWidth, -speedX, speedY));
 			}
 			
 		}
 	}
-	
-	public Color getColor(int i) {
-		i = i%10;
-		Color[] colors = new Color[] {Color.red, Color.orange, Color.yellow, Color.green, Color.cyan, Color.blue, Color.pink, Color.magenta, Color.DARK_GRAY, Color.black};
-		return colors[i];
-	}
-	
+
 	// Make a function to remove balls from the array, if player is dead, remove player from array
 	public Player getPlayer1() {
 		return players[0];
@@ -80,4 +76,9 @@ public class Map {
 	public ArrayList<Bubble> getBubbles() {
 		return bubbles;
 	}
+	
+    public void setListOfBubbles(ArrayList<Bubble> bubbles) {
+    	bubbles = new ArrayList<Bubble>();
+    	this.bubbles = bubbles;
+    }
 }
