@@ -19,6 +19,13 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.Color;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JMenuItem;
 
 public class WaitingRoom {
 
@@ -37,6 +44,10 @@ public class WaitingRoom {
 	private JLabel lblRoomID;
 	private String lRoomID;
 	private JLabel lblWaiting;
+	private JPopupMenu popupMenu;
+	private JMenuBar menuBar;
+	private JMenu settings;
+	private JMenu help;
 
 	/**
 	 * Launch the application.
@@ -83,6 +94,9 @@ public class WaitingRoom {
 		lblWaiting.setBounds(391, 458, 278, 29);
 		frmWaitingRoom.getContentPane().add(lblWaiting);
 		lblWaiting.setVisible(false);
+	
+		
+	
 		
 		//Room ID panel
 		lblRoomID = new JLabel();
@@ -163,6 +177,73 @@ public class WaitingRoom {
 		lblNewLabel_1.setBounds(120, 431, 214, 130);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_1);
 	
+		//Menu Bar
+		menuBar = new JMenuBar();
+		menuBar.setBounds(868, 0, 132, 22);
+		frmWaitingRoom.getContentPane().add(menuBar);
+		
+		//MENU - Settings
+		settings = new JMenu("Settings");
+		//mnNewMenu.setBounds(868, 0, 124, 19);
+		menuBar.add(settings);
+		
+
+		//MENU - Help 
+		help = new JMenu("Help");
+		menuBar.add(help);
+		JMenuItem itemHelp = new JMenuItem("Help");
+		help.add(itemHelp);
+		
+		itemHelp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Help.HelpFunction();	
+			}
+		});
+		
+	
+		//MENU Amount of lives
+		JMenu lives = new JMenu("Amount of lives");
+		settings.add(lives);
+		JMenuItem lives1 = new JMenuItem("1");
+		JMenuItem lives2 = new JMenuItem("2");
+		JMenuItem lives3 = new JMenuItem("3");
+		JMenuItem lives4 = new JMenuItem("4");
+		JMenuItem lives5 = new JMenuItem("5");
+		lives.add(lives1);
+		lives.add(lives2);
+		lives.add(lives3);
+		lives.add(lives4);
+		lives.add(lives5);
+		lives1 .addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		//MENU - Levels
+		JMenu levels = new JMenu("Levels");
+		settings.add(levels);
+		JMenuItem levels1 = new JMenuItem("1");
+		JMenuItem levels2 = new JMenuItem("2");
+		JMenuItem levels3 = new JMenuItem("3");
+		JMenuItem levels4 = new JMenuItem("4");
+		JMenuItem levels5 = new JMenuItem("5");
+		JMenuItem levels6 = new JMenuItem("6");
+		JMenuItem levels7 = new JMenuItem("7");
+		JMenuItem levels8 = new JMenuItem("8");
+		JMenuItem levels9 = new JMenuItem("9");
+		JMenuItem levels10 = new JMenuItem("10");
+		levels.add(levels1);
+		levels.add(levels2);
+		levels.add(levels3);
+		levels.add(levels4);
+		levels.add(levels5);
+		levels.add(levels6);
+		levels.add(levels7);
+		levels.add(levels8);
+		levels.add(levels9);
+		levels.add(levels10);
+		
+		
 		//Background
 		Image img = new ImageIcon(this.getClass().getResource("/bg.png")).getImage();
 		
@@ -176,7 +257,7 @@ public class WaitingRoom {
 		lblNewLabel_4.setBounds(760, 0, 320, 678);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_4);		
 		
-		
+
 
 	}
 
@@ -233,5 +314,22 @@ public class WaitingRoom {
 
 	public void closeWindow() {
 		frmWaitingRoom.setVisible(false);
+	}
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
 	}
 }
