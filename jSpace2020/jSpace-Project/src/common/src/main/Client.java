@@ -254,11 +254,6 @@ public class Client {
             if (otherArrow != null && (boolean) otherArrow[3]) {
             	 gRoom.getGame().getPlayer2().makeArrow(); 
             }
-            
-            // Game loop - single player
-            while (singleConnected) {
-                gameRoom.get(new ActualField("singleplayergameroom"));
-            }
            
             // Send player collision with bubble
             
@@ -282,6 +277,11 @@ public class Client {
             
             gameRoom.get(new ActualField("TEST"));*/
         }  
+
+        // Game loop - single player
+        while (singleConnected) {
+            gameRoom.get(new ActualField("singleplayergameroom"));
+        }
     }
 
     public static void endScreen(int level, int player1Score, int player2Score) throws InterruptedException, UnknownHostException, IOException {
