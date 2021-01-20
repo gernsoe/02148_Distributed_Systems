@@ -15,6 +15,7 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import javax.swing.Timer;
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -28,11 +29,12 @@ import javax.swing.SwingConstants;
 public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	
 	private Timer timer;
-	private int delay = 17, playerHeight = 48, moveDelay = 0;
-	int score, level = 9, hearts = 3;
+	private int delay = 17, playerHeight = 48;
+	int score, level = 1, hearts = 5;
+	boolean bubbleHitPlayer1 = false;
+	boolean multiplayer;
 	private JFrame frame;
 	private JPanel panel;
-	private boolean left1, left2, right1, right2, shooting;
 	private LevelHandler game;
 	private int borderWidth = 800, borderHeight = 600;
 	private JLabel lblNewLabel_1, lblNewLabel_3, lblNewLabel, Label_level;
@@ -43,27 +45,31 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	 * Create the application.
 	 * @param actionListener 
 	 */
-	public GameRoom() {
-		game = new LevelHandler(borderWidth, borderHeight, "Name", "Name1", playerHeight);
+	public GameRoom(boolean multiplayer, String player1name, String player2name) {
+		game = new LevelHandler(borderWidth, borderHeight, player1name, player2name, playerHeight);
+		this.multiplayer = multiplayer;
 	}
-
+	
+	public void setPlayerMode(boolean multiplayer) {
+		this.multiplayer = multiplayer;
+		initialize();
+	}
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	
 	public void initializeAsHost() {
 		game.makeLevel(level, hearts, score);
-		initialize();
 	}
 	
 	public void initializeAsParticipant(ArrayList<Bubble> bubbles) {
 		game.joinLevel(level, hearts, score, bubbles);
-		initialize();
-
 	}
 	
 	private void initialize() {
+
 		// Add game elements
+		System.out.println("multiplayer" + multiplayer);
 
 		// Add GUI
 		frame = new JFrame("Game Room");
@@ -97,28 +103,49 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
 				
+				
 				// Background
 				g.setColor(game.getLevelColor(level));
 				g.fillRect(0,0,borderWidth,borderHeight);
 				
 				// Arrow for player 1
 				if (game.getPlayer1().getArrowIsAlive()) {
-					g.setColor(Color.black);
+					g.setColor(Color.red);
 					g.fillRect((int)game.getPlayer1().getArrow().getX(), (int)game.getPlayer1().getArrow().getY(), game.getPlayer1().getArrow().getArrowWidth(), game.getPlayer1().getArrow().getArrowHeight());
 				}
 				
+				// Arrow for player 2
+				if (multiplayer) {
+					if (game.getPlayer2().getArrowIsAlive()) {
+						g.setColor(Color.green);
+						g.fillRect((int)game.getPlayer2().getArrow().getX(), (int)game.getPlayer2().getArrow().getY(), game.getPlayer2().getArrow().getArrowWidth(), game.getPlayer2().getArrow().getArrowHeight());
+					}
+				}
+
 				// Player 1
-				if(left1 & !shooting) {
+				if(game.getPlayer1().getLeft() & !(game.getPlayer1().isShooting())) {
 					g.drawImage(player1left,(int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight(), null);
-				} else if (right1 & !shooting) {
+				} else if (game.getPlayer1().getRight() & !(game.getPlayer1().isShooting())) {
 					g.drawImage(player1right,(int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight(), null);
 				} else {
 					g.drawImage(player1front,(int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight(), null);
 				}
 				
 				// Player 2
+				if (multiplayer) {
+					if(game.getPlayer2().getLeft() & !(game.getPlayer2().isShooting())) {
+						g.drawImage(player2left,(int)game.getPlayer2().getX(),(int)game.getPlayer2().getY(),game.getPlayer2().getPlayerWidth(),game.getPlayer2().getPlayerHeight(), null);
+					} else if (game.getPlayer2().getRight() & !(game.getPlayer2().isShooting())) {
+						g.drawImage(player2right,(int)game.getPlayer2().getX(),(int)game.getPlayer2().getY(),game.getPlayer2().getPlayerWidth(),game.getPlayer2().getPlayerHeight(), null);
+					} else {
+						g.drawImage(player2front,(int)game.getPlayer2().getX(),(int)game.getPlayer2().getY(),game.getPlayer2().getPlayerWidth(),game.getPlayer2().getPlayerHeight(), null);
+					}
+
+					// To update it visually correctly
+					game.getPlayer2().setRight(false);
+					game.getPlayer2().setLeft(false);
+				}
 				
-	
 				// Bubble
 				for(int i = 0; i < game.getBubbles().size(); i++) {
 					// Get color from bubble and draw its movement
@@ -151,31 +178,39 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		panel_1.setBounds(100,610,150,30);
 		panel_1.add(Player1Label);
 		
-		Player2Label = new JLabel("");
-		Player2Label.setHorizontalAlignment(SwingConstants.RIGHT);
-		Player2Label.setFont(new Font("Lucida Grande", Font.BOLD, 18));
-		Player2Label.setBounds(750, 610, 150, 30);
-		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(750,610,150,30);
-		panel_2.add(Player2Label);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBounds(270,610,70,30);
 		
-		// Player 2to score
+		// Player 2's label and score
+		Player2Label = new JLabel("");
+		Player2Label.setHorizontalAlignment(SwingConstants.RIGHT);
+		Player2Label.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		Player2Label.setBounds(750, 610, 150, 30);
+			
+		JPanel panel_2 = new JPanel();
+		panel_2.setBounds(750,610,150,30);
+		panel_2.add(Player2Label);
+		frame.getContentPane().add(panel_2);
+			
 		JPanel panel_4 = new JPanel();
 		panel_4.setBounds(660,610,70,30);
 		frame.getContentPane().add(panel_4);
-		
+			
 		score_2 = new JLabel();
 		score_2.setText("?");
 		score_2.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		panel_4.add(score_2);
-		
-		
+			
 		Player2Label.setForeground(Color.green);
-		frame.getContentPane().add(panel_2);
+		
+		// Hide if not multiplayer
+		if (!multiplayer) {
+			panel_4.setVisible(false);
+			panel_2.setVisible(false);
+		}
+
+		
 		frame.getContentPane().add(panel_1);
 		frame.getContentPane().add(panel_3);
 		
@@ -215,30 +250,33 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		Player1Heart5.setIcon(new ImageIcon(imgHeart));
 		
 		// Hearts of player 2
-		Player2Heart1 = new JLabel();
-		Player2Heart1.setBounds(865, 650, 32, 32);
-		frame.getContentPane().add(Player2Heart1);
-		Player2Heart1.setIcon(new ImageIcon(imgHeart));
+		if (multiplayer) {
+			Player2Heart1 = new JLabel();
+			Player2Heart1.setBounds(865, 650, 32, 32);
+			frame.getContentPane().add(Player2Heart1);
+			Player2Heart1.setIcon(new ImageIcon(imgHeart));
+			
+			Player2Heart2 = new JLabel();
+			Player2Heart2.setBounds(830, 650, 32, 32);
+			frame.getContentPane().add(Player2Heart2);
+			Player2Heart2.setIcon(new ImageIcon(imgHeart));
+			
+			Player2Heart3 = new JLabel();
+			Player2Heart3.setBounds(795, 650, 32, 32);
+			frame.getContentPane().add(Player2Heart3);
+			Player2Heart3.setIcon(new ImageIcon(imgHeart));
+			
+			Player2Heart4 = new JLabel();
+			Player2Heart4.setBounds(760, 650, 32, 32);
+			frame.getContentPane().add(Player2Heart4);
+			Player2Heart4.setIcon(new ImageIcon(imgHeart));
+			
+			Player2Heart5 = new JLabel();
+			Player2Heart5.setBounds(725, 650, 32, 32);
+			frame.getContentPane().add(Player2Heart5);
+			Player2Heart5.setIcon(new ImageIcon(imgHeart));	
+		}
 		
-		Player2Heart2 = new JLabel();
-		Player2Heart2.setBounds(830, 650, 32, 32);
-		frame.getContentPane().add(Player2Heart2);
-		Player2Heart2.setIcon(new ImageIcon(imgHeart));
-		
-		Player2Heart3 = new JLabel();
-		Player2Heart3.setBounds(795, 650, 32, 32);
-		frame.getContentPane().add(Player2Heart3);
-		Player2Heart3.setIcon(new ImageIcon(imgHeart));
-		
-		Player2Heart4 = new JLabel();
-		Player2Heart4.setBounds(760, 650, 32, 32);
-		frame.getContentPane().add(Player2Heart4);
-		Player2Heart4.setIcon(new ImageIcon(imgHeart));
-		
-		Player2Heart5 = new JLabel();
-		Player2Heart5.setBounds(725, 650, 32, 32);
-		frame.getContentPane().add(Player2Heart5);
-		Player2Heart5.setIcon(new ImageIcon(imgHeart));
 		
 		// Add labels
 		Label_leveltext = new JLabel("");
@@ -283,23 +321,28 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_RIGHT:
 				System.out.println("right click");
-				if (!shooting) {
-					
-					right1 = true;
+				if (!game.getPlayer1().isShooting()) {
+					game.getPlayer1().setRight(true);
 				}
 				break;
 			case KeyEvent.VK_LEFT:
 				System.out.println("left click");
-				if (!shooting) {
-					
-					left1 = true;	
+				if (!game.getPlayer1().isShooting()) {
+					game.getPlayer1().setLeft(true);
 				}
 				break;
 			case KeyEvent.VK_SPACE:
-				if (!game.getPlayer1().getArrowIsAlive()) {
-					shooting = true;
+				if (!game.getPlayer1().getArrowIsAlive() & !game.getPlayer1().isShooting()) {
+					game.getPlayer1().setShooting(true);
 					game.getPlayer1().makeArrow();
-					moveDelay = (68/delay);
+					game.getPlayer1().setMoveDelay(68/delay);
+				}
+				break;
+			case KeyEvent.VK_UP:
+				if (!game.getPlayer1().getArrowIsAlive() & !game.getPlayer1().isShooting()) {
+					game.getPlayer1().setShooting(true);
+					game.getPlayer1().makeArrow();
+					game.getPlayer1().setMoveDelay(68/delay);
 				}
 				break;
 			default:
@@ -311,12 +354,12 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	@Override
 	public void keyReleased(KeyEvent e) {
 		switch (e.getKeyCode()) {
-		case KeyEvent.VK_RIGHT:
-			right1 = false;
-			break;
-		case KeyEvent.VK_LEFT:
-			left1 = false;
-			break;
+			case KeyEvent.VK_RIGHT:
+				game.getPlayer1().setRight(false);
+				break;
+			case KeyEvent.VK_LEFT:
+				game.getPlayer1().setLeft(false);
+				break;
 		}
 	}
 
@@ -325,7 +368,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	}
 
 	public void setUserName2(String name) {
-		Player2Label.setText(name);
+			Player2Label.setText(name);
 	}
 
 	@Override
@@ -362,16 +405,39 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	}
 	
 	public void updateP1() {
-		if (shooting) {
-			moveDelay--;
+		int moveDelay = game.getPlayer1().getMoveDelay();
+		if (game.getPlayer1().isShooting()) {
+			game.getPlayer1().setMoveDelay(--moveDelay);
 			if (moveDelay == 0) {
-				shooting = false;
+				game.getPlayer1().setShooting(false);
 			}
-		} else if (left1 & !shooting) {
+		} else if (game.getPlayer1().getLeft() & !(game.getPlayer1().isShooting())) {
 			game.getPlayer1().goLeft();
-		} else if (right1 & !shooting) {
+		} else if (game.getPlayer1().getRight() & !(game.getPlayer1().isShooting())) {
 			game.getPlayer1().goRight();
 		} 
+	}
+	
+	public void setP2(boolean p2Right, boolean p2Left, boolean p2shoot, double xCord, int p2score, int p2hearts) {
+		game.getPlayer2().setX(xCord);
+		game.getPlayer2().setShooting(p2shoot);
+		game.getPlayer2().setLeft(p2Left);
+		game.getPlayer2().setRight(p2Right);
+		game.getPlayer2().setScore(p2score);
+		game.getPlayer2().setHearts(p2hearts);
+		if (p2shoot & !(game.getPlayer2().getArrowIsAlive())) {
+			game.getPlayer2().makeArrow();
+		}
+	}
+	
+	public void updateP2() {
+		int moveDelay = game.getPlayer2().getMoveDelay();
+		if(game.getPlayer2().isShooting()) {
+			game.getPlayer2().setMoveDelay(--moveDelay);
+			if (moveDelay == 0) {
+				game.getPlayer2().setShooting(false);
+			}
+		}
 	}
 
 	public void closeWindow() {
@@ -397,6 +463,10 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				// Lose life if player gets hit and restart level, if dead then stop game
 				System.out.println("bubble shape" + game.getBubbles().get(i).getShape().getBounds2D());
 				System.out.println("player shape" + game.getPlayer1().getShape().toString());
+				
+				// Set bubblehitplayer to true
+				bubbleHitPlayer1 = true;
+				
 				if (game.getPlayer1().getHearts() == 1) {
 					Player1Heart1.setVisible(false);
 				} else if (game.getPlayer1().getHearts() == 2) {
@@ -440,9 +510,15 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		if (game.getPlayer1().getArrowIsAlive()) {
 		game.getPlayer1().getArrow().updatePos();
 		}
-		/* if (game.getPlayer2().getArrowIsAlive()) {
-		game.getPlayer2().getArrow().updatePos();
-		} */
+		if (multiplayer) {
+			if (game.getPlayer2().getArrowIsAlive()) {
+				game.getPlayer2().getArrow().updatePos();
+			} 
+		}
+	}
+	
+	public boolean checkBubbleHitPlayer1() {
+		return bubbleHitPlayer1;
 	}
 
 	@Override
@@ -453,22 +529,25 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		
 		// Player movement
 		updateP1();
+		if (multiplayer) {
+			updateP2();
+		}
 		
 		// Update arrows
 		updateArrows();
 		
 		// Bubble movement and collisions
-		updateBubbles();
+		// updateBubbles();
 		
 		// Level Status
 		checkLevel();
 	}
 	
 	public boolean getPlayerLeft() {
-		return left1;
+		return game.getPlayer1().getLeft();
 	}
 	
 	public boolean getPlayerRight() {
-		return right1;
+		return game.getPlayer1().getRight();
 	}
 }

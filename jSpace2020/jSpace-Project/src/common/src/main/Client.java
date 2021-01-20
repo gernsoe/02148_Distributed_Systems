@@ -52,7 +52,10 @@ public class Client {
     public static final String BUBBLES = "bubbles";
     public static final String STARTMAP = "startmap";
     public static final String GOTMAP = "gotmap";
-
+    public static final String PLAYER_HIT = "player_hit";
+    public static final String PLAYER_DEAD = "player_dead";
+    public static final String GO_TO_END_SCREEN = "go_to_end_screen";
+    
     //String host = "tcp://2.tcp.ngrok.io:10963/";
     public static final String host = "tcp://127.0.0.1:9001/";
     public static final String lobbyURI = host + "lobby?keep";
@@ -112,7 +115,7 @@ public class Client {
         WaitingRoom wRoom = new WaitingRoom(name, roomID);
         wRoom.createLeaveButton();
         leaveRoomButton(wRoom);
-
+        
         // Check if client is a host
         if (myPermission.equals(HOST)) {
 
@@ -166,7 +169,13 @@ public class Client {
     }
 
     public static void gameLoop() throws InterruptedException {
-    	gRoom = new GameRoom();
+    	boolean multiplayer = false;
+    	if (otherPlayerName != null) {
+    		gRoom = new GameRoom(multiplayer, name, otherPlayerName);
+    	} else {
+    		gRoom = new GameRoom(multiplayer, name, "");
+    	}
+    	
     	Gson gson = new Gson();
     	JsonParser parser = new JsonParser();
     	
@@ -181,6 +190,7 @@ public class Client {
     		if (otherPlayerName != null) {
                 gameRoom.get(new ActualField(TO), new ActualField(HOST), new ActualField(STARTMAP));
                 multiConnected = true;
+                multiplayer = true;
     		} else {
                 singleConnected = true;
             }
@@ -202,18 +212,28 @@ public class Client {
     		// Get approved by server to start game
             gameRoom.get(new ActualField(TO), new ActualField(PARTICIPANT), new ActualField(STARTMAP));
             multiConnected = true;
+            multiplayer = true;
     	}
     	
+    	gRoom.setPlayerMode(multiplayer);
         gRoom.setUserName1(name);
-        gRoom.setUserName2(otherPlayerName);
+        if (multiplayer) {
+        	 gRoom.setUserName2(otherPlayerName);
+        }
+        
+        int id = 0;
+        int otherid = 1;
+        if (myPermission.equals(HOST)) {
+        	id = 0;
+        	otherid = 1;
+        } else if (myPermission.equals(PARTICIPANT)) {
+        	id = 1;
+        	otherid = 0;
+        }
+
         
         // Start timer
-        gRoom.getTimer().start();
-        
-        // Player infos from this client
-        Player player1 = gRoom.getGame().getPlayer1();
-        String jsonPlayer = gson.toJson(player1);
-        
+        gRoom.getTimer().start();       
 
         // LevelHandler game = gRoom.getGame();
 
@@ -225,39 +245,53 @@ public class Client {
         */
         // Game loop - multiplayer
         while(multiConnected) {
-            System.out.println("Entered game loop");
-            
+            // System.out.println("Entered game loop");
+            // Player infos from this client
+            Player player1 = gRoom.getGame().getPlayer1();
+            String jsonPlayer = gson.toJson(player1);
             // Send player movement information
-            if (gRoom.getPlayerRight() || gRoom.getPlayerLeft()) {
-            	gameRoom.put(FROM, name, PLAYER, jsonPlayer);
+            if (player1.getLeft() | player1.getRight() | player1.isShooting) {
+            	gameRoom.put(FROM, id, PLAYER, jsonPlayer);
             }
             
             // Get player movement from other player
-            Object[] otherPlayer = gameRoom.getp(new ActualField(FROM), new ActualField(otherPlayerName), new ActualField(PLAYER), new FormalField(String.class));
+            Object[] otherPlayer = gameRoom.getp(new ActualField(FROM), new ActualField(otherid), new ActualField(PLAYER), new FormalField(String.class));
+
             if (otherPlayer != null) {
                 String jsonOtherPlayer = (String) otherPlayer[3];
                 JsonObject player2 = parser.parse(jsonOtherPlayer).getAsJsonObject();
-                Point player2pos = gson.fromJson(player2.get("player"), Point.class);
-                
-                // Set other players position
-                gRoom.getGame().getPlayer2().setX(player2pos.getX());
+                // Point player2pos = gson.fromJson(player2.get("player"), Point.class);
+                boolean p2goRight = gson.fromJson(player2.get("right"), Boolean.class);
+                boolean p2goLeft = gson.fromJson(player2.get("left"), Boolean.class);
+                boolean p2shooting = gson.fromJson(player2.get("isShooting"), Boolean.class);
+                int p2score = gson.fromJson(player2.get("scores"), Integer.class);
+                int p2hearts = gson.fromJson(player2.get("hearts"), Integer.class);
+                Point p2pos = gson.fromJson(player2.get("player"), Point.class);
+                // Set other players position and make arrow if they shoot
+                gRoom.setP2(p2goRight, p2goLeft, p2shooting,p2pos.getX(),p2score,p2hearts);
             }
             
-            // Arrow shooting from player, send boolean, so other player can make arrow
-            if (player1.getArrowIsAlive()) {
-            	Arrow p1arrow = player1.getArrow();
-            	gameRoom.put(FROM, name, PLAYERSHOOT, p1arrow.getX());
+            //TODO: Make bubble collision with player work
+            
+           /* // Send player collision with bubble
+            if (gRoom.checkBubbleHitPlayer1()) {
+            	gameRoom.put(FROM, id, PLAYER_HIT);
+            	if(!gRoom.getGame().getPlayer1().isAlive) {
+            		// Give server information that player is dead.
+            		gameRoom.put(FROM,myPermission,PLAYER_DEAD);
+            		// Leads to end screen, atm stopping time
+            		gameRoom.get(new ActualField(TO), new ActualField(myPermission), new ActualField(GO_TO_END_SCREEN));
+            	}
             }
             
-            // Receive information, when other player shoot
-            Object[] otherArrow = gameRoom.getp(new ActualField(FROM),new ActualField(otherPlayerName), new ActualField(ARROW), new FormalField(Boolean.class));
-            if (otherArrow != null && (boolean) otherArrow[3]) {
-            	 gRoom.getGame().getPlayer2().makeArrow(); 
-            }
-           
-            // Send player collision with bubble
+            // Receive information about player hit
+            Object[] otherPlayerGotHit = gameRoom.getp(new ActualField(FROM),new ActualField(otherid),new ActualField(PLAYER_HIT));
+            if (otherPlayerGotHit != null) {
+            	gRoom.getGame().getPlayer2().loseHeart();
+            	
+            }*/
             
-            
+            //TODO: Make bubble collision with arrow work
 
            // otherPlayerInfo = gameRoom.get(new ActualField(TO));
 
