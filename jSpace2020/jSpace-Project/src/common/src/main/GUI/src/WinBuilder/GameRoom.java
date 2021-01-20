@@ -426,7 +426,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	public void checkLevel() {
 		// When the level is cleared, make a new level
 		if (game.getBubbles().isEmpty()) {
-			game.makeLevel(level, game.getPlayer1().getHearts(),game.getPlayer1().getScore(), game.getPlayer2().getHearts(), game.getPlayer2().getScore());
+			game.makeLevel(++level, game.getPlayer1().getHearts(),game.getPlayer1().getScore(), game.getPlayer2().getHearts(), game.getPlayer2().getScore());
 			Label_leveltext.setText("" + level);
 		}
 	}
