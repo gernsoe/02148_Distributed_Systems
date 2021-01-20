@@ -238,44 +238,37 @@ class roomHandler implements Runnable {
 			while (connected) {
 				// System.out.println("Entered game loop");
 
-				// When the participant has received the map, start game on both
-				Object[] newMap = gameRoom.getp(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(GOTMAP));
-				if (newMap != null) {
-					gameRoom.put(TO, HOST, STARTMAP);
-					gameRoom.put(TO, PARTICIPANT, STARTMAP);
-				}
-				
-				// Server only needs to end the game
-				
-				Object[] playerDied = gameRoom.getp(new ActualField(FROM), new FormalField(String.class), new ActualField(PLAYER_DEAD));
-				if (playerDied != null) {
-					String who = (String) playerDied[1];
-					if (who.equals(HOST)) {
-						hostDied = true;
-					} else if (who.equals(PARTICIPANT)) {
-						participantDied = true;
-					}
+				Object[] gameInstruction = gameRoom.get(new ActualField(FROM), new FormalField(String.class), new FormalField(String.class));
+				String who = (String) gameInstruction[1];
+				String instruction = (String) gameInstruction[2];
+
+				switch (instruction) {
+					case GOTMAP:
+						gameRoom.put(TO, HOST, STARTMAP);
+						gameRoom.put(TO, PARTICIPANT, STARTMAP);
+
+						break;
+					
+					case PLAYER_DEAD:
+						if (who.equals(HOST)) {
+							hostDied = true;
+						} else if (who.equals(PARTICIPANT)) {
+							participantDied = true;
+						}
+						break;
+
+					default:
+						break;
 				}
 
 				if (hostDied && participantDied) {
 					gameRoom.put(TO, HOST, GO_TO_END_SCREEN);
 					gameRoom.put(TO, PARTICIPANT, GO_TO_END_SCREEN);
 					connected = false;
+					rooms.put(roomID, LEFT_ROOM, HOST); // Get the leaveHandler to delete the room
 					Thread.interrupted();
 				}
-				/*Object[] testBubble = gameRoom.get(new ActualField("newBubble"), new FormalField(String.class));
-				String json = (String) testBubble[1];
-
-				JsonObject newBubble = parser.parse(json).getAsJsonObject();
-				int size = gson.fromJson(newBubble.get("size"), int.class);
-				Point bubble = gson.fromJson(newBubble.get("bubble"), Point.class);
-				
-				System.out.println(json);
-				System.out.println("Size " + size);
-				System.out.println("Bubble pos: " + bubble.toString());*/
 			}
-
-			// Delete room after game ends
 
 		} catch (InterruptedException e) {
 			System.out.println(e.getStackTrace());

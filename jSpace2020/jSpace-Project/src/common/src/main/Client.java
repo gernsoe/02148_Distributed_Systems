@@ -155,6 +155,7 @@ public class Client {
                     } 
                 }
                 
+                Thread.sleep(500);
                 checkGameStarted(wRoom);
                 checkLeaveRoom(wRoom);
 
@@ -179,6 +180,7 @@ public class Client {
             System.out.println("Waiting for host to start the game");
 
             while (inLobby) {
+                Thread.sleep(500);
                 checkGameSettings(wRoom);
                 checkGameStarted(wRoom);
                 checkLeaveRoom(wRoom);
@@ -279,6 +281,7 @@ public class Client {
             }
 
             if (gRoom.getGame().getBubbles().isEmpty() && myPermission.equals(HOST) && !otherPlayerDied) {
+                gRoom.getTimer().stop();
                 currentLevel++;
                 gRoom.setCurrentLevel(currentLevel);
                 gameRoom.put(FROM, id, "next_level", currentLevel);
@@ -298,9 +301,10 @@ public class Client {
 
             Object[] newLevel = gameRoom.getp(new ActualField(FROM), new ActualField(otherid), new ActualField("next_level"), new FormalField(Integer.class));
             if (newLevel != null) {
-                //gRoom.getTimer().stop();
+                gRoom.getTimer().stop();
                 currentLevel = (int) newLevel[3];
                 System.out.println("Current level PART: " + currentLevel);
+                gRoom.setCurrentLevel(currentLevel);
                 createNewLevel();
             }
 
@@ -356,7 +360,7 @@ public class Client {
             Object[] otherPlayerGotHit = gameRoom.getp(new ActualField(FROM),new ActualField(otherid),new ActualField(PLAYER_HIT));
             if (otherPlayerGotHit != null) {
                 gRoom.player2LoseHeart();
-                if (gRoom.getGame().getPlayer2().isAlive()) {
+                if (!gRoom.getGame().getPlayer2().isAlive()) {
                     otherPlayerDied = true;
                 }
             }
