@@ -19,11 +19,9 @@ public class Map {
 	
 	public void makePlayers(String playerName1, String playerName2, int playerHeight, int hearts1, int scores1, int hearts2, int scores2) {
 		// Add players 
-		if (!playerName2.equals("")) {
-			players[1] = new Player(new Point(borderWidth/2+playerHeight/3,borderHeight-playerHeight),borderWidth, playerName2, playerHeight, hearts2, scores2);
-		}
-		
 		players[0] = new Player(new Point(borderWidth/2-playerHeight/3,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts1, scores1);
+		players[1] = new Player(new Point(borderWidth/2+playerHeight/3,borderHeight-playerHeight),borderWidth, playerName2, playerHeight, hearts2, scores2);
+	
 	}
 	
 	public void addPlayers(String playerName1, String playerName2, int playerHeight, int hearts1, int scores1, int hearts2, int scores2) {
