@@ -5,12 +5,14 @@ import java.awt.geom.Rectangle2D;
 public class Player {
 	// Check if player is alive
 	boolean isAlive = true;
-	boolean isInvincible = false;
+	boolean isShooting;
+	boolean right;
+	boolean left;
 	
 	// Player position
 	Point player;
 	Arrow arrow;
-	int hearts, scores;
+	int hearts, scores, moveDelay = 0;
 	
 	// Size of player
 	private int playerHeight, playerID, borderWidth, stepSize = 2, playerWidth;
@@ -32,6 +34,7 @@ public class Player {
 		if (player.getX() + (stepSize + playerWidth) <= borderWidth & isAlive) {
 			System.out.println("Going right at " + player.toString());
 			player.setX(player.getX() + stepSize);
+			System.out.println("Going right is " + right);
 		}
 	}
 	
@@ -39,6 +42,7 @@ public class Player {
 		if (player.getX() >= 0 & isAlive) {
 			player.setX(player.getX() - stepSize);
 			System.out.println("Going left at " + player.toString());
+			System.out.println("Going left is " + left);
 		}
 	}
 	
@@ -66,13 +70,6 @@ public class Player {
 		return player.getX();
 	}
 	
-	public void setInvincibility(boolean invicibility) {
-		isInvincible = invicibility;
-	}
-	
-	public boolean getInvicibilityStatus() {
-		return isInvincible;
-	}
 	public double getY() {
 		return player.getY();
 	}
@@ -140,5 +137,37 @@ public class Player {
 	
 	public Arrow getArrow() {
 		return arrow;
+	}
+	
+	public void setRight(boolean move) {
+		right = move;
+	}
+	
+	public void setLeft(boolean move) {
+		left = move;
+	}
+	
+	public void setShooting(boolean shoot) {
+		isShooting = shoot;
+	}
+	
+	public boolean getRight() {
+		return right;
+	}
+	
+	public boolean getLeft() {
+		return left;
+	}
+	
+	public boolean isShooting() {
+		return isShooting;
+	}
+	
+	public void setMoveDelay(int delay) {
+		moveDelay = delay;
+	}
+	
+	public int getMoveDelay() {
+		return moveDelay;
 	}
  }

@@ -29,11 +29,11 @@ import javax.swing.SwingConstants;
 public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	
 	private Timer timer;
-	private int delay = 17, playerHeight = 48, moveDelay = 0;
-	int score, level = 9, hearts = 3;
+	private int delay = 17, playerHeight = 48;
+	int score, level = 1, hearts = 3;
+	boolean multiplayer;
 	private JFrame frame;
 	private JPanel panel;
-	private boolean left1, left2, right1, right2, shooting;
 	private LevelHandler game;
 	private int borderWidth = 800, borderHeight = 600;
 	private JLabel lblNewLabel_1, lblNewLabel_3, lblNewLabel, Label_level;
@@ -44,10 +44,14 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	 * Create the application.
 	 * @param actionListener 
 	 */
-	public GameRoom() {
-		game = new LevelHandler(borderWidth, borderHeight, "Name", "Name1", playerHeight);
+	public GameRoom(boolean multiplayer, String player1name, String player2name) {
+		game = new LevelHandler(borderWidth, borderHeight, player1name, player2name, playerHeight);
+		this.multiplayer = multiplayer;
 	}
-
+	
+	public void setPlayerMode(boolean multiplayer) {
+		this.multiplayer = multiplayer;
+	}
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -109,17 +113,25 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				}
 				
 				// Player 1
-				if(left1 & !shooting) {
+				if(game.getPlayer1().getLeft() & !(game.getPlayer1().isShooting())) {
 					g.drawImage(player1left,(int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight(), null);
-				} else if (right1 & !shooting) {
+				} else if (game.getPlayer1().getRight() & !(game.getPlayer1().isShooting())) {
 					g.drawImage(player1right,(int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight(), null);
 				} else {
 					g.drawImage(player1front,(int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight(), null);
 				}
 				
 				// Player 2
+				if (multiplayer) {
+					if(game.getPlayer2().getLeft() & !(game.getPlayer2().isShooting())) {
+						g.drawImage(player2left,(int)game.getPlayer2().getX(),(int)game.getPlayer2().getY(),game.getPlayer2().getPlayerWidth(),game.getPlayer2().getPlayerHeight(), null);
+					} else if (game.getPlayer2().getRight() & !(game.getPlayer2().isShooting())) {
+						g.drawImage(player2right,(int)game.getPlayer2().getX(),(int)game.getPlayer2().getY(),game.getPlayer2().getPlayerWidth(),game.getPlayer2().getPlayerHeight(), null);
+					} else {
+						g.drawImage(player2front,(int)game.getPlayer2().getX(),(int)game.getPlayer2().getY(),game.getPlayer2().getPlayerWidth(),game.getPlayer2().getPlayerHeight(), null);
+					}
+				}
 				
-	
 				// Bubble
 				for(int i = 0; i < game.getBubbles().size(); i++) {
 					// Get color from bubble and draw its movement
@@ -284,23 +296,21 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_RIGHT:
 				System.out.println("right click");
-				if (!shooting) {
-					
-					right1 = true;
+				if (!game.getPlayer1().isShooting()) {
+					game.getPlayer1().setRight(true);
 				}
 				break;
 			case KeyEvent.VK_LEFT:
 				System.out.println("left click");
-				if (!shooting) {
-					
-					left1 = true;	
+				if (!game.getPlayer1().isShooting()) {
+					game.getPlayer1().setLeft(true);
 				}
 				break;
 			case KeyEvent.VK_SPACE:
 				if (!game.getPlayer1().getArrowIsAlive()) {
-					shooting = true;
+					game.getPlayer1().setShooting(true);
 					game.getPlayer1().makeArrow();
-					moveDelay = (68/delay);
+					game.getPlayer1().setMoveDelay(68/delay);
 				}
 				break;
 			default:
@@ -313,10 +323,10 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	public void keyReleased(KeyEvent e) {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_RIGHT:
-				right1 = false;
+				game.getPlayer1().setRight(false);
 				break;
 			case KeyEvent.VK_LEFT:
-				left1 = false;
+				game.getPlayer1().setLeft(false);
 				break;
 		}
 	}
@@ -363,15 +373,33 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	}
 	
 	public void updateP1() {
-		if (shooting) {
-			moveDelay--;
+		int moveDelay = game.getPlayer1().getMoveDelay();
+		if (game.getPlayer1().isShooting()) {
+			game.getPlayer1().setMoveDelay(--moveDelay);
 			if (moveDelay == 0) {
-				shooting = false;
+				game.getPlayer1().setShooting(false);
 			}
-		} else if (left1 & !shooting) {
+		} else if (game.getPlayer1().getLeft() & !(game.getPlayer1().isShooting())) {
 			game.getPlayer1().goLeft();
-		} else if (right1 & !shooting) {
+		} else if (game.getPlayer1().getRight() & !(game.getPlayer1().isShooting())) {
 			game.getPlayer1().goRight();
+		} 
+	}
+	
+	public void setP2(boolean p2Right, boolean p2Left, boolean p2shoot, double xCord) {
+		game.getPlayer2().setShooting(p2shoot);
+		game.getPlayer2().setLeft(p2Left);
+		game.getPlayer2().setRight(p2Right);
+		game.getPlayer2().setX(xCord);
+	}
+	
+	public void updateP2() {
+		int moveDelay = game.getPlayer2().getMoveDelay();
+		if(game.getPlayer2().isShooting()) {
+			game.getPlayer2().setMoveDelay(--moveDelay);
+			if (moveDelay == 0) {
+				game.getPlayer2().setShooting(false);
+			}
 		} 
 	}
 
@@ -454,22 +482,23 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		
 		// Player movement
 		updateP1();
+		updateP2();
 		
 		// Update arrows
 		updateArrows();
 		
 		// Bubble movement and collisions
-		updateBubbles();
+		// updateBubbles();
 		
 		// Level Status
 		checkLevel();
 	}
 	
 	public boolean getPlayerLeft() {
-		return left1;
+		return game.getPlayer1().getLeft();
 	}
 	
 	public boolean getPlayerRight() {
-		return right1;
+		return game.getPlayer1().getRight();
 	}
 }

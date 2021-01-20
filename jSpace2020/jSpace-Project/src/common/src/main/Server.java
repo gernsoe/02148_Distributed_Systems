@@ -239,7 +239,7 @@ class roomHandler implements Runnable {
 
 			// Game loop
 			while (connected) {
-				System.out.println("Entered game loop");
+				// System.out.println("Entered game loop");
 				
 				
 				// Server only needs to end the game
