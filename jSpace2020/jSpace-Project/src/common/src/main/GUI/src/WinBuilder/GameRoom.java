@@ -332,7 +332,14 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				}
 				break;
 			case KeyEvent.VK_SPACE:
-				if (!game.getPlayer1().getArrowIsAlive()) {
+				if (!game.getPlayer1().getArrowIsAlive() & !game.getPlayer1().isShooting()) {
+					game.getPlayer1().setShooting(true);
+					game.getPlayer1().makeArrow();
+					game.getPlayer1().setMoveDelay(68/delay);
+				}
+				break;
+			case KeyEvent.VK_UP:
+				if (!game.getPlayer1().getArrowIsAlive() & !game.getPlayer1().isShooting()) {
 					game.getPlayer1().setShooting(true);
 					game.getPlayer1().makeArrow();
 					game.getPlayer1().setMoveDelay(68/delay);
