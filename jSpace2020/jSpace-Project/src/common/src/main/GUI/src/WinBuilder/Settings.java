@@ -16,6 +16,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Settings {
 
@@ -114,7 +116,7 @@ public class Settings {
 		JRadioButton checkLevel2 = new JRadioButton("2");
 		checkLevel2.setBounds(47, 41, 47, 23);
 		panel_1.add(checkLevel2);
-		
+
 		JRadioButton checkLevel3 = new JRadioButton("3");
 		checkLevel3.setBounds(88, 41, 47, 23);
 		panel_1.add(checkLevel3);
@@ -160,10 +162,6 @@ public class Settings {
 		background.setIcon(new ImageIcon(img));
 		
 		
-	
-		
-		
-
 		frmSetting.setBounds(100, 100, 491, 352);
 		frmSetting.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
