@@ -26,6 +26,8 @@ import com.google.gson.JsonParser;
 public class Client {
     static String name, roomID, roomURI;
     static String otherPlayerName = null;
+    public static int startingLevel = 1;
+    public static int amountOfHearts = 5;
     public static String myPermission;
     public static boolean loginButtonClicked = false;
     public static boolean startButtonClicked = false;
@@ -55,6 +57,8 @@ public class Client {
     public static final String PLAYER_HIT = "player_hit";
     public static final String PLAYER_DEAD = "player_dead";
     public static final String GO_TO_END_SCREEN = "go_to_end_screen";
+    public static final String AMOUNT_OF_HEARTS = "amount_of_hearts";
+    public static final String STARTING_LEVEL = "starting_level";
     
     //String host = "tcp://2.tcp.ngrok.io:10963/";
     public static final String host = "tcp://127.0.0.1:9001/";
@@ -122,6 +126,8 @@ public class Client {
             // Add buttons visble to host
             wRoom.createStartButton();
             startGameButton(wRoom);
+            wRoom.addSettingsButton(wRoom);
+            saveSettingsButton(wRoom, gameRoom);
             wRoom.setUserName1(name);
             wRoom.toggleFigure1();
             wRoom.setRoomID("Welcome to room "+roomID);
@@ -162,6 +168,7 @@ public class Client {
             System.out.println("Waiting for host to start the game");
 
             while (inLobby) {
+                checkGameSettings(wRoom);
                 checkGameStarted(wRoom);
                 checkLeaveRoom(wRoom);
             }   
@@ -171,9 +178,9 @@ public class Client {
     public static void gameLoop() throws InterruptedException {
     	boolean multiplayer = false;
     	if (otherPlayerName != null) {
-    		gRoom = new GameRoom(multiplayer, name, otherPlayerName);
+    		gRoom = new GameRoom(multiplayer, name, otherPlayerName, startingLevel, amountOfHearts);
     	} else {
-    		gRoom = new GameRoom(multiplayer, name, "");
+    		gRoom = new GameRoom(multiplayer, name, "", startingLevel, amountOfHearts);
     	}
     	
     	Gson gson = new Gson();
@@ -297,9 +304,6 @@ public class Client {
 
             //endScreen(1, 50, 100);
             /*System.out.println("Entered game loop");
-=======
-            System.out.println("Entered game loop");
->>>>>>> branch 'master' of https://github.com/gernsoe/02148_Game_Repo
 
             Bubble testBubble = game.getBubbles().get(0);
             Bubble testBubble1 = game.getBubbles().get(1);
@@ -359,6 +363,26 @@ public class Client {
             }
         });
     }
+    public static void saveSettingsButton(WaitingRoom wRoom, Space gameRoom) throws InterruptedException{
+        wRoom.getSettingsButton().addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    for (int i = 0; i < wRoom.settings.checkHearts.size(); ++i) {
+                        if (wRoom.settings.checkHearts.get("lives"+i).isSelected()) {
+                            amountOfHearts = i+1;
+                        }
+                    }
+                    for (int i = 0; i < wRoom.settings.checkLevels.size(); ++i) {
+                        if (wRoom.settings.checkLevels.get("level"+i).isSelected()) {
+                            startingLevel = i+1;
+                        }
+                    }
+                    gameRoom.put(FROM, myPermission, STARTING_LEVEL, startingLevel, AMOUNT_OF_HEARTS, amountOfHearts);
+                    wRoom.settings.closeWindow();
+                } catch (InterruptedException err) {}
+            }
+        });
+    }
 
     public static void startGameButton(WaitingRoom wRoom) throws InterruptedException {
         wRoom.getStartButton().addActionListener(new ActionListener() {
@@ -406,6 +430,16 @@ public class Client {
         if (gameStarted != null) {
             wRoom.closeWindow();
             gameLoop();
+        }
+    }
+
+    // Get updated settings directly from the host
+    public static void checkGameSettings(WaitingRoom wRoom) throws InterruptedException {
+        Object[] gameSettings = gameRoom.getp(new ActualField(FROM), new ActualField(HOST), new ActualField(STARTING_LEVEL), 
+                                              new FormalField(Integer.class), new ActualField(AMOUNT_OF_HEARTS), new FormalField(Integer.class));
+        if (gameSettings != null) {
+            startingLevel = (int) gameSettings[3];
+            amountOfHearts = (int) gameSettings[5];
         }
     }
 
