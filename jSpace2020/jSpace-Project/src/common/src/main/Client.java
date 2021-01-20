@@ -54,6 +54,7 @@ public class Client {
     public static final String STARTMAP = "startmap";
     public static final String GOTMAP = "gotmap";
     public static final String PLAYER_HIT = "player_hit";
+    public static final String ARROW_HIT = "arrow_hit";
     public static final String PLAYER_DEAD = "player_dead";
     public static final String GO_TO_END_SCREEN = "go_to_end_screen";
     public static final String AMOUNT_OF_HEARTS = "amount_of_hearts";
@@ -299,7 +300,12 @@ public class Client {
 
             }
             
+            /*
             //TODO: Make bubble collision with arrow work
+            if (gRoom.checkPlayer1ArrowHit()) {
+                gameRoom.put(FROM, id, ARROW_HIT);
+                gRoom.setPlayer1ArrowHit(false);
+            }
 
            // otherPlayerInfo = gameRoom.get(new ActualField(TO));
 

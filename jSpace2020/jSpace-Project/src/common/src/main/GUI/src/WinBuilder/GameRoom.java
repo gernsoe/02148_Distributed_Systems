@@ -34,6 +34,8 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	private int delay = 17, playerHeight = 48;
 	int score, level, hearts;
 	boolean bubbleHitPlayer1 = false;
+	boolean player1ArrowHit = false;
+	boolean player2ArrowHit = false;
 	boolean multiplayer;
 	private JFrame frame;
 	private JPanel panel;
@@ -448,9 +450,13 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				}
 			}
 			
-			
 			// Bubble collision with arrow
 			if(game.getPlayer1().getArrowIsAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getArrow().getShape())) {
+
+				player1ArrowHit = true;
+
+				//setBubbleHitByArrow = game.getBubbles().get(i);
+
 				if (game.getBubbles().get(i).getSize() > 20) {
 					game.getBubbles().addAll(game.getBubbles().get(i).addSplitBubbles());
 				}
@@ -459,13 +465,29 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				game.getBubbles().remove(i);
 				game.getPlayer1().getArrow().setAliveTo(false);
 			}	
+
+			// Bubble collision with arrow
+			if(game.getPlayer2().getArrowIsAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer2().getArrow().getShape())) {
+
+				player1ArrowHit = true;
+
+				//setBubbleHitByArrow = game.getBubbles().get(i);
+
+				if (game.getBubbles().get(i).getSize() > 20) {
+					game.getBubbles().addAll(game.getBubbles().get(i).addSplitBubbles());
+				}
+				game.getPlayer2().setScore(game.getPlayer2().getScore()+1);
+				score_1.setText("" + game.getPlayer2().getScore());
+				game.getBubbles().remove(i);
+				game.getPlayer2().getArrow().setAliveTo(false);
+			}	
 			
 		}
 	}
 	
 	public void updateArrows() {
 		if (game.getPlayer1().getArrowIsAlive()) {
-		game.getPlayer1().getArrow().updatePos();
+			game.getPlayer1().getArrow().updatePos();
 		}
 		if (multiplayer) {
 			if (game.getPlayer2().getArrowIsAlive()) {
@@ -481,6 +503,22 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	public void setBubbleHitPlayer1(boolean hit) {
 		bubbleHitPlayer1 = hit;
 	}
+
+	public boolean checkPlayer1ArrowHit() {
+		return player1ArrowHit;
+	}
+
+	public void setPlayer1ArrowHit(boolean hit) {
+		player1ArrowHit = hit;
+	}
+
+	public boolean checkPlayer2ArrowHit() {
+		return player2ArrowHit;
+	}
+	public void setPlayer2ArrowHit(boolean hit) {
+		player2ArrowHit = hit;
+	}
+
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
