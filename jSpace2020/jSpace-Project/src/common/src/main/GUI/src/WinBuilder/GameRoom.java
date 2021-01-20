@@ -214,7 +214,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		frame.getContentPane().add(panel_4);
 			
 		score_2 = new JLabel();
-		score_2.setText("?");
+		score_2.setText("0");
 		score_2.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		panel_4.add(score_2);
 			
@@ -234,7 +234,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		
 		// Add scores
 		score_1 = new JLabel();
-		score_1.setText("" + game.getPlayer1().getScore());
+		score_1.setText("0");
 		score_1.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		panel_3.add(score_1);
 
@@ -299,13 +299,11 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_RIGHT:
-				System.out.println("right click");
 				if (!game.getPlayer1().isShooting()) {
 					game.getPlayer1().setRight(true);
 				}
 				break;
 			case KeyEvent.VK_LEFT:
-				System.out.println("left click");
 				if (!game.getPlayer1().isShooting()) {
 					game.getPlayer1().setLeft(true);
 				}
@@ -426,9 +424,14 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	public void checkLevel() {
 		// When the level is cleared, make a new level
 		if (game.getBubbles().isEmpty()) {
-			game.makeLevel(++level, game.getPlayer1().getHearts(),game.getPlayer1().getScore(), game.getPlayer2().getHearts(), game.getPlayer2().getScore());
+			++level;
+			//game.makeLevel(++level, game.getPlayer1().getHearts(),game.getPlayer1().getScore(), game.getPlayer2().getHearts(), game.getPlayer2().getScore());
 			Label_leveltext.setText("" + level);
-		}
+		} 
+	}
+
+	public int getCurrentLevel() {
+		return level;
 	}
 	
 	public void updateBubbles() {
@@ -487,7 +490,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 					game.getBubbles().addAll(game.getBubbles().get(i).addSplitBubbles());
 				}
 				game.getPlayer2().setScore(game.getPlayer2().getScore()+1);
-				score_1.setText("" + game.getPlayer2().getScore());
+				score_2.setText("" + game.getPlayer2().getScore());
 				game.getBubbles().remove(i);
 				game.getPlayer2().getArrow().setAliveTo(false);
 			}	
@@ -534,7 +537,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// Redraw bubbles, players and arrows
 		panel.repaint();
-		
+		System.out.println("gamroom loop");
 		// Player movement
 		updateP1();
 		if (multiplayer) {
@@ -570,7 +573,6 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		if (!game.getPlayer1().isAlive()) {
 			timer.stop();
 		} else {
-			System.out.println("hi");
 			game.getPlayer1().setInvincible(true);
 			game.getPlayer1().setInvinTime((1000/delay)*3);
 		}

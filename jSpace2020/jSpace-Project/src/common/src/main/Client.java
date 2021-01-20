@@ -27,10 +27,12 @@ public class Client {
     static String otherPlayerName = null;
     public static int startingLevel = 1;
     public static int amountOfHearts = 5;
+    public static int currentLevel;
     public static String myPermission;
     public static boolean loginButtonClicked = false;
     public static boolean startButtonClicked = false;
     public static boolean backToMenuButtonClicked = false;
+    public static boolean multiplayer = false;
     public static boolean inLobby = true;
     public static boolean multiConnected = false;
     public static boolean singleConnected = false;
@@ -67,6 +69,9 @@ public class Client {
     public static RemoteSpace gameRoom;
     public static GameRoom gRoom;
     static Timer timer;
+    public static Gson gson;
+    public static JsonParser parser;
+    public static ArrayList<Bubble> bubbles;
 
 	public static void main(String[] argv) throws InterruptedException, UnknownHostException, IOException {
 
@@ -176,19 +181,21 @@ public class Client {
     }
 
     public static void gameLoop() throws InterruptedException {
-    	boolean multiplayer = false;
+    	multiplayer = false;
     	if (otherPlayerName != null) {
     		gRoom = new GameRoom(multiplayer, name, otherPlayerName, startingLevel, amountOfHearts);
     	} else {
     		gRoom = new GameRoom(multiplayer, name, "", startingLevel, amountOfHearts);
-    	}
+        }
+        
+        currentLevel = startingLevel;
     	
-    	Gson gson = new Gson();
-    	JsonParser parser = new JsonParser();
-    	
-    	if (myPermission.equals(HOST)) {
+    	gson = new Gson();
+        parser = new JsonParser();
+        
+        if (myPermission.equals(HOST)) {
     		gRoom.initializeAsHost();
-    		ArrayList<Bubble> bubbles = gRoom.getGame().getBubbles();
+    		bubbles = gRoom.getGame().getBubbles();
     		String json = gson.toJson(bubbles);
     		// Send bubbles
     		gameRoom.put(FROM, HOST, BUBBLES, json);
@@ -207,13 +214,13 @@ public class Client {
     	
     		String json = (String) getBubbles[3];
     		
-    		ArrayList<Bubble> bubbles = new ArrayList<Bubble>();
+    		bubbles = new ArrayList<Bubble>();
     		JsonArray bubbleList = parser.parse(json).getAsJsonArray();
     		for(int i = 0; i < bubbleList.size(); i++) {
     			Bubble bubble = gson.fromJson(bubbleList.get(i), Bubble.class);
     			bubbles.add(bubble);
-    		}
-    		gRoom.initializeAsParticipant(bubbles);
+            }
+            gRoom.initializeAsParticipant(bubbles);
     		gameRoom.put(FROM, PARTICIPANT, GOTMAP);
     		
     		// Get approved by server to start game
@@ -250,8 +257,27 @@ public class Client {
         int score2 = game.getPlayer2().getScore();
         endScreen(level, score1, score2);
         */
+        System.out.println("groom level " + gRoom.getCurrentLevel());
+        System.out.println("current level " + currentLevel);
+
         // Game loop - multiplayer
         while(multiConnected) {
+            
+            // Signal participant to enter new level with host
+            if (gRoom.getCurrentLevel() != currentLevel && myPermission.equals(HOST)) {
+                gRoom.getTimer().stop();
+                currentLevel = gRoom.getCurrentLevel();
+                gameRoom.put(FROM, id, "next_level", currentLevel);
+                createNewLevel();
+            }
+
+            Object[] newLevel = gameRoom.getp(new ActualField(FROM), new ActualField(otherid), new ActualField("next_level"), new FormalField(Integer.class));
+            if (newLevel != null) {
+                gRoom.getTimer().stop();
+                currentLevel = (int) newLevel[3];
+                createNewLevel();
+            }
+
             // System.out.println("Entered game loop");
             // Player infos from this client
             Player player1 = gRoom.getGame().getPlayer1();
@@ -345,6 +371,43 @@ public class Client {
         }
         eScreen.closeWindow();
         joinRoom();
+    }
+
+    public static void initLevel() throws InterruptedException {
+        
+    }
+
+    public static void createNewLevel() throws InterruptedException {
+        if (myPermission.equals(HOST)) {
+            gRoom.getGame().makeLevel(currentLevel, gRoom.getGame().getPlayer1().getHearts(), gRoom.getGame().getPlayer1().getScore(), 
+                                                    gRoom.getGame().getPlayer2().getHearts(), gRoom.getGame().getPlayer2().getScore());
+            bubbles = gRoom.getGame().getBubbles();
+    		String json = gson.toJson(bubbles);
+            // Send bubbles
+            System.out.println("Sending new bubbles to participant");
+            gameRoom.put(FROM, HOST, BUBBLES, json);
+            gameRoom.get(new ActualField(TO), new ActualField(HOST), new ActualField(STARTMAP));
+        } else if (myPermission.equals(PARTICIPANT)) {
+            
+    		// Receive bubbles from host
+    		Object[] getBubbles = gameRoom.get(new ActualField(FROM), new ActualField(HOST), new ActualField(BUBBLES), new FormalField(String.class));
+    	
+    		String json = (String) getBubbles[3];
+    		
+    		bubbles = new ArrayList<Bubble>();
+    		JsonArray bubbleList = parser.parse(json).getAsJsonArray();
+    		for(int i = 0; i < bubbleList.size(); i++) {
+    			Bubble bubble = gson.fromJson(bubbleList.get(i), Bubble.class);
+    			bubbles.add(bubble);
+            }
+            gRoom.getGame().joinLevel(currentLevel, gRoom.getGame().getPlayer1().getHearts(), gRoom.getGame().getPlayer1().getScore(), 
+                                                    gRoom.getGame().getPlayer2().getHearts(), gRoom.getGame().getPlayer2().getScore(), bubbles);
+    		gameRoom.put(FROM, PARTICIPANT, GOTMAP);
+            System.out.println("joined new level");
+    		// Get approved by server to start game
+            gameRoom.get(new ActualField(TO), new ActualField(PARTICIPANT), new ActualField(STARTMAP));
+        }
+        gRoom.getTimer().start();
     }
     
     public static void loginButton(fMenu menu, Space lobby) throws InterruptedException{

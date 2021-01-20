@@ -26,7 +26,7 @@ public class LevelHandler {
 		double speedX = 1;
 		double speedY = 0;
 		if (level == 1) {
-			bubbleCounts = new int[] {0,1,0,0,0,0,0,0,0,0};
+			bubbleCounts = new int[] {1,0,0,0,0,0,0,0,0,0};
 		} else if (level == 2) {
 			bubbleCounts = new int[] {0,0,1,0,0,0,0,0,0,0};
 		} else if (level == 3) {

@@ -230,19 +230,11 @@ class roomHandler implements Runnable {
 						break;
 				}
 			}
-			// When the participant has received the map, start game on both
-			gameRoom.get(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(GOTMAP));
-			gameRoom.put(TO, HOST, STARTMAP);
-			gameRoom.put(TO, PARTICIPANT, STARTMAP);
-			
-
-			Gson gson = new Gson();
-			JsonParser parser = new JsonParser();
 
 			// Game loop
 			while (connected) {
 				// System.out.println("Entered game loop");
-				
+				/*
 				Object[] playerStatus = gameRoom.get(new ActualField(FROM), new FormalField(Integer.class), new ActualField(PLAYER_HIT_TO_SERVER));
 				if ((int)playerStatus[1] == 0) {
 					
@@ -250,6 +242,15 @@ class roomHandler implements Runnable {
 				} else if ((int)playerStatus[1] == 1) {
 					
 				}
+				*/
+
+				// When the participant has received the map, start game on both
+				Object newMap = gameRoom.getp(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(GOTMAP));
+				if (newMap != null) {
+					gameRoom.put(TO, HOST, STARTMAP);
+					gameRoom.put(TO, PARTICIPANT, STARTMAP);
+				}
+				
 				// Server only needs to end the game
 				
 				

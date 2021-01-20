@@ -32,17 +32,13 @@ public class Player {
 	// Player movement and collision with wall
 	public void goRight() {
 		if (player.getX() + (stepSize + playerWidth) <= borderWidth & isAlive) {
-			System.out.println("Going right at " + player.toString());
 			player.setX(player.getX() + stepSize);
-			System.out.println("Going right is " + right);
 		}
 	}
 	
 	public void goLeft() {
 		if (player.getX() >= 0 & isAlive) {
 			player.setX(player.getX() - stepSize);
-			System.out.println("Going left at " + player.toString());
-			System.out.println("Going left is " + left);
 		}
 	}
 	
