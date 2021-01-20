@@ -234,34 +234,37 @@ public class Client {
             Player player1 = gRoom.getGame().getPlayer1();
             String jsonPlayer = gson.toJson(player1);
             // Send player movement information
-            gameRoom.put(FROM, name, PLAYER, jsonPlayer);
-            
+            if (player1.getLeft() | player1.getRight() | player1.isShooting) {
+            	gameRoom.put(FROM, name, PLAYER, jsonPlayer);
+            }
             
             // Get player movement from other player
             Object[] otherPlayer = gameRoom.getp(new ActualField(FROM), new ActualField(otherPlayerName), new ActualField(PLAYER), new FormalField(String.class));
             if (otherPlayer != null) {
-                String jsonOtherPlayer = (String) otherPlayer[3];
-                JsonObject player2 = parser.parse(jsonOtherPlayer).getAsJsonObject();
+            	 String jsonOtherPlayer = (String) otherPlayer[3];
+                 JsonObject player2 = parser.parse(jsonOtherPlayer).getAsJsonObject();
+  
                 // Point player2pos = gson.fromJson(player2.get("player"), Point.class);
                 boolean p2goRight = gson.fromJson(player2.get("right"), Boolean.class);
                 boolean p2goLeft = gson.fromJson(player2.get("left"), Boolean.class);
                 boolean p2shooting = gson.fromJson(player2.get("isShooting"), Boolean.class);
+
                 Point p2pos = gson.fromJson(player2.get("player"), Point.class);
-                // Set other players position
+                // Set other players position and make arrow if they shoot
                 gRoom.setP2(p2goRight, p2goLeft, p2shooting,p2pos.getX());
             }
             
-            // Arrow shooting from player, send boolean, so other player can make arrow
+            /* Arrow shooting from player, send boolean, so other player can make arrow
             if (player1.getArrowIsAlive()) {
             	Arrow p1arrow = player1.getArrow();
-            	gameRoom.put(FROM, name, PLAYERSHOOT, p1arrow.getX());
+            	gameRoom.put(FROM, name, PLAYERSHOOT, p1arrow.isAlive());
             }
             
             // Receive information, when other player shoot
             Object[] otherArrow = gameRoom.getp(new ActualField(FROM),new ActualField(otherPlayerName), new ActualField(ARROW), new FormalField(Boolean.class));
             if (otherArrow != null && (boolean) otherArrow[3]) {
             	 gRoom.getGame().getPlayer2().makeArrow(); 
-            }
+            }*/
            
             // Send player collision with bubble
             

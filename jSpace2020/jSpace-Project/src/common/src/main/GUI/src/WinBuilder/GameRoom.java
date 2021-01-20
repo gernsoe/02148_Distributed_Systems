@@ -108,9 +108,16 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				
 				// Arrow for player 1
 				if (game.getPlayer1().getArrowIsAlive()) {
-					g.setColor(Color.black);
+					g.setColor(Color.red);
 					g.fillRect((int)game.getPlayer1().getArrow().getX(), (int)game.getPlayer1().getArrow().getY(), game.getPlayer1().getArrow().getArrowWidth(), game.getPlayer1().getArrow().getArrowHeight());
 				}
+				
+				// Arrow for player 2
+				if (game.getPlayer2().getArrowIsAlive()) {
+					g.setColor(Color.green);
+					g.fillRect((int)game.getPlayer2().getArrow().getX(), (int)game.getPlayer2().getArrow().getY(), game.getPlayer2().getArrow().getArrowWidth(), game.getPlayer2().getArrow().getArrowHeight());
+				}
+				
 				
 				// Player 1
 				if(game.getPlayer1().getLeft() & !(game.getPlayer1().isShooting())) {
@@ -130,6 +137,10 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 					} else {
 						g.drawImage(player2front,(int)game.getPlayer2().getX(),(int)game.getPlayer2().getY(),game.getPlayer2().getPlayerWidth(),game.getPlayer2().getPlayerHeight(), null);
 					}
+
+					// To update it visually correctly
+					game.getPlayer2().setRight(false);
+					game.getPlayer2().setLeft(false);
 				}
 				
 				// Bubble
@@ -387,10 +398,13 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	}
 	
 	public void setP2(boolean p2Right, boolean p2Left, boolean p2shoot, double xCord) {
+		game.getPlayer2().setX(xCord);
 		game.getPlayer2().setShooting(p2shoot);
 		game.getPlayer2().setLeft(p2Left);
 		game.getPlayer2().setRight(p2Right);
-		game.getPlayer2().setX(xCord);
+		if (p2shoot & !(game.getPlayer2().getArrowIsAlive())) {
+			game.getPlayer2().makeArrow();
+		}
 	}
 	
 	public void updateP2() {
@@ -400,7 +414,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 			if (moveDelay == 0) {
 				game.getPlayer2().setShooting(false);
 			}
-		} 
+		}
 	}
 
 	public void closeWindow() {
@@ -469,9 +483,9 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		if (game.getPlayer1().getArrowIsAlive()) {
 		game.getPlayer1().getArrow().updatePos();
 		}
-		/* if (game.getPlayer2().getArrowIsAlive()) {
+		if (game.getPlayer2().getArrowIsAlive()) {
 		game.getPlayer2().getArrow().updatePos();
-		} */
+		} 
 	}
 
 	@Override
