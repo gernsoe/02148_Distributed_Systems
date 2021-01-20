@@ -5,14 +5,14 @@ import java.awt.geom.Rectangle2D;
 public class Player {
 	// Check if player is alive
 	boolean isAlive = true;
-	boolean isShooting;
+	boolean isShooting, isInvincible;
 	boolean right;
 	boolean left;
 	
 	// Player position
 	Point player;
 	Arrow arrow;
-	int hearts, scores, moveDelay = 0;
+	int hearts, scores, moveDelay = 0, invinTime = 0;
 	
 	// Size of player
 	private int playerHeight, playerID, borderWidth, stepSize = 2, playerWidth;
@@ -173,5 +173,21 @@ public class Player {
 	
 	public void setHearts(int hearts) {
 		this.hearts = hearts;
+	}
+	
+	public void setInvincible(boolean in) {
+		isInvincible = in;
+	}
+	
+	public boolean getInvincible() {
+		return isInvincible;
+	}
+	
+	public void setInvinTime(int inv) {
+		invinTime = inv;
+	}
+	
+	public int getInvinTime() {
+		return invinTime;
 	}
  }

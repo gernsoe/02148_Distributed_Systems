@@ -122,13 +122,21 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				}
 				
 				// Arrow for player 2
-				if (multiplayer) {
+				if (multiplayer && game.getPlayer2().isAlive()) {
 					if (game.getPlayer2().getArrowIsAlive()) {
 						g.setColor(Color.green);
 						g.fillRect((int)game.getPlayer2().getArrow().getX(), (int)game.getPlayer2().getArrow().getY(), game.getPlayer2().getArrow().getArrowWidth(), game.getPlayer2().getArrow().getArrowHeight());
 					}
 				}
 
+				// Color player background yellow if invincible
+				if (game.getPlayer1().getInvincible()) {
+					g.setColor(Color.yellow);
+				}
+				if (multiplayer && game.getPlayer2().getInvincible()) {
+					g.setColor(Color.yellow);
+				}
+				
 				// Player 1
 				if(game.getPlayer1().getLeft() & !(game.getPlayer1().isShooting())) {
 					g.drawImage(player1left,(int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight(), null);
@@ -138,8 +146,9 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 					g.drawImage(player1front,(int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight(), null);
 				}
 				
+				
 				// Player 2
-				if (multiplayer) {
+				if (multiplayer && game.getPlayer2().isAlive()) {
 					if(game.getPlayer2().getLeft() & !(game.getPlayer2().isShooting())) {
 						g.drawImage(player2left,(int)game.getPlayer2().getX(),(int)game.getPlayer2().getY(),game.getPlayer2().getPlayerWidth(),game.getPlayer2().getPlayerHeight(), null);
 					} else if (game.getPlayer2().getRight() & !(game.getPlayer2().isShooting())) {
@@ -423,13 +432,14 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	}
 	
 	public void updateBubbles() {
+		
 		for(int i = 0; i < game.getBubbles().size(); i++) {
 			
 			// Move bubbles
 			game.getBubbles().get(i).move();
 			
 			// Bubble collision with player
-			if(game.getPlayer1().isAlive() && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getShape())) {
+			if(game.getPlayer1().isAlive() && !(game.getPlayer1().getInvincible()) && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getShape())) {
 				// Lose life if player gets hit and restart level, if dead then stop game
 				System.out.println("bubble shape" + game.getBubbles().get(i).getShape().getBounds2D());
 				System.out.println("player shape" + game.getPlayer1().getShape().toString());
@@ -522,7 +532,6 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		timer.start();
 		// Redraw bubbles, players and arrows
 		panel.repaint();
 		
@@ -538,8 +547,22 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		// Bubble movement and collisions
 		updateBubbles();
 		
+		// Update invincibility status for player
+		updateInvincibility();
+		
 		// Level Status
 		checkLevel();
+	}
+	
+	public void updateInvincibility() {
+		if (game.getPlayer1().getInvincible()) {
+			game.getPlayer1().setInvinTime(game.getPlayer1().getInvinTime()-1);
+			System.out.println("Invincible time" + game.getPlayer1().getInvinTime());
+		}
+		if (multiplayer && game.getPlayer2().getInvincible()) {
+			game.getPlayer2().setInvinTime(game.getPlayer2().getInvinTime()-1);
+			System.out.println("Invincible time" + game.getPlayer2().getInvinTime());
+		}
 	}
 	
 	public void player1LoseHeart() {
@@ -547,16 +570,17 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		if (!game.getPlayer1().isAlive()) {
 			timer.stop();
 		} else {
-			
+			System.out.println("hi");
+			game.getPlayer1().setInvincible(true);
+			game.getPlayer1().setInvinTime((1000/delay)*3);
 		}
 	}
 	
 	public void player2LoseHeart() {
 		game.getPlayer2().loseHeart();
-		if (!game.getPlayer2().isAlive()) {
-			// Do something if the other player is dead
-		} else {
-			
+		if (game.getPlayer2().isAlive()) {
+			game.getPlayer2().setInvincible(true);
+			game.getPlayer2().setInvinTime((1000/delay)*3);
 		}
 	}
 	

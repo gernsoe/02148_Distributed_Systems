@@ -285,8 +285,10 @@ public class Client {
             	gRoom.setBubbleHitPlayer1(false);
             	
             	if(!gRoom.getGame().getPlayer1().isAlive) {
+            		
             		// Give server information that player is dead.
             		gameRoom.put(FROM,myPermission,PLAYER_DEAD);
+            		
             		// Leads to end screen, atm stopping time
             		gRoom.getTimer().stop();
             		gameRoom.get(new ActualField(TO), new ActualField(myPermission), new ActualField(GO_TO_END_SCREEN));
@@ -297,7 +299,6 @@ public class Client {
             Object[] otherPlayerGotHit = gameRoom.getp(new ActualField(FROM),new ActualField(otherid),new ActualField(PLAYER_HIT));
             if (otherPlayerGotHit != null) {
             	gRoom.player2LoseHeart();
-
             }
             
             /*
