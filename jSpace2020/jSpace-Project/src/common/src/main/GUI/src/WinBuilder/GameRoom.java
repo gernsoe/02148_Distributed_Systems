@@ -132,9 +132,11 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				// Color player background yellow if invincible
 				if (game.getPlayer1().getInvincible()) {
 					g.setColor(Color.yellow);
+					g.fillRect((int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight());
 				}
 				if (multiplayer && game.getPlayer2().getInvincible()) {
 					g.setColor(Color.yellow);
+					g.fillRect((int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight());
 				}
 				
 				// Player 1
@@ -447,9 +449,6 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				System.out.println("bubble shape" + game.getBubbles().get(i).getShape().getBounds2D());
 				System.out.println("player shape" + game.getPlayer1().getShape().toString());
 				
-				// Set bubblehitplayer to true
-				bubbleHitPlayer1 = true;
-				
 				if (game.getPlayer1().getHearts() == 1) {
 					Player1Hearts.get("heart0").setVisible(false);
 				} else if (game.getPlayer1().getHearts() == 2) {
@@ -460,6 +459,13 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 					Player1Hearts.get("heart3").setVisible(false);
 				} else if (game.getPlayer1().getHearts() == 5) {
 					Player1Hearts.get("heart4").setVisible(false);
+				}
+				
+				// Lose health if not multiplayer
+				if (!multiplayer) {
+					player1LoseHeart();
+				} else {
+					bubbleHitPlayer1 = true;
 				}
 			}
 			
@@ -535,6 +541,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		timer.start();
 		// Redraw bubbles, players and arrows
 		panel.repaint();
 		System.out.println("gamroom loop");
@@ -561,10 +568,16 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		if (game.getPlayer1().getInvincible()) {
 			game.getPlayer1().setInvinTime(game.getPlayer1().getInvinTime()-1);
 			System.out.println("Invincible time" + game.getPlayer1().getInvinTime());
+			if (game.getPlayer1().getInvinTime() == 0) {
+				game.getPlayer1().setInvincible(false);
+			}
 		}
 		if (multiplayer && game.getPlayer2().getInvincible()) {
 			game.getPlayer2().setInvinTime(game.getPlayer2().getInvinTime()-1);
 			System.out.println("Invincible time" + game.getPlayer2().getInvinTime());
+			if (game.getPlayer2().getInvinTime() == 0) {
+				game.getPlayer2().setInvincible(false);
+			}
 		}
 	}
 	
