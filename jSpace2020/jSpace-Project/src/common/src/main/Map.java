@@ -17,18 +17,16 @@ public class Map {
 		players = new Player[playerCount];
 	}
 	
-	public void makePlayers(String playerName1, String playerName2, int playerHeight, int hearts, int scores) {
+	public void makePlayers(String playerName1, String playerName2, int playerHeight, int hearts1, int scores1, int hearts2, int scores2) {
 		// Add players 
-		if (!playerName2.equals("")) {
-			players[1] = new Player(new Point(borderWidth/2+playerHeight/3,borderHeight-playerHeight),borderWidth, playerName2, playerHeight, hearts, scores);
-		}
-		
-		players[0] = new Player(new Point(borderWidth/2-playerHeight/3,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts, scores);
+		players[0] = new Player(new Point(borderWidth/2-playerHeight/3,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts1, scores1);
+		players[1] = new Player(new Point(borderWidth/2+playerHeight/3,borderHeight-playerHeight),borderWidth, playerName2, playerHeight, hearts2, scores2);
+	
 	}
 	
-	public void addPlayers(String playerName1, String playerName2, int playerHeight, int hearts, int scores) {
-		players[0] = new Player(new Point(borderWidth/2+playerHeight/3,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts, scores);
-		players[1] = new Player(new Point(borderWidth/2-playerHeight/3,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts, scores);
+	public void addPlayers(String playerName1, String playerName2, int playerHeight, int hearts1, int scores1, int hearts2, int scores2) {
+		players[0] = new Player(new Point(borderWidth/2+playerHeight/3,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts1, scores1);
+		players[1] = new Player(new Point(borderWidth/2-playerHeight/3,borderHeight-playerHeight),borderWidth, playerName1, playerHeight, hearts2, scores2);
 	}
 	
 	public void makeMap(int bubbleCounts[], int bubbleSize[], double speedX, double speedY) {

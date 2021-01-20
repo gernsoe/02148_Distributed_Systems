@@ -127,6 +127,8 @@ class roomHandler implements Runnable {
     public static final String BUBBLES = "bubbles";
     public static final String GOTMAP = "gotmap";
     public static final String STARTMAP = "startmap";
+    public static final String RESTART_GAME = "restart_game";
+    public static final String PLAYER_HIT_TO_SERVER = "player_hit_to_server";
 
 	public roomHandler(String roomID, int roomCounter, String roomURI, SpaceRepository repo, Space rooms) {
         this.roomID = roomID;
@@ -241,7 +243,13 @@ class roomHandler implements Runnable {
 			while (connected) {
 				// System.out.println("Entered game loop");
 				
-				
+				Object[] playerStatus = gameRoom.get(new ActualField(FROM), new FormalField(Integer.class), new ActualField(PLAYER_HIT_TO_SERVER));
+				if ((int)playerStatus[1] == 0) {
+					
+					
+				} else if ((int)playerStatus[1] == 1) {
+					
+				}
 				// Server only needs to end the game
 				
 				

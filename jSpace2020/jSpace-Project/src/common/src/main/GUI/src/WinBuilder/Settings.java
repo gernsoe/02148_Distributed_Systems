@@ -18,19 +18,27 @@ import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Settings {
 
-	private JFrame frmSetting;
+	public JFrame frmSetting;
+	public Map<String, JRadioButton> checkHearts = new HashMap<String, JRadioButton>();
+	public Map<String, JRadioButton> checkLevels = new HashMap<String, JRadioButton>();
+	public JButton saveSettingsBtn;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void SettingScreen() {
+	/*
+	public static void SettingScreen(WaitingRoom wRoom) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Settings window = new Settings();
+					Settings window = new Settings(wRoom);
 					window.frmSetting.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -42,53 +50,50 @@ public class Settings {
 	/**
 	 * Create the application.
 	 */
-	public Settings() {
-		initialize();
+	public Settings(WaitingRoom wRoom) {
+		initialize(wRoom);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(WaitingRoom wRoom) {
 		frmSetting = new JFrame();
 		frmSetting.setTitle("Setting");
 		frmSetting.getContentPane().setBackground(new Color(218, 165, 32));
 		frmSetting.getContentPane().setLayout(null);
-		frmSetting.setLocationRelativeTo(null);
 		
 		//Amount of lives
 		JPanel panel = new JPanel();
 		panel.setBounds(136, 62, 222, 73);
 		frmSetting.getContentPane().add(panel);
 		panel.setLayout(null);
+		frmSetting.setLocationRelativeTo(null);
+
+		for (int i = 0; i < 5; ++i) {
+			JRadioButton checkBox = new JRadioButton("" + (i+1));
+			checkBox.setBounds(6 + 41*i, 33, 45, 23);
+			panel.add(checkBox); 
+			checkBox.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (checkBox.isSelected()) {	
+						for (int i = 0; i < checkHearts.size(); ++i) {
+							checkHearts.get("lives"+i).setSelected(false);
+						}
+						checkBox.setSelected(true);
+					}
+				}
+			});
+			checkHearts.put("lives" + i, checkBox);
+		}
 		
-		
-		//CheckBoxes
-		JRadioButton checkBox1 = new JRadioButton("1");
-		checkBox1.setBounds(6, 33, 45, 23);
-		panel.add(checkBox1);
-		
-		JRadioButton checkBox2 = new JRadioButton("2");
-		checkBox2.setBounds(47, 33, 45, 23);
-		panel.add(checkBox2);
-		
-		JRadioButton checkBox3 = new JRadioButton("3");
-		checkBox3.setBounds(88, 33, 45, 23);
-		panel.add(checkBox3);
-		
-		JRadioButton checkBox4 = new JRadioButton("4");
-		checkBox4.setBounds(129, 33, 45, 23);
-		panel.add(checkBox4);
-		
-		JRadioButton checkBox5 = new JRadioButton("5");
-		checkBox5.setBounds(170, 33, 45, 23);
-		panel.add(checkBox5);
-		
+		// Default starting lives
+		checkHearts.get("lives"+4).setSelected(true);
+
 		JLabel lblNewLabel_2 = new JLabel("Amount of Lives");
 		lblNewLabel_2.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblNewLabel_2.setBounds(64, 6, 110, 16);
 		panel.add(lblNewLabel_2);
-		
 		
 		//Settings label
 		JLabel lblNewLabel_1 = new JLabel("Setting");
@@ -144,15 +149,87 @@ public class Settings {
 		JRadioButton checkLevel9 = new JRadioButton("9");
 		checkLevel9.setBounds(334, 41, 47, 23);
 		panel_1.add(checkLevel9);
-		
-		JRadioButton checkLevel10 = new JRadioButton("10");
-		checkLevel10.setBounds(375, 41, 58, 23);
-		panel_1.add(checkLevel10);
+		for (int i = 0; i < 10; ++i) {
+			JRadioButton checkLevel = new JRadioButton("" + (i+1));
+			checkLevel.setBounds(6 + 41*i, 41, 47, 23);
+			panel_1.add(checkLevel); 
+			checkLevel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (checkLevel.isSelected()) {	
+						for (int i = 0; i < checkLevels.size(); ++i) {
+							checkLevels.get("level"+i).setSelected(false);
+						}
+						checkLevel.setSelected(true);
+					}
+				}
+			});
+			checkLevels.put("level" + i, checkLevel);
+		}
+
+		// Default starting levels
+		checkLevels.get("level"+0).setSelected(true);
+		for (int i = 0; i < 10; ++i) {
+			JRadioButton checkLevel = new JRadioButton("" + (i+1));
+			checkLevel.setBounds(6 + 41*i, 41, 47, 23);
+			panel_1.add(checkLevel); 
+			checkLevel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (checkLevel.isSelected()) {	
+						for (int i = 0; i < checkLevels.size(); ++i) {
+							checkLevels.get("level"+i).setSelected(false);
+						}
+						checkLevel.setSelected(true);
+					}
+				}
+			});
+			checkLevels.put("level" + i, checkLevel);
+		}
+
+		// Default starting levels
+		checkLevels.get("level"+0).setSelected(true);
+		for (int i = 0; i < 10; ++i) {
+			JRadioButton checkLevel = new JRadioButton("" + (i+1));
+			checkLevel.setBounds(6 + 41*i, 41, 47, 23);
+			panel_1.add(checkLevel); 
+			checkLevel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (checkLevel.isSelected()) {	
+						for (int i = 0; i < checkLevels.size(); ++i) {
+							checkLevels.get("level"+i).setSelected(false);
+						}
+						checkLevel.setSelected(true);
+					}
+				}
+			});
+			checkLevels.put("level" + i, checkLevel);
+		}
+
+		// Default starting levels
+		checkLevels.get("level"+0).setSelected(true);
+		for (int i = 0; i < 10; ++i) {
+			JRadioButton checkLevel = new JRadioButton("" + (i+1));
+			checkLevel.setBounds(6 + 41*i, 41, 47, 23);
+			panel_1.add(checkLevel); 
+			checkLevel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (checkLevel.isSelected()) {	
+						for (int i = 0; i < checkLevels.size(); ++i) {
+							checkLevels.get("level"+i).setSelected(false);
+						}
+						checkLevel.setSelected(true);
+					}
+				}
+			});
+			checkLevels.put("level" + i, checkLevel);
+		}
+
+		// Default starting levels
+		checkLevels.get("level"+0).setSelected(true);
 		
 		//Save Settings
-		JButton btnNewButton = new JButton("Save");
-		btnNewButton.setBounds(181, 279, 136, 29);
-		frmSetting.getContentPane().add(btnNewButton);
+		saveSettingsBtn = new JButton("Save");
+		saveSettingsBtn.setBounds(181, 279, 136, 29);
+		frmSetting.getContentPane().add(saveSettingsBtn);
 		
 		//Background
 		JLabel background = new JLabel("");
@@ -164,5 +241,13 @@ public class Settings {
 		
 		frmSetting.setBounds(100, 100, 491, 352);
 		frmSetting.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	}
+
+	public JButton getSaveSettingsButton() {
+		return saveSettingsBtn;
+	}
+
+	public void closeWindow() {
+		frmSetting.setVisible(false);
 	}
 }

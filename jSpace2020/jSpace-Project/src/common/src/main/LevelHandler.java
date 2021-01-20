@@ -21,7 +21,7 @@ public class LevelHandler {
 		this.pHeight = pHeight;
 	}
 
-	public void makeLevel(int level, int hearts, int scores) {
+	public void makeLevel(int level, int hearts1, int scores1, int hearts2, int scores2) {
 		// Default speed
 		double speedX = 1;
 		double speedY = 0;
@@ -49,7 +49,7 @@ public class LevelHandler {
 		}
 
 		game.makeMap(bubbleCounts, bubbleSizes, speedX, speedY);
-		game.makePlayers(player1, player2, pHeight, hearts, scores);
+		game.makePlayers(player1, player2, pHeight, hearts1, scores1, hearts2, scores2);
 	}
 	
 	public Player getPlayer1() {
@@ -80,8 +80,8 @@ public class LevelHandler {
 		return colors[i];
 	}
 	
-	public void joinLevel(int level, int hearts, int scores, ArrayList<Bubble> bubbles) {
-		game.addPlayers(player1, player2, pHeight, hearts, scores);
+	public void joinLevel(int level, int hearts1, int scores1, int hearts2, int scores2, ArrayList<Bubble> bubbles) {
+		game.addPlayers(player1, player2, pHeight, hearts1, scores1, hearts2, scores2);
 		game.setListOfBubbles(bubbles);
 	}
 }
