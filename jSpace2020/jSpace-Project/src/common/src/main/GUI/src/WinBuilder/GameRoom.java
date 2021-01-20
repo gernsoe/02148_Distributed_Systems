@@ -13,6 +13,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.Timer;
 import javax.swing.AbstractAction;
@@ -30,7 +32,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	
 	private Timer timer;
 	private int delay = 17, playerHeight = 48;
-	int score, level = 1, hearts = 5;
+	int score, level, hearts;
 	boolean bubbleHitPlayer1 = false;
 	boolean multiplayer;
 	private JFrame frame;
@@ -38,16 +40,19 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	private LevelHandler game;
 	private int borderWidth = 800, borderHeight = 600;
 	private JLabel lblNewLabel_1, lblNewLabel_3, lblNewLabel, Label_level;
-	private JLabel  Player1Heart1, Player1Heart2, Player1Heart3, Player1Heart4, Player1Heart5,
-		Player2Heart1, Player2Heart2, Player2Heart3, Player2Heart4, Player2Heart5, Label_leveltext, Player2Label, Player1Label, score_1, score_2;
+	private JLabel Label_leveltext, Player2Label, Player1Label, score_1, score_2;
+	private Map<String, JLabel> Player1Hearts = new HashMap<String, JLabel>();
+	private Map<String, JLabel> Player2Hearts = new HashMap<String, JLabel>();
 
 	/**
 	 * Create the application.
 	 * @param actionListener 
 	 */
-	public GameRoom(boolean multiplayer, String player1name, String player2name) {
+	public GameRoom(boolean multiplayer, String player1name, String player2name, int level, int hearts) {
 		game = new LevelHandler(borderWidth, borderHeight, player1name, player2name, playerHeight);
 		this.multiplayer = multiplayer;
+		this.level = level;
+		this.hearts = hearts;
 	}
 	
 	public void setPlayerMode(boolean multiplayer) {
@@ -209,7 +214,6 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 			panel_4.setVisible(false);
 			panel_2.setVisible(false);
 		}
-
 		
 		frame.getContentPane().add(panel_1);
 		frame.getContentPane().add(panel_3);
@@ -222,61 +226,25 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		score_1.setText("" + game.getPlayer1().getScore());
 		score_1.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		panel_3.add(score_1);
-		
+
 		// Hearts of player 1
-		Player1Heart1 = new JLabel();
-		Player1Heart1.setBounds(100, 650, 32, 32);
-		frame.getContentPane().add(Player1Heart1);
-		Player1Heart1.setIcon(new ImageIcon(imgHeart));
-		
-		Player1Heart2 = new JLabel();
-		Player1Heart2.setBounds(135, 650, 32, 32);
-		frame.getContentPane().add(Player1Heart2);
-		Player1Heart2.setIcon(new ImageIcon(imgHeart));
-		
-		Player1Heart3 = new JLabel();
-		Player1Heart3.setBounds(170, 650, 32, 32);
-		frame.getContentPane().add(Player1Heart3);
-		Player1Heart3.setIcon(new ImageIcon(imgHeart));
-		
-		Player1Heart4 = new JLabel();
-		Player1Heart4.setBounds(205, 650, 32, 32);
-		frame.getContentPane().add(Player1Heart4);
-		Player1Heart4.setIcon(new ImageIcon(imgHeart));
-		
-		Player1Heart5 = new JLabel();
-		Player1Heart5.setBounds(240, 650, 32, 32);
-		frame.getContentPane().add(Player1Heart5);
-		Player1Heart5.setIcon(new ImageIcon(imgHeart));
-		
-		// Hearts of player 2
-		if (multiplayer) {
-			Player2Heart1 = new JLabel();
-			Player2Heart1.setBounds(865, 650, 32, 32);
-			frame.getContentPane().add(Player2Heart1);
-			Player2Heart1.setIcon(new ImageIcon(imgHeart));
-			
-			Player2Heart2 = new JLabel();
-			Player2Heart2.setBounds(830, 650, 32, 32);
-			frame.getContentPane().add(Player2Heart2);
-			Player2Heart2.setIcon(new ImageIcon(imgHeart));
-			
-			Player2Heart3 = new JLabel();
-			Player2Heart3.setBounds(795, 650, 32, 32);
-			frame.getContentPane().add(Player2Heart3);
-			Player2Heart3.setIcon(new ImageIcon(imgHeart));
-			
-			Player2Heart4 = new JLabel();
-			Player2Heart4.setBounds(760, 650, 32, 32);
-			frame.getContentPane().add(Player2Heart4);
-			Player2Heart4.setIcon(new ImageIcon(imgHeart));
-			
-			Player2Heart5 = new JLabel();
-			Player2Heart5.setBounds(725, 650, 32, 32);
-			frame.getContentPane().add(Player2Heart5);
-			Player2Heart5.setIcon(new ImageIcon(imgHeart));	
+		for (int i = 0; i < hearts; ++i) {
+			JLabel Player1Heart = new JLabel();
+			Player1Heart.setBounds(100 + i*35, 650, 32, 32);
+			frame.getContentPane().add(Player1Heart);
+			Player1Heart.setIcon(new ImageIcon(imgHeart));
+			Player1Hearts.put("heart"+i, Player1Heart);
 		}
-		
+
+		if (multiplayer) {
+			for (int i = 0; i < hearts; ++i) {
+				JLabel Player2Heart = new JLabel();
+				Player2Heart.setBounds(865 - i*35, 650, 32, 32);
+				frame.getContentPane().add(Player2Heart);
+				Player2Heart.setIcon(new ImageIcon(imgHeart));
+				Player2Hearts.put("heart"+i, Player2Heart);
+			}
+		}
 		
 		// Add labels
 		Label_leveltext = new JLabel("");
@@ -468,15 +436,15 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				bubbleHitPlayer1 = true;
 				
 				if (game.getPlayer1().getHearts() == 1) {
-					Player1Heart1.setVisible(false);
+					Player1Hearts.get("heart0").setVisible(false);
 				} else if (game.getPlayer1().getHearts() == 2) {
-					Player1Heart2.setVisible(false);
+					Player1Hearts.get("heart1").setVisible(false);
 				} else if (game.getPlayer1().getHearts() == 3) {
-					Player1Heart3.setVisible(false);
+					Player1Hearts.get("heart2").setVisible(false);
 				} else if (game.getPlayer1().getHearts() == 4) {
-					Player1Heart4.setVisible(false);
+					Player1Hearts.get("heart3").setVisible(false);
 				} else if (game.getPlayer1().getHearts() == 5) {
-					Player1Heart5.setVisible(false);
+					Player1Hearts.get("heart4").setVisible(false);
 				}
 
 				game.getPlayer1().loseHeart();
@@ -537,7 +505,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		updateArrows();
 		
 		// Bubble movement and collisions
-		// updateBubbles();
+		updateBubbles();
 		
 		// Level Status
 		checkLevel();
