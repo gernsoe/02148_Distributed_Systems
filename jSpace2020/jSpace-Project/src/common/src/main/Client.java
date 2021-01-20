@@ -52,7 +52,10 @@ public class Client {
     public static final String BUBBLES = "bubbles";
     public static final String STARTMAP = "startmap";
     public static final String GOTMAP = "gotmap";
-
+    public static final String PLAYER_HIT = "player_hit";
+    public static final String PLAYER_DEAD = "player_dead";
+    public static final String GO_TO_END_SCREEN = "go_to_end_screen";
+    
     //String host = "tcp://2.tcp.ngrok.io:10963/";
     public static final String host = "tcp://127.0.0.1:9001/";
     public static final String lobbyURI = host + "lobby?keep";
@@ -268,9 +271,27 @@ public class Client {
                 gRoom.setP2(p2goRight, p2goLeft, p2shooting,p2pos.getX(),p2score,p2hearts);
             }
             
-            // Send player and arrow collision with bubble
+            //TODO: Make bubble collision with player work
             
+           /* // Send player collision with bubble
+            if (gRoom.checkBubbleHitPlayer1()) {
+            	gameRoom.put(FROM, id, PLAYER_HIT);
+            	if(!gRoom.getGame().getPlayer1().isAlive) {
+            		// Give server information that player is dead.
+            		gameRoom.put(FROM,myPermission,PLAYER_DEAD);
+            		// Leads to end screen, atm stopping time
+            		gameRoom.get(new ActualField(TO), new ActualField(myPermission), new ActualField(GO_TO_END_SCREEN));
+            	}
+            }
             
+            // Receive information about player hit
+            Object[] otherPlayerGotHit = gameRoom.getp(new ActualField(FROM),new ActualField(otherid),new ActualField(PLAYER_HIT));
+            if (otherPlayerGotHit != null) {
+            	gRoom.getGame().getPlayer2().loseHeart();
+            	
+            }*/
+            
+            //TODO: Make bubble collision with arrow work
 
            // otherPlayerInfo = gameRoom.get(new ActualField(TO));
 

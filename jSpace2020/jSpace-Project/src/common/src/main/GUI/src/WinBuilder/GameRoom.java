@@ -30,7 +30,8 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	
 	private Timer timer;
 	private int delay = 17, playerHeight = 48;
-	int score, level = 1, hearts = 3;
+	int score, level = 1, hearts = 5;
+	boolean bubbleHitPlayer1 = false;
 	boolean multiplayer;
 	private JFrame frame;
 	private JPanel panel;
@@ -455,6 +456,10 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				// Lose life if player gets hit and restart level, if dead then stop game
 				System.out.println("bubble shape" + game.getBubbles().get(i).getShape().getBounds2D());
 				System.out.println("player shape" + game.getPlayer1().getShape().toString());
+				
+				// Set bubblehitplayer to true
+				bubbleHitPlayer1 = true;
+				
 				if (game.getPlayer1().getHearts() == 1) {
 					Player1Heart1.setVisible(false);
 				} else if (game.getPlayer1().getHearts() == 2) {
@@ -503,6 +508,10 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				game.getPlayer2().getArrow().updatePos();
 			} 
 		}
+	}
+	
+	public boolean checkBubbleHitPlayer1() {
+		return bubbleHitPlayer1;
 	}
 
 	@Override
