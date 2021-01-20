@@ -148,11 +148,11 @@ public class endScreen {
 	
 	}
 
-	public void setScore(String player, int score) {
-		if (player.equals("host")) {
+	public void setScore(int player, int score) {
+		if (player == 1) {
 			score_1.setText("" + score);
 			score_1.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-		} else if (player.equals("participant")) {
+		} else if (player == 2) {
 			score_2.setText("" + score);
 			score_2.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 		}

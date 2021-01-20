@@ -32,7 +32,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	
 	private Timer timer;
 	private int delay = 17, playerHeight = 48;
-	int score, level, hearts;
+	public int score, level, hearts;
 	boolean bubbleHitPlayer1 = false;
 	boolean player1ArrowHit = false;
 	boolean player2ArrowHit = false;
@@ -136,7 +136,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				}
 				if (multiplayer && game.getPlayer2().getInvincible()) {
 					g.setColor(Color.yellow);
-					g.fillRect((int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight());
+					g.fillRect((int)game.getPlayer2().getX(),(int)game.getPlayer2().getY(),game.getPlayer2().getPlayerWidth(),game.getPlayer2().getPlayerHeight());
 				}
 				
 				// Player 1
@@ -422,14 +422,20 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	public void closeWindow() {
 		frame.setVisible(false);
 	}
-	
+	/*
 	public void checkLevel() {
 		// When the level is cleared, make a new level
 		if (game.getBubbles().isEmpty()) {
 			++level;
+			System.out.println("Incrementing levels");
 			//game.makeLevel(++level, game.getPlayer1().getHearts(),game.getPlayer1().getScore(), game.getPlayer2().getHearts(), game.getPlayer2().getScore());
 			Label_leveltext.setText("" + level);
 		} 
+	}
+	*/
+
+	public void setCurrentLevel(int newLevel) {
+		level = newLevel;
 	}
 
 	public int getCurrentLevel() {
@@ -449,24 +455,13 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				System.out.println("bubble shape" + game.getBubbles().get(i).getShape().getBounds2D());
 				System.out.println("player shape" + game.getPlayer1().getShape().toString());
 				
-				if (game.getPlayer1().getHearts() == 1) {
-					Player1Hearts.get("heart0").setVisible(false);
-				} else if (game.getPlayer1().getHearts() == 2) {
-					Player1Hearts.get("heart1").setVisible(false);
-				} else if (game.getPlayer1().getHearts() == 3) {
-					Player1Hearts.get("heart2").setVisible(false);
-				} else if (game.getPlayer1().getHearts() == 4) {
-					Player1Hearts.get("heart3").setVisible(false);
-				} else if (game.getPlayer1().getHearts() == 5) {
-					Player1Hearts.get("heart4").setVisible(false);
-				}
-				
 				// Lose health if not multiplayer
 				if (!multiplayer) {
 					player1LoseHeart();
 				} else {
 					bubbleHitPlayer1 = true;
 				}
+				
 			}
 			
 			// Bubble collision with arrow
@@ -544,7 +539,6 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		timer.start();
 		// Redraw bubbles, players and arrows
 		panel.repaint();
-		System.out.println("gamroom loop");
 		// Player movement
 		updateP1();
 		if (multiplayer) {
@@ -561,20 +555,18 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		updateInvincibility();
 		
 		// Level Status
-		checkLevel();
+		//checkLevel();
 	}
 	
 	public void updateInvincibility() {
 		if (game.getPlayer1().getInvincible()) {
 			game.getPlayer1().setInvinTime(game.getPlayer1().getInvinTime()-1);
-			System.out.println("Invincible time" + game.getPlayer1().getInvinTime());
 			if (game.getPlayer1().getInvinTime() == 0) {
 				game.getPlayer1().setInvincible(false);
 			}
 		}
 		if (multiplayer && game.getPlayer2().getInvincible()) {
 			game.getPlayer2().setInvinTime(game.getPlayer2().getInvinTime()-1);
-			System.out.println("Invincible time" + game.getPlayer2().getInvinTime());
 			if (game.getPlayer2().getInvinTime() == 0) {
 				game.getPlayer2().setInvincible(false);
 			}
@@ -582,16 +574,40 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	}
 	
 	public void player1LoseHeart() {
+
+		if (game.getPlayer1().getHearts() == 1) {
+			Player1Hearts.get("heart0").setVisible(false);
+		} else if (game.getPlayer1().getHearts() == 2) {
+			Player1Hearts.get("heart1").setVisible(false);
+		} else if (game.getPlayer1().getHearts() == 3) {
+			Player1Hearts.get("heart2").setVisible(false);
+		} else if (game.getPlayer1().getHearts() == 4) {
+			Player1Hearts.get("heart3").setVisible(false);
+		} else if (game.getPlayer1().getHearts() == 5) {
+			Player1Hearts.get("heart4").setVisible(false);
+		}
+
 		game.getPlayer1().loseHeart();
-		if (!game.getPlayer1().isAlive()) {
-			timer.stop();
-		} else {
+		if (game.getPlayer1().isAlive()) {
 			game.getPlayer1().setInvincible(true);
 			game.getPlayer1().setInvinTime((1000/delay)*3);
 		}
 	}
 	
 	public void player2LoseHeart() {
+
+		if (game.getPlayer2().getHearts() == 1) {
+			Player2Hearts.get("heart0").setVisible(false);
+		} else if (game.getPlayer2().getHearts() == 2) {
+			Player2Hearts.get("heart1").setVisible(false);
+		} else if (game.getPlayer2().getHearts() == 3) {
+			Player2Hearts.get("heart2").setVisible(false);
+		} else if (game.getPlayer2().getHearts() == 4) {
+			Player2Hearts.get("heart3").setVisible(false);
+		} else if (game.getPlayer2().getHearts() == 5) {
+			Player2Hearts.get("heart4").setVisible(false);
+		}
+
 		game.getPlayer2().loseHeart();
 		if (game.getPlayer2().isAlive()) {
 			game.getPlayer2().setInvincible(true);

@@ -25,6 +25,7 @@ import com.google.gson.JsonParser;
 public class Client {
     static String name, roomID, roomURI;
     static String otherPlayerName = null;
+    public static boolean otherPlayerDied = false;
     public static int startingLevel = 1;
     public static int amountOfHearts = 5;
     public static int currentLevel;
@@ -78,13 +79,18 @@ public class Client {
         lobby = new RemoteSpace(lobbyURI);
 
         try {
-            joinRoom();
-
-            preGameLobby();
-
-            gameLoop();
+            gameStates();
 
         } catch (InterruptedException e) {}
+    }
+
+    // Call when restarting the game
+    public static void gameStates() throws InterruptedException, UnknownHostException, IOException {
+        joinRoom();
+
+        preGameLobby();
+
+        gameLoop();
     }
 
     public static void joinRoom() throws InterruptedException, UnknownHostException, IOException {
@@ -262,19 +268,39 @@ public class Client {
 
         // Game loop - multiplayer
         while(multiConnected) {
+
+            if (gRoom.getGame().getBubbles().isEmpty() && otherPlayerDied) {
+                currentLevel++;
+                gRoom.setCurrentLevel(currentLevel);
+                multiConnected = false;
+                singleConnected = true;
+                gRoom.getGame().makeLevel(currentLevel, gRoom.getGame().getPlayer1().getHearts(), gRoom.getGame().getPlayer1().getScore(), 
+                                                        gRoom.getGame().getPlayer2().getHearts(), gRoom.getGame().getPlayer2().getScore());
+            }
+
+            if (gRoom.getGame().getBubbles().isEmpty() && myPermission.equals(HOST) && !otherPlayerDied) {
+                currentLevel++;
+                gRoom.setCurrentLevel(currentLevel);
+                gameRoom.put(FROM, id, "next_level", currentLevel);
+                createNewLevel();
+            }
             
+            /*
             // Signal participant to enter new level with host
             if (gRoom.getCurrentLevel() != currentLevel && myPermission.equals(HOST)) {
                 gRoom.getTimer().stop();
                 currentLevel = gRoom.getCurrentLevel();
+                System.out.println("Current level HOST: " + currentLevel);
                 gameRoom.put(FROM, id, "next_level", currentLevel);
                 createNewLevel();
             }
+            */
 
             Object[] newLevel = gameRoom.getp(new ActualField(FROM), new ActualField(otherid), new ActualField("next_level"), new FormalField(Integer.class));
             if (newLevel != null) {
-                gRoom.getTimer().stop();
+                //gRoom.getTimer().stop();
                 currentLevel = (int) newLevel[3];
+                System.out.println("Current level PART: " + currentLevel);
                 createNewLevel();
             }
 
@@ -303,8 +329,7 @@ public class Client {
                 // Set other players position and make arrow if they shoot
                 gRoom.setP2(p2goRight, p2goLeft, p2shooting,p2pos.getX(),p2score,p2hearts);
             }
-          // Send player collision with bubble
-            System.out.println("check1" + gRoom.checkBubbleHitPlayer1());
+          // Send player collision with bubbl
             if (gRoom.checkBubbleHitPlayer1()) {
             	gameRoom.put(FROM, id, PLAYER_HIT);  	
             	gRoom.player1LoseHeart();
@@ -319,37 +344,22 @@ public class Client {
             		
             		// Leads to end screen, atm stopping time
             		gRoom.getTimer().stop();
-            		gameRoom.get(new ActualField(TO), new ActualField(myPermission), new ActualField(GO_TO_END_SCREEN));
+                    gameRoom.get(new ActualField(TO), new ActualField(myPermission), new ActualField(GO_TO_END_SCREEN));
+                    try {
+                        gRoom.closeWindow();
+                        endScreen(gRoom.getGame().getPlayer1().getScore(), gRoom.getGame().getPlayer2().getScore());
+                    } catch (IOException e) {}
             	}
             }
             
             // Receive information about player hit
             Object[] otherPlayerGotHit = gameRoom.getp(new ActualField(FROM),new ActualField(otherid),new ActualField(PLAYER_HIT));
             if (otherPlayerGotHit != null) {
-            	gRoom.player2LoseHeart();
+                gRoom.player2LoseHeart();
+                if (gRoom.getGame().getPlayer2().isAlive()) {
+                    otherPlayerDied = true;
+                }
             }
-            
-            /*
-            //TODO: Make bubble collision with arrow work
-            if (gRoom.checkPlayer1ArrowHit()) {
-                gameRoom.put(FROM, id, ARROW_HIT);
-                gRoom.setPlayer1ArrowHit(false);
-            }
-
-           // otherPlayerInfo = gameRoom.get(new ActualField(TO));
-
-            //endScreen(1, 50, 100);
-            /*System.out.println("Entered game loop");
-
-            Bubble testBubble = game.getBubbles().get(0);
-            Bubble testBubble1 = game.getBubbles().get(1);
-          
-            String json = gson.toJson(testBubble);
-            String json1 = gson.toJson(testBubble1);
-            gameRoom.put("newBubble", json);
-            gameRoom.put("newBubble", json1);
-            
-            gameRoom.get(new ActualField("TEST"));*/
         }  
 
         // Game loop - single player
@@ -358,13 +368,13 @@ public class Client {
         }
     }
 
-    public static void endScreen(int level, int player1Score, int player2Score) throws InterruptedException, UnknownHostException, IOException {
+    public static void endScreen(int player1Score, int player2Score) throws InterruptedException, UnknownHostException, IOException {
         endScreen eScreen = new endScreen();
-        eScreen.setScore(myPermission, player1Score);
+        eScreen.setScore(1, player1Score);
         if (otherPlayerName != null) {
-            eScreen.setScore(myPermission, player2Score);
+            eScreen.setScore(2, player2Score);
         }
-        eScreen.setLevel(level);
+        eScreen.setLevel(currentLevel);
 
         eScreen.createBackButton();
         backToMenuButton(eScreen);
@@ -372,11 +382,7 @@ public class Client {
             Thread.sleep(500);
         }
         eScreen.closeWindow();
-        joinRoom();
-    }
-
-    public static void initLevel() throws InterruptedException {
-        
+        gameStates();
     }
 
     public static void createNewLevel() throws InterruptedException {
@@ -486,11 +492,11 @@ public class Client {
     }
 
     public static void resetVariables() {
-        name = null;
-        roomID = null;
-        roomURI = null;
+        name = "";
+        roomID = "";
+        roomURI = "";
         otherPlayerName = null;
-        myPermission = null;
+        myPermission = "";
         loginButtonClicked = false;
         startButtonClicked = false;
         inLobby = true;
@@ -528,7 +534,7 @@ public class Client {
                         case HOST:
                             wRoom.closeWindow();
                             gameRoom.put(FROM, myPermission, LEFT_ROOM);
-                            joinRoom();
+                            gameStates();
 
                             break;
                         case PARTICIPANT:
@@ -544,7 +550,7 @@ public class Client {
                 case PARTICIPANT:
                     wRoom.closeWindow();
                     gameRoom.put(FROM, myPermission, LEFT_ROOM);
-                    joinRoom();
+                    gameStates();
                     break;
                     
                 default:

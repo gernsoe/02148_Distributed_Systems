@@ -107,6 +107,8 @@ class roomHandler implements Runnable {
 	private boolean inLobby = true;
 	private String player1;
 	private String player2;
+	private boolean hostDied = false;
+	private boolean participantDied = false;
 	
 	public static final String LEAVE_ROOM = "leave_room";	// used to signal that a player wants to leave a room
 	public static final String LEFT_ROOM = "left_room"; 	// used to signal when the player is out of the room
@@ -128,7 +130,9 @@ class roomHandler implements Runnable {
     public static final String GOTMAP = "gotmap";
     public static final String STARTMAP = "startmap";
     public static final String RESTART_GAME = "restart_game";
-    public static final String PLAYER_HIT_TO_SERVER = "player_hit_to_server";
+	public static final String PLAYER_HIT_TO_SERVER = "player_hit_to_server";
+	public static final String PLAYER_DEAD = "player_dead";
+	public static final String GO_TO_END_SCREEN = "go_to_end_screen";
 
 	public roomHandler(String roomID, int roomCounter, String roomURI, SpaceRepository repo, Space rooms) {
         this.roomID = roomID;
@@ -203,7 +207,6 @@ class roomHandler implements Runnable {
 								gameRoom.put(TO, PARTICIPANT, LEAVE_ROOM, PARTICIPANT);
 								gameRoom.get(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(LEFT_ROOM));
 								rooms.put(roomID, LEFT_ROOM, PARTICIPANT);
-								Thread.interrupted();
 								break;
 								
 							default:
@@ -234,18 +237,9 @@ class roomHandler implements Runnable {
 			// Game loop
 			while (connected) {
 				// System.out.println("Entered game loop");
-				/*
-				Object[] playerStatus = gameRoom.get(new ActualField(FROM), new FormalField(Integer.class), new ActualField(PLAYER_HIT_TO_SERVER));
-				if ((int)playerStatus[1] == 0) {
-					
-					
-				} else if ((int)playerStatus[1] == 1) {
-					
-				}
-				*/
 
 				// When the participant has received the map, start game on both
-				Object newMap = gameRoom.getp(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(GOTMAP));
+				Object[] newMap = gameRoom.getp(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(GOTMAP));
 				if (newMap != null) {
 					gameRoom.put(TO, HOST, STARTMAP);
 					gameRoom.put(TO, PARTICIPANT, STARTMAP);
@@ -253,7 +247,22 @@ class roomHandler implements Runnable {
 				
 				// Server only needs to end the game
 				
-				
+				Object[] playerDied = gameRoom.getp(new ActualField(FROM), new FormalField(String.class), new ActualField(PLAYER_DEAD));
+				if (playerDied != null) {
+					String who = (String) playerDied[1];
+					if (who.equals(HOST)) {
+						hostDied = true;
+					} else if (who.equals(PARTICIPANT)) {
+						participantDied = true;
+					}
+				}
+
+				if (hostDied && participantDied) {
+					gameRoom.put(TO, HOST, GO_TO_END_SCREEN);
+					gameRoom.put(TO, PARTICIPANT, GO_TO_END_SCREEN);
+					connected = false;
+					Thread.interrupted();
+				}
 				/*Object[] testBubble = gameRoom.get(new ActualField("newBubble"), new FormalField(String.class));
 				String json = (String) testBubble[1];
 
