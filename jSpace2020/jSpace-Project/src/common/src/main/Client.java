@@ -112,7 +112,7 @@ public class Client {
         WaitingRoom wRoom = new WaitingRoom(name, roomID);
         wRoom.createLeaveButton();
         leaveRoomButton(wRoom);
-
+        
         // Check if client is a host
         if (myPermission.equals(HOST)) {
 
@@ -214,7 +214,20 @@ public class Client {
     	
     	gRoom.setPlayerMode(multiplayer);
         gRoom.setUserName1(name);
-        gRoom.setUserName2(otherPlayerName);
+        if (multiplayer) {
+        	 gRoom.setUserName2(otherPlayerName);
+        }
+        
+        int id = 0;
+        int otherid = 1;
+        if (myPermission.equals(HOST)) {
+        	id = 0;
+        	otherid = 1;
+        } else if (myPermission.equals(PARTICIPANT)) {
+        	id = 1;
+        	otherid = 0;
+        }
+
         
         // Start timer
         gRoom.getTimer().start();       
@@ -235,23 +248,24 @@ public class Client {
             String jsonPlayer = gson.toJson(player1);
             // Send player movement information
             if (player1.getLeft() | player1.getRight() | player1.isShooting) {
-            	gameRoom.put(FROM, name, PLAYER, jsonPlayer);
+            	gameRoom.put(FROM, id, PLAYER, jsonPlayer);
             }
             
             // Get player movement from other player
-            Object[] otherPlayer = gameRoom.getp(new ActualField(FROM), new ActualField(otherPlayerName), new ActualField(PLAYER), new FormalField(String.class));
+            Object[] otherPlayer = gameRoom.getp(new ActualField(FROM), new ActualField(otherid), new ActualField(PLAYER), new FormalField(String.class));
+
             if (otherPlayer != null) {
-            	 String jsonOtherPlayer = (String) otherPlayer[3];
-                 JsonObject player2 = parser.parse(jsonOtherPlayer).getAsJsonObject();
-  
+                String jsonOtherPlayer = (String) otherPlayer[3];
+                JsonObject player2 = parser.parse(jsonOtherPlayer).getAsJsonObject();
                 // Point player2pos = gson.fromJson(player2.get("player"), Point.class);
                 boolean p2goRight = gson.fromJson(player2.get("right"), Boolean.class);
                 boolean p2goLeft = gson.fromJson(player2.get("left"), Boolean.class);
                 boolean p2shooting = gson.fromJson(player2.get("isShooting"), Boolean.class);
-
+                int p2score = gson.fromJson(player2.get("scores"), Integer.class);
+                int p2hearts = gson.fromJson(player2.get("hearts"), Integer.class);
                 Point p2pos = gson.fromJson(player2.get("player"), Point.class);
                 // Set other players position and make arrow if they shoot
-                gRoom.setP2(p2goRight, p2goLeft, p2shooting,p2pos.getX());
+                gRoom.setP2(p2goRight, p2goLeft, p2shooting,p2pos.getX(),p2score,p2hearts);
             }
             
             // Send player and arrow collision with bubble

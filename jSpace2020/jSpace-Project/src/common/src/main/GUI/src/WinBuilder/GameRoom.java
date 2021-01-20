@@ -51,6 +51,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	
 	public void setPlayerMode(boolean multiplayer) {
 		this.multiplayer = multiplayer;
+		initialize();
 	}
 	/**
 	 * Initialize the contents of the frame.
@@ -58,16 +59,16 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	
 	public void initializeAsHost() {
 		game.makeLevel(level, hearts, score);
-		initialize();
 	}
 	
 	public void initializeAsParticipant(ArrayList<Bubble> bubbles) {
 		game.joinLevel(level, hearts, score, bubbles);
-		initialize();
 	}
 	
 	private void initialize() {
+
 		// Add game elements
+		System.out.println("multiplayer" + multiplayer);
 
 		// Add GUI
 		frame = new JFrame("Game Room");
@@ -181,30 +182,32 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		panel_3.setBounds(270,610,70,30);
 		
 		// Player 2's label and score
-		if (multiplayer) {
+		Player2Label = new JLabel("");
+		Player2Label.setHorizontalAlignment(SwingConstants.RIGHT);
+		Player2Label.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		Player2Label.setBounds(750, 610, 150, 30);
 			
-			Player2Label = new JLabel("");
-			Player2Label.setHorizontalAlignment(SwingConstants.RIGHT);
-			Player2Label.setFont(new Font("Lucida Grande", Font.BOLD, 18));
-			Player2Label.setBounds(750, 610, 150, 30);
+		JPanel panel_2 = new JPanel();
+		panel_2.setBounds(750,610,150,30);
+		panel_2.add(Player2Label);
+		frame.getContentPane().add(panel_2);
 			
-			JPanel panel_2 = new JPanel();
-			panel_2.setBounds(750,610,150,30);
-			panel_2.add(Player2Label);
-			frame.getContentPane().add(panel_2);
+		JPanel panel_4 = new JPanel();
+		panel_4.setBounds(660,610,70,30);
+		frame.getContentPane().add(panel_4);
 			
-			JPanel panel_4 = new JPanel();
-			panel_4.setBounds(660,610,70,30);
-			frame.getContentPane().add(panel_4);
+		score_2 = new JLabel();
+		score_2.setText("?");
+		score_2.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		panel_4.add(score_2);
 			
-			score_2 = new JLabel();
-			score_2.setText("?");
-			score_2.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
-			panel_4.add(score_2);
-			
-			Player2Label.setForeground(Color.green);
+		Player2Label.setForeground(Color.green);
+		
+		// Hide if not multiplayer
+		if (!multiplayer) {
+			panel_4.setVisible(false);
+			panel_2.setVisible(false);
 		}
-
 
 		
 		frame.getContentPane().add(panel_1);
@@ -357,9 +360,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	}
 
 	public void setUserName2(String name) {
-		if (multiplayer) {
 			Player2Label.setText(name);
-		}
 	}
 
 	@Override
@@ -409,11 +410,13 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		} 
 	}
 	
-	public void setP2(boolean p2Right, boolean p2Left, boolean p2shoot, double xCord) {
+	public void setP2(boolean p2Right, boolean p2Left, boolean p2shoot, double xCord, int p2score, int p2hearts) {
 		game.getPlayer2().setX(xCord);
 		game.getPlayer2().setShooting(p2shoot);
 		game.getPlayer2().setLeft(p2Left);
 		game.getPlayer2().setRight(p2Right);
+		game.getPlayer2().setScore(p2score);
+		game.getPlayer2().setHearts(p2hearts);
 		if (p2shoot & !(game.getPlayer2().getArrowIsAlive())) {
 			game.getPlayer2().makeArrow();
 		}

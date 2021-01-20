@@ -170,4 +170,8 @@ public class Player {
 	public int getMoveDelay() {
 		return moveDelay;
 	}
+	
+	public void setHearts(int hearts) {
+		this.hearts = hearts;
+	}
  }
