@@ -277,12 +277,14 @@ public class Client {
                 // Set other players position and make arrow if they shoot
                 gRoom.setP2(p2goRight, p2goLeft, p2shooting,p2pos.getX(),p2score,p2hearts);
             }
-            
           // Send player collision with bubble
+            System.out.println("check1" + gRoom.checkBubbleHitPlayer1());
             if (gRoom.checkBubbleHitPlayer1()) {
             	gameRoom.put(FROM, id, PLAYER_HIT);  	
             	gRoom.player1LoseHeart();
             	gRoom.setBubbleHitPlayer1(false);
+            	
+            	System.out.println("check2" + gRoom.checkBubbleHitPlayer1());
             	
             	if(!gRoom.getGame().getPlayer1().isAlive) {
             		
