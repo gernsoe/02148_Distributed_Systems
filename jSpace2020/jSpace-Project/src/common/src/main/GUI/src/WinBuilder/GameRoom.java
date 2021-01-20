@@ -113,12 +113,13 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				}
 				
 				// Arrow for player 2
-				if (game.getPlayer2().getArrowIsAlive()) {
-					g.setColor(Color.green);
-					g.fillRect((int)game.getPlayer2().getArrow().getX(), (int)game.getPlayer2().getArrow().getY(), game.getPlayer2().getArrow().getArrowWidth(), game.getPlayer2().getArrow().getArrowHeight());
+				if (multiplayer) {
+					if (game.getPlayer2().getArrowIsAlive()) {
+						g.setColor(Color.green);
+						g.fillRect((int)game.getPlayer2().getArrow().getX(), (int)game.getPlayer2().getArrow().getY(), game.getPlayer2().getArrow().getArrowWidth(), game.getPlayer2().getArrow().getArrowHeight());
+					}
 				}
-				
-				
+
 				// Player 1
 				if(game.getPlayer1().getLeft() & !(game.getPlayer1().isShooting())) {
 					g.drawImage(player1left,(int)game.getPlayer1().getX(),(int)game.getPlayer1().getY(),game.getPlayer1().getPlayerWidth(),game.getPlayer1().getPlayerHeight(), null);
@@ -175,31 +176,37 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		panel_1.setBounds(100,610,150,30);
 		panel_1.add(Player1Label);
 		
-		Player2Label = new JLabel("");
-		Player2Label.setHorizontalAlignment(SwingConstants.RIGHT);
-		Player2Label.setFont(new Font("Lucida Grande", Font.BOLD, 18));
-		Player2Label.setBounds(750, 610, 150, 30);
-		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(750,610,150,30);
-		panel_2.add(Player2Label);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBounds(270,610,70,30);
 		
-		// Player 2to score
-		JPanel panel_4 = new JPanel();
-		panel_4.setBounds(660,610,70,30);
-		frame.getContentPane().add(panel_4);
+		// Player 2's label and score
+		if (multiplayer) {
+			
+			Player2Label = new JLabel("");
+			Player2Label.setHorizontalAlignment(SwingConstants.RIGHT);
+			Player2Label.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+			Player2Label.setBounds(750, 610, 150, 30);
+			
+			JPanel panel_2 = new JPanel();
+			panel_2.setBounds(750,610,150,30);
+			panel_2.add(Player2Label);
+			frame.getContentPane().add(panel_2);
+			
+			JPanel panel_4 = new JPanel();
+			panel_4.setBounds(660,610,70,30);
+			frame.getContentPane().add(panel_4);
+			
+			score_2 = new JLabel();
+			score_2.setText("?");
+			score_2.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+			panel_4.add(score_2);
+			
+			Player2Label.setForeground(Color.green);
+		}
+
+
 		
-		score_2 = new JLabel();
-		score_2.setText("?");
-		score_2.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
-		panel_4.add(score_2);
-		
-		
-		Player2Label.setForeground(Color.green);
-		frame.getContentPane().add(panel_2);
 		frame.getContentPane().add(panel_1);
 		frame.getContentPane().add(panel_3);
 		
@@ -239,30 +246,33 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		Player1Heart5.setIcon(new ImageIcon(imgHeart));
 		
 		// Hearts of player 2
-		Player2Heart1 = new JLabel();
-		Player2Heart1.setBounds(865, 650, 32, 32);
-		frame.getContentPane().add(Player2Heart1);
-		Player2Heart1.setIcon(new ImageIcon(imgHeart));
+		if (multiplayer) {
+			Player2Heart1 = new JLabel();
+			Player2Heart1.setBounds(865, 650, 32, 32);
+			frame.getContentPane().add(Player2Heart1);
+			Player2Heart1.setIcon(new ImageIcon(imgHeart));
+			
+			Player2Heart2 = new JLabel();
+			Player2Heart2.setBounds(830, 650, 32, 32);
+			frame.getContentPane().add(Player2Heart2);
+			Player2Heart2.setIcon(new ImageIcon(imgHeart));
+			
+			Player2Heart3 = new JLabel();
+			Player2Heart3.setBounds(795, 650, 32, 32);
+			frame.getContentPane().add(Player2Heart3);
+			Player2Heart3.setIcon(new ImageIcon(imgHeart));
+			
+			Player2Heart4 = new JLabel();
+			Player2Heart4.setBounds(760, 650, 32, 32);
+			frame.getContentPane().add(Player2Heart4);
+			Player2Heart4.setIcon(new ImageIcon(imgHeart));
+			
+			Player2Heart5 = new JLabel();
+			Player2Heart5.setBounds(725, 650, 32, 32);
+			frame.getContentPane().add(Player2Heart5);
+			Player2Heart5.setIcon(new ImageIcon(imgHeart));	
+		}
 		
-		Player2Heart2 = new JLabel();
-		Player2Heart2.setBounds(830, 650, 32, 32);
-		frame.getContentPane().add(Player2Heart2);
-		Player2Heart2.setIcon(new ImageIcon(imgHeart));
-		
-		Player2Heart3 = new JLabel();
-		Player2Heart3.setBounds(795, 650, 32, 32);
-		frame.getContentPane().add(Player2Heart3);
-		Player2Heart3.setIcon(new ImageIcon(imgHeart));
-		
-		Player2Heart4 = new JLabel();
-		Player2Heart4.setBounds(760, 650, 32, 32);
-		frame.getContentPane().add(Player2Heart4);
-		Player2Heart4.setIcon(new ImageIcon(imgHeart));
-		
-		Player2Heart5 = new JLabel();
-		Player2Heart5.setBounds(725, 650, 32, 32);
-		frame.getContentPane().add(Player2Heart5);
-		Player2Heart5.setIcon(new ImageIcon(imgHeart));
 		
 		// Add labels
 		Label_leveltext = new JLabel("");
@@ -347,7 +357,9 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	}
 
 	public void setUserName2(String name) {
-		Player2Label.setText(name);
+		if (multiplayer) {
+			Player2Label.setText(name);
+		}
 	}
 
 	@Override
@@ -483,9 +495,11 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		if (game.getPlayer1().getArrowIsAlive()) {
 		game.getPlayer1().getArrow().updatePos();
 		}
-		if (game.getPlayer2().getArrowIsAlive()) {
-		game.getPlayer2().getArrow().updatePos();
-		} 
+		if (multiplayer) {
+			if (game.getPlayer2().getArrowIsAlive()) {
+				game.getPlayer2().getArrow().updatePos();
+			} 
+		}
 	}
 
 	@Override
@@ -496,7 +510,9 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		
 		// Player movement
 		updateP1();
-		updateP2();
+		if (multiplayer) {
+			updateP2();
+		}
 		
 		// Update arrows
 		updateArrows();

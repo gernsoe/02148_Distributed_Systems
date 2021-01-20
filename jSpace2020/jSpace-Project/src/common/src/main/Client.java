@@ -254,19 +254,7 @@ public class Client {
                 gRoom.setP2(p2goRight, p2goLeft, p2shooting,p2pos.getX());
             }
             
-            /* Arrow shooting from player, send boolean, so other player can make arrow
-            if (player1.getArrowIsAlive()) {
-            	Arrow p1arrow = player1.getArrow();
-            	gameRoom.put(FROM, name, PLAYERSHOOT, p1arrow.isAlive());
-            }
-            
-            // Receive information, when other player shoot
-            Object[] otherArrow = gameRoom.getp(new ActualField(FROM),new ActualField(otherPlayerName), new ActualField(ARROW), new FormalField(Boolean.class));
-            if (otherArrow != null && (boolean) otherArrow[3]) {
-            	 gRoom.getGame().getPlayer2().makeArrow(); 
-            }*/
-           
-            // Send player collision with bubble
+            // Send player and arrow collision with bubble
             
             
 
