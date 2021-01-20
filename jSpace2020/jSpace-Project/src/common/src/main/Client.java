@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.EnumSet;
 
 import javax.swing.Timer;
 
@@ -55,6 +54,8 @@ public class Client {
     public static final String PLAYER_HIT = "player_hit";
     public static final String PLAYER_DEAD = "player_dead";
     public static final String GO_TO_END_SCREEN = "go_to_end_screen";
+    public static final String PLAYER_HIT_TO_SERVER = "player_hit_to_server";
+    public static final String RESTART_GAME = "restart_game";
     
     //String host = "tcp://2.tcp.ngrok.io:10963/";
     public static final String host = "tcp://127.0.0.1:9001/";
@@ -271,15 +272,17 @@ public class Client {
                 gRoom.setP2(p2goRight, p2goLeft, p2shooting,p2pos.getX(),p2score,p2hearts);
             }
             
-            //TODO: Make bubble collision with player work
-            
-           /* // Send player collision with bubble
+          // Send player collision with bubble
             if (gRoom.checkBubbleHitPlayer1()) {
-            	gameRoom.put(FROM, id, PLAYER_HIT);
+            	gameRoom.put(FROM, id, PLAYER_HIT);  	
+            	gRoom.player1LoseHeart();
+            	gRoom.setBubbleHitPlayer1(false);
+            	
             	if(!gRoom.getGame().getPlayer1().isAlive) {
             		// Give server information that player is dead.
             		gameRoom.put(FROM,myPermission,PLAYER_DEAD);
             		// Leads to end screen, atm stopping time
+            		gRoom.getTimer().stop();
             		gameRoom.get(new ActualField(TO), new ActualField(myPermission), new ActualField(GO_TO_END_SCREEN));
             	}
             }
@@ -287,9 +290,9 @@ public class Client {
             // Receive information about player hit
             Object[] otherPlayerGotHit = gameRoom.getp(new ActualField(FROM),new ActualField(otherid),new ActualField(PLAYER_HIT));
             if (otherPlayerGotHit != null) {
-            	gRoom.getGame().getPlayer2().loseHeart();
-            	
-            }*/
+            	gRoom.player2LoseHeart();
+
+            }
             
             //TODO: Make bubble collision with arrow work
 

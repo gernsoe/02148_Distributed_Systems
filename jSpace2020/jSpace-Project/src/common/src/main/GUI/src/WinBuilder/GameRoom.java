@@ -59,11 +59,11 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	 */
 	
 	public void initializeAsHost() {
-		game.makeLevel(level, hearts, score);
+		game.makeLevel(level, hearts, score, hearts, score);
 	}
 	
 	public void initializeAsParticipant(ArrayList<Bubble> bubbles) {
-		game.joinLevel(level, hearts, score, bubbles);
+		game.joinLevel(level, hearts, score, hearts, score, bubbles);
 	}
 	
 	private void initialize() {
@@ -447,7 +447,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	public void checkLevel() {
 		// When the level is cleared, make a new level
 		if (game.getBubbles().isEmpty()) {
-			game.makeLevel(level, game.getPlayer1().getHearts(),game.getPlayer1().getScore());
+			game.makeLevel(level, game.getPlayer1().getHearts(),game.getPlayer1().getScore(), game.getPlayer2().getHearts(), game.getPlayer2().getScore());
 			Label_leveltext.setText("" + level);
 		}
 	}
@@ -478,18 +478,6 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				} else if (game.getPlayer1().getHearts() == 5) {
 					Player1Heart5.setVisible(false);
 				}
-
-				game.getPlayer1().loseHeart();
-				if (!game.getPlayer1().isAlive()) {
-					timer.stop();
-				} else {
-					try {
-						Thread.sleep(3000);
-						game.getCurrentLevel().makeLevel(level,game.getPlayer1().getHearts(),game.getPlayer1().getScore());
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
 			}
 			
 			
@@ -503,6 +491,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				game.getBubbles().remove(i);
 				game.getPlayer1().getArrow().setAliveTo(false);
 			}	
+			
 		}
 	}
 	
@@ -519,6 +508,10 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	
 	public boolean checkBubbleHitPlayer1() {
 		return bubbleHitPlayer1;
+	}
+	
+	public void setBubbleHitPlayer1(boolean hit) {
+		bubbleHitPlayer1 = hit;
 	}
 
 	@Override
@@ -537,10 +530,28 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		updateArrows();
 		
 		// Bubble movement and collisions
-		// updateBubbles();
+		updateBubbles();
 		
 		// Level Status
 		checkLevel();
+	}
+	
+	public void player1LoseHeart() {
+		game.getPlayer1().loseHeart();
+		if (!game.getPlayer1().isAlive()) {
+			timer.stop();
+		} else {
+			
+		}
+	}
+	
+	public void player2LoseHeart() {
+		game.getPlayer2().loseHeart();
+		if (!game.getPlayer2().isAlive()) {
+			// Do something if the other player is dead
+		} else {
+			
+		}
 	}
 	
 	public boolean getPlayerLeft() {
