@@ -45,8 +45,10 @@ public class WaitingRoom {
 	private JLabel lblWaiting;
 	private JPopupMenu popupMenu;
 	private JMenuBar menuBar;
-	private JMenu settings;
+	private JMenu settingsMenu;
 	private JMenu help;
+	private JMenuItem itemSet;
+	public Settings settings;
 
 	/**
 	 * Launch the application.
@@ -93,8 +95,6 @@ public class WaitingRoom {
 		lblWaiting.setBounds(391, 458, 278, 29);
 		frmWaitingRoom.getContentPane().add(lblWaiting);
 		lblWaiting.setVisible(false);
-		
-		
 		
 	
 		//Leave Room
@@ -163,21 +163,7 @@ public class WaitingRoom {
 		//Menu Bar
 		menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 132, 22);
-		frmWaitingRoom.getContentPane().add(menuBar);
-		
-		//MENU - Settings
-		settings = new JMenu("Settings");
-		//mnNewMenu.setBounds(868, 0, 124, 19);
-		menuBar.add(settings);
-		JMenuItem itemSet = new JMenuItem("Settings");
-		settings.add(itemSet);
-		
-		itemSet.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Settings.SettingScreen();	
-			}
-		});
-		
+		frmWaitingRoom.getContentPane().add(menuBar);	
 
 		//MENU - Help 
 		help = new JMenu("Help");
@@ -212,13 +198,29 @@ public class WaitingRoom {
 		lblNewLabel_4.setIcon(new ImageIcon(img));
 		lblNewLabel_4.setBounds(760, 0, 320, 678);
 		frmWaitingRoom.getContentPane().add(lblNewLabel_4);		
+
+
+	}
+
+	public void addSettingsButton(WaitingRoom wRoom) {
+		//MENU - Settings
+		settingsMenu = new JMenu("Settings");
+		//mnNewMenu.setBounds(868, 0, 124, 19);
+		menuBar.add(settingsMenu);
+		itemSet = new JMenuItem("Settings");
+		settingsMenu.add(itemSet);
+
+		settings = new Settings(wRoom);	
 		
-			
-		
-			
+		itemSet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				settings.frmSetting.setVisible(true);
+			}
+		});
+	}
 
-
-
+	public JButton getSettingsButton() {
+		return settings.getSaveSettingsButton();
 	}
 
 	public void toggleFigure1(){
