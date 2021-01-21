@@ -65,13 +65,8 @@ public class Client {
     public static final String GAME_SETTINGS = "game_settings";
     public static final String SINGLEPLAYER = "singlerplayer";
      
-<<<<<<< HEAD
     //public static final String host = "tcp://2.tcp.eu.ngrok.io:17657/";
     public static final String host = "tcp://127.0.0.1:9001/";
-=======
-    public static final String host = "tcp://2.tcp.eu.ngrok.io:17657/";
-    //public static final String host = "tcp://127.0.0.1:9001/";
->>>>>>> branch 'master' of https://github.com/gernsoe/02148_Game_Repo.git
     public static final String lobbyURI = host + "lobby?keep";
     public static RemoteSpace lobby;
     public static RemoteSpace gameRoom;
@@ -592,6 +587,7 @@ public class Client {
         myPermission = "";
         loginButtonClicked = false;
         startButtonClicked = false;
+        backToMenuButtonClicked = false;
         inLobby = true;
         multiConnected = false;
         singleConnected = false;

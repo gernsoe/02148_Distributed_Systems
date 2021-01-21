@@ -36,11 +36,7 @@ public class Server {
 		// Users request to join room, server sends rooms
 		Space lobby = new SequentialSpace();
 		
-<<<<<<< HEAD
 		//String ngrokURI = "tcp://2.tcp.eu.ngrok.io:17657/";
-=======
-		//String host = "tcp://0.tcp.ngrok.io:12226/";
->>>>>>> branch 'master' of https://github.com/gernsoe/02148_Game_Repo.git
 		String host = "tcp://127.0.0.1:9001/";
 		String repoURI = host + "?keep";
 		
@@ -273,6 +269,9 @@ class roomHandler implements Runnable {
 						System.out.print("Instruction recerived");
 						if (gameInstruction2 != null) {
 							gameRoom.put(TO, HOST, GO_TO_END_SCREEN);
+							connected = false;
+							rooms.put(roomID, LEFT_ROOM, HOST);
+							Thread.interrupted();
 						}
 						break;
 				}
