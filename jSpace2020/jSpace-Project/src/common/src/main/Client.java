@@ -62,7 +62,8 @@ public class Client {
     public static final String GO_TO_END_SCREEN = "go_to_end_screen";
     public static final String AMOUNT_OF_HEARTS = "amount_of_hearts";
     public static final String STARTING_LEVEL = "starting_level";
-    
+    public static final String GAME_SETTINGS = "game_settings";
+     
     //String host = "tcp://2.tcp.ngrok.io:10963/";
     public static final String host = "tcp://127.0.0.1:9001/";
     public static final String lobbyURI = host + "lobby?keep";
@@ -144,23 +145,7 @@ public class Client {
             wRoom.setRoomID("Welcome to room "+roomID);
             
             while (inLobby) {
-                if (otherPlayerName == null) {
-                    Object[] playerJoined = gameRoom.getp(new ActualField(TO), new ActualField(myPermission), new ActualField(PLAYER_JOINED), new FormalField(String.class));
-                    if (playerJoined != null) {
-                        otherPlayerName = (String) playerJoined[3];
-                        wRoom.setUserName2(otherPlayerName);
-                        wRoom.toggleFigure2();
-                        //wRoom.createLeaveButton();
-                        System.out.println("Player 2 joined");
-                    } 
-                }
-                
-                Thread.sleep(500);
-                checkGameStarted(wRoom);
-                checkLeaveRoom(wRoom);
-
-                //Click a button to set settings
-                //gameRoom.put(name, SETTINGS);
+                checkWaitingRoomInstructions(wRoom);
             }
         
         // If client is not host
@@ -180,11 +165,70 @@ public class Client {
             System.out.println("Waiting for host to start the game");
 
             while (inLobby) {
-                Thread.sleep(500);
-                checkGameSettings(wRoom);
-                checkGameStarted(wRoom);
-                checkLeaveRoom(wRoom);
+                checkWaitingRoomInstructions(wRoom);
             }   
+        }
+    }
+
+    public static void checkWaitingRoomInstructions(WaitingRoom wRoom) throws InterruptedException, IOException {
+        Object[] waitingRoomOptions = gameRoom.get(new ActualField(TO), new ActualField(myPermission), new FormalField(String.class), new FormalField(String.class),
+                                                           new FormalField(Integer.class), new FormalField(String.class), new FormalField(Integer.class));
+
+        String sender = (String) waitingRoomOptions[1];
+        String instruction = (String) waitingRoomOptions[2];
+
+        switch (instruction) {
+            case PLAYER_JOINED:
+                otherPlayerName = (String) waitingRoomOptions[3];
+                wRoom.setUserName2(otherPlayerName);
+                wRoom.toggleFigure2();
+                System.out.println("Player 2 joined");
+                break;
+
+            case GAME_STARTED:
+                wRoom.closeWindow();
+                gameLoop();
+                break;
+
+            case GAME_SETTINGS:
+                startingLevel = (int) waitingRoomOptions[4];
+                amountOfHearts = (int) waitingRoomOptions[6];
+                break;
+
+            case LEAVE_ROOM:
+                String whoLeft = (String) waitingRoomOptions[3];
+                switch (sender) {
+                    case HOST:
+                        switch (whoLeft) {
+                            case HOST:
+                                wRoom.closeWindow();
+                                gameRoom.put(FROM, myPermission, LEFT_ROOM);
+                                gameStates();
+    
+                                break;
+                            case PARTICIPANT:
+                                wRoom.toggleFigure2();
+                                wRoom.setUserName2("");
+                                otherPlayerName = null;
+                                break;
+                            default:
+                                break;
+                        }
+    
+                        break;
+                    case PARTICIPANT:
+                        wRoom.closeWindow();
+                        gameRoom.put(FROM, myPermission, LEFT_ROOM);
+                        gameStates();
+                        break;
+                        
+                    default:
+                        break;
+                }
+                break;
+        
+            default:
+                break;
         }
     }
 
@@ -257,23 +301,13 @@ public class Client {
         // Start timer
         gRoom.getTimer().start();       
 
-        // LevelHandler game = gRoom.getGame();
-
-        /*
-        int level = game.getCurrentLevel();
-        int score1 = game.getPlayer1().getScore();
-        int score2 = game.getPlayer2().getScore();
-        endScreen(level, score1, score2);
-        */
-        System.out.println("groom level " + gRoom.getCurrentLevel());
-        System.out.println("current level " + currentLevel);
-
         // Game loop - multiplayer
         while(multiConnected) {
 
             if (gRoom.getGame().getBubbles().isEmpty() && otherPlayerDied) {
                 currentLevel++;
                 gRoom.setCurrentLevel(currentLevel);
+                gRoom.setLevelText();
                 multiConnected = false;
                 singleConnected = true;
                 gRoom.getGame().makeLevel(currentLevel, gRoom.getGame().getPlayer1().getHearts(), gRoom.getGame().getPlayer1().getScore(), 
@@ -284,27 +318,18 @@ public class Client {
                 gRoom.getTimer().stop();
                 currentLevel++;
                 gRoom.setCurrentLevel(currentLevel);
+                gRoom.setLevelText();
                 gameRoom.put(FROM, id, "next_level", currentLevel);
                 createNewLevel();
             }
             
-            /*
-            // Signal participant to enter new level with host
-            if (gRoom.getCurrentLevel() != currentLevel && myPermission.equals(HOST)) {
-                gRoom.getTimer().stop();
-                currentLevel = gRoom.getCurrentLevel();
-                System.out.println("Current level HOST: " + currentLevel);
-                gameRoom.put(FROM, id, "next_level", currentLevel);
-                createNewLevel();
-            }
-            */
-
             Object[] newLevel = gameRoom.getp(new ActualField(FROM), new ActualField(otherid), new ActualField("next_level"), new FormalField(Integer.class));
             if (newLevel != null) {
                 gRoom.getTimer().stop();
                 currentLevel = (int) newLevel[3];
                 System.out.println("Current level PART: " + currentLevel);
                 gRoom.setCurrentLevel(currentLevel);
+                gRoom.setLevelText();
                 createNewLevel();
             }
 
@@ -460,7 +485,7 @@ public class Client {
                             startingLevel = i+1;
                         }
                     }
-                    gameRoom.put(FROM, myPermission, STARTING_LEVEL, startingLevel, AMOUNT_OF_HEARTS, amountOfHearts);
+                    gameRoom.put(TO, PARTICIPANT, GAME_SETTINGS, STARTING_LEVEL, startingLevel, AMOUNT_OF_HEARTS, amountOfHearts);
                     wRoom.settings.closeWindow();
                 } catch (InterruptedException err) {}
             }
@@ -508,8 +533,12 @@ public class Client {
         singleConnected = false;
     }
 
+    //Object[] waitingRoomOptions = gameRoom.get(new FormalField(String.class), new FormalField(String.class), new FormalField(String.class), 
+    //                                           new FormalField(Integer.class), new FormalField(String.class), new FormalField(Integer.class));
+    /*
     public static void checkGameStarted(WaitingRoom wRoom) throws InterruptedException {
-        Object[] gameStarted = gameRoom.getp(new ActualField(TO), new ActualField(myPermission), new ActualField(GAME_STARTED));
+        Object[] gameStarted = gameRoom.getp(new ActualField(TO), new ActualField(myPermission), new ActualField(GAME_STARTED),
+                                            new FormalField(String.class),  new FormalField(Integer.class), new FormalField(String.class), new FormalField(Integer.class));
         if (gameStarted != null) {
             wRoom.closeWindow();
             gameLoop();
@@ -518,16 +547,18 @@ public class Client {
 
     // Get updated settings directly from the host
     public static void checkGameSettings(WaitingRoom wRoom) throws InterruptedException {
-        Object[] gameSettings = gameRoom.getp(new ActualField(FROM), new ActualField(HOST), new ActualField(STARTING_LEVEL), 
+        Object[] gameSettings = gameRoom.getp(new ActualField(FROM), new ActualField(HOST), new ActualField(GAME_SETTINGS), new ActualField(STARTING_LEVEL), 
                                               new FormalField(Integer.class), new ActualField(AMOUNT_OF_HEARTS), new FormalField(Integer.class));
         if (gameSettings != null) {
-            startingLevel = (int) gameSettings[3];
-            amountOfHearts = (int) gameSettings[5];
+            startingLevel = (int) gameSettings[4];
+            amountOfHearts = (int) gameSettings[6];
+            System.out.println("starting level " + startingLevel + " hearts: " + amountOfHearts);
         }
     }
 
     public static void checkLeaveRoom(WaitingRoom wRoom) throws InterruptedException, IOException {
-        Object[] gameLeft = gameRoom.getp(new ActualField(TO), new ActualField(myPermission), new ActualField(LEAVE_ROOM), new FormalField(String.class));
+        Object[] gameLeft = gameRoom.getp(new ActualField(TO), new ActualField(myPermission), new ActualField(LEAVE_ROOM), new FormalField(String.class),
+                                          new FormalField(Integer.class), new FormalField(String.class), new FormalField(Integer.class));
         
         if (gameLeft != null) {
             String me = (String) gameLeft[1];
@@ -562,4 +593,5 @@ public class Client {
             }
         }
     }
+    */
 }

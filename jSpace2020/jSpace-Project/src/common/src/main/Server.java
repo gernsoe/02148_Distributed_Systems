@@ -164,7 +164,7 @@ class roomHandler implements Runnable {
 						System.out.println(player2 + " is ready to play!!!");
 	
 						// Signal to player1 that someone joined
-						gameRoom.put(TO, HOST, PLAYER_JOINED, player2);
+						gameRoom.put(TO, HOST, PLAYER_JOINED, player2, 0, "", 0);	// last 3 are only used to match the template in checkWaitingRoomInstruction
 						gameRoom.put(TO, player2, PERMISSION, PARTICIPANT); // Tell player 2 that he's participant
 						gameRoom.put(TO, PARTICIPANT, PLAYER_JOINED, player1);
 						Object[] start_settings_inst = gameRoom.get(new ActualField(FROM), new FormalField(String.class), new FormalField(String.class));
@@ -176,8 +176,8 @@ class roomHandler implements Runnable {
 								switch (multiPlayerInstruction) {
 									case START_GAME:	
 										System.out.println("Starting the game");
-										gameRoom.put(TO, HOST, GAME_STARTED);			//Player one
-										gameRoom.put(TO, PARTICIPANT, GAME_STARTED); 	//Player two
+										gameRoom.put(TO, HOST, GAME_STARTED, "", 0, "", 0);			//Player one - last 4 are only used to match the template in checkWaitingRoomInstruction
+										gameRoom.put(TO, PARTICIPANT, GAME_STARTED, "", 0, "", 0); 	//Player two -  -||-
 										inLobby = false;
 										break;
 									
@@ -187,8 +187,8 @@ class roomHandler implements Runnable {
 										break;
 		
 									case LEAVE_ROOM:	// Host leaves room when it's full
-										gameRoom.put(TO, HOST, LEAVE_ROOM, HOST);
-										gameRoom.put(TO, PARTICIPANT, LEAVE_ROOM, HOST);
+										gameRoom.put(TO, HOST, LEAVE_ROOM, HOST, 0, "", 0);
+										gameRoom.put(TO, PARTICIPANT, LEAVE_ROOM, HOST, 0, "", 0);
 										gameRoom.get(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(LEFT_ROOM));
 										gameRoom.get(new ActualField(FROM), new ActualField(HOST), new ActualField(LEFT_ROOM));
 										rooms.put(roomID, LEFT_ROOM, PARTICIPANT);
@@ -203,8 +203,8 @@ class roomHandler implements Runnable {
 								break;
 							
 							case PARTICIPANT:	// Participant leave room
-								gameRoom.put(TO, HOST, LEAVE_ROOM, PARTICIPANT);
-								gameRoom.put(TO, PARTICIPANT, LEAVE_ROOM, PARTICIPANT);
+								gameRoom.put(TO, HOST, LEAVE_ROOM, PARTICIPANT, 0, "", 0);
+								gameRoom.put(TO, PARTICIPANT, LEAVE_ROOM, PARTICIPANT, 0, "", 0);
 								gameRoom.get(new ActualField(FROM), new ActualField(PARTICIPANT), new ActualField(LEFT_ROOM));
 								rooms.put(roomID, LEFT_ROOM, PARTICIPANT);
 								break;
@@ -216,13 +216,13 @@ class roomHandler implements Runnable {
 						
 						break;
 					case START_GAME:	// When host is alone
-						gameRoom.put(TO, HOST, GAME_STARTED);
+						gameRoom.put(TO, HOST, GAME_STARTED, "" , 0, "", 0);
 						System.out.println("Starting the game");
 						inLobby = false;
 
 						break;
 					case LEAVE_ROOM:	// Leave room when host is alone
-						gameRoom.put(TO, HOST, LEAVE_ROOM, HOST);
+						gameRoom.put(TO, HOST, LEAVE_ROOM, HOST, 0, "", 0);
 						gameRoom.get(new ActualField(FROM), new ActualField(HOST), new ActualField(LEFT_ROOM));
 						rooms.put(roomID, LEFT_ROOM, HOST);
 						Thread.interrupted();

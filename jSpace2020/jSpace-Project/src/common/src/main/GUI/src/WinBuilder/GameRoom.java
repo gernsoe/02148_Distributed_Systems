@@ -434,6 +434,10 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	}
 	*/
 
+	public void setLevelText() {
+		Label_leveltext.setText("" + level);
+	}
+
 	public void setCurrentLevel(int newLevel) {
 		level = newLevel;
 	}
