@@ -65,7 +65,7 @@ public class Settings {
 		
 		//Amount of lives
 		JPanel panel = new JPanel();
-		panel.setBounds(136, 62, 222, 73);
+		panel.setBounds(147, 62, 222, 73);
 		frmSetting.getContentPane().add(panel);
 		panel.setLayout(null);
 		frmSetting.setLocationRelativeTo(null);
@@ -100,11 +100,11 @@ public class Settings {
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
 		lblNewLabel_1.setBackground(new Color(255, 255, 255));
 		lblNewLabel_1.setFont(new Font("Lucida Grande", Font.BOLD, 20));
-		lblNewLabel_1.setBounds(210, 0, 102, 33);
+		lblNewLabel_1.setBounds(228, 0, 102, 33);
 		frmSetting.getContentPane().add(lblNewLabel_1);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(35, 162, 431, 83);
+		panel_1.setBounds(48, 162, 466, 83);
 		frmSetting.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -135,18 +135,18 @@ public class Settings {
 		
 		//Save Settings
 		saveSettingsBtn = new JButton("Save");
-		saveSettingsBtn.setBounds(181, 279, 136, 29);
+		saveSettingsBtn.setBounds(194, 279, 136, 29);
 		frmSetting.getContentPane().add(saveSettingsBtn);
 		
 		//Background
 		JLabel background = new JLabel("");
-		background.setBounds(-6, 0, 517, 344);
+		background.setBounds(-6, 0, 585, 344);
 		frmSetting.getContentPane().add(background);
 		Image img = new ImageIcon(this.getClass().getResource("/bg.png")).getImage();
 		background.setIcon(new ImageIcon(img));
 		
 		
-		frmSetting.setBounds(100, 100, 491, 352);
+		frmSetting.setBounds(100, 100, 566, 352);
 		frmSetting.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
