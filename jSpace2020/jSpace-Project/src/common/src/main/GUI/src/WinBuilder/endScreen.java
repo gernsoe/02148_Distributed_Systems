@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
 import java.awt.Color;
 import java.awt.Font;
 
@@ -123,9 +125,10 @@ public class endScreen {
 
 		// "Level" text
 		
-		JLabel atLevel = new JLabel("New label");
+		atLevel = new JLabel("New label");
 		atLevel.setBounds(128, 288, 61, 16);
 		panel.add(atLevel);
+		atLevel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JLabel levelLabel = new JLabel("");
 		levelLabel.setBounds(128, 261, 61, 60);
