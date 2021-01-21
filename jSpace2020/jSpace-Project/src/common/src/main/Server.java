@@ -36,7 +36,7 @@ public class Server {
 		// Users request to join room, server sends rooms
 		Space lobby = new SequentialSpace();
 		
-		//String host = "tcp://2.tcp.ngrok.io:10963/";
+		//String ngrokURI = "tcp://2.tcp.eu.ngrok.io:17657/";
 		String host = "tcp://127.0.0.1:9001/";
 		String repoURI = host + "?keep";
 		
@@ -74,6 +74,7 @@ public class Server {
 					lobby.put("roomURI", who, roomID, "");	// Sending empty uri back, so client knows the room was full
 				} else {
 					// Join room	
+					//roomURI = ngrokURI + "game" + (int) getRoom[1] + "?keep";   // fx. tcp://127.0.0.1:9001/game0?keep
 					roomURI = host + "game" + (int) getRoom[1] + "?keep";   // fx. tcp://127.0.0.1:9001/game0?keep
 					System.out.println("Sending user: " + who + " to game room: " + roomCounter);
 		            lobby.put("roomURI", who, roomID, roomURI);  
@@ -84,6 +85,7 @@ public class Server {
 			} else {
 				// Create thread to take care of the new game room
 				System.out.println("Creating new room with ID: " + roomID + " for: " + who);
+				//roomURI = ngrokURI + "game" + roomCounter + "?keep";   // fx. tcp://127.0.0.1:9001/game0?keep
 				roomURI = host + "game" + roomCounter + "?keep";   // fx. tcp://127.0.0.1:9001/game0?keep
 				rooms.put(roomID, roomCounter, playerCount);
                 new Thread(new roomHandler(roomID, roomCounter, roomURI, repo, rooms)).start();
