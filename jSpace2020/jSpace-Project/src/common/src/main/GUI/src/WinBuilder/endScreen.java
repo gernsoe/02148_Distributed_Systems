@@ -65,35 +65,39 @@ public class endScreen {
 		lblNewLabel_7.setForeground(new Color(255, 255, 255));
 		
 		JLabel lblNewLabel_5 = new JLabel("PLAYER 1");
-		lblNewLabel_5.setBounds(6, 33, 71, 16);
+		lblNewLabel_5.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+		lblNewLabel_5.setBounds(6, 43, 71, 16);
 		panel_3.add(lblNewLabel_5);
 		lblNewLabel_5.setForeground(new Color(255, 255, 255));
-
-		score_1 = new JLabel("0");
-		score_2 = new JLabel("0");
 		
 		// Player1 score
+		score_1 = new JLabel("0");
+		score_1.setBounds(115, 39, 16, 26);
+		panel_3.add(score_1);
+		score_1.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(76, 33, 80, 16);
+		panel_1.setBounds(76, 43, 80, 16);
 		panel_3.add(panel_1);
 		panel_1.setBackground(new Color(255, 255, 255));
-		panel_1.add(score_1);
+		panel_1.setLayout(null);
 
 		JLabel lblNewLabel_6 = new JLabel("PLAYER 2");
-		lblNewLabel_6.setBounds(6, 75, 61, 16);
+		lblNewLabel_6.setBounds(6, 85, 61, 16);
 		panel_3.add(lblNewLabel_6);
 		lblNewLabel_6.setForeground(new Color(255, 255, 255));
 		
 		// Player2 score
+		score_2 = new JLabel("0");
+		score_2.setBounds(115, 85, 16, 16);
+		panel_3.add(score_2);
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(76, 75, 80, 16);
+		panel_2.setBounds(76, 85, 80, 16);
 		panel_3.add(panel_2);
 		panel_2.setBackground(new Color(255, 255, 255));
-		panel_2.add(score_2);
+		panel_2.setLayout(null);
+
 		
-		JLabel lblNewLabel_8 = new JLabel("New label");
-		lblNewLabel_8.setBounds(76, 33, 80, 16);
-		panel_3.add(lblNewLabel_8);
+			
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(220, 20, 60));
@@ -145,6 +149,10 @@ public class endScreen {
 		lblNewLabel_2.setBounds(781, 0, 256, 684);
 		lblNewLabel_2.setIcon(new ImageIcon(img));
 		frmEndScreen.getContentPane().add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_8 = new JLabel("New label");
+		lblNewLabel_8.setBounds(209, 46, 80, 16);
+		frmEndScreen.getContentPane().add(lblNewLabel_8);
 	
 	}
 
