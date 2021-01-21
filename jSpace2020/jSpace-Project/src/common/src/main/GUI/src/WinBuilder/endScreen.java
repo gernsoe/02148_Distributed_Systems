@@ -89,13 +89,13 @@ public class endScreen {
 
 		
 		btnNewButton = new JButton("Restart");
-		btnNewButton.setBounds(116, 126, 88, 29);
+		btnNewButton.setBounds(115, 156, 88, 29);
 		btnNewButton.setVisible(false);
 		btnNewButton.setEnabled(false);
 		panel.add(btnNewButton);
 		
 		btnNewButton_1 = new JButton("Back to Menu");
-		btnNewButton_1.setBounds(100, 169, 128, 29);
+		btnNewButton_1.setBounds(98, 197, 128, 29);
 		btnNewButton_1.setVisible(false);
 		btnNewButton_1.setEnabled(false);
 		panel.add(btnNewButton_1);

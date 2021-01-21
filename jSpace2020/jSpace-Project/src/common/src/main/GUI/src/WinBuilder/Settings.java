@@ -63,13 +63,14 @@ public class Settings {
 		frmSetting.getContentPane().setBackground(new Color(218, 165, 32));
 		frmSetting.getContentPane().setLayout(null);
 		frmSetting.setResizable(false);
+		frmSetting.setLocationRelativeTo(null);
 		
 		//Amount of lives
 		JPanel panel = new JPanel();
-		panel.setBounds(147, 62, 222, 73);
+		panel.setBounds(194, 61, 222, 73);
 		frmSetting.getContentPane().add(panel);
 		panel.setLayout(null);
-		frmSetting.setLocationRelativeTo(null);
+		
 
 		for (int i = 0; i < 5; ++i) {
 			JRadioButton checkBox = new JRadioButton("" + (i+1));
@@ -101,22 +102,24 @@ public class Settings {
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
 		lblNewLabel_1.setBackground(new Color(255, 255, 255));
 		lblNewLabel_1.setFont(new Font("Lucida Grande", Font.BOLD, 20));
-		lblNewLabel_1.setBounds(228, 0, 102, 33);
+		lblNewLabel_1.setBounds(269, 0, 102, 33);
 		frmSetting.getContentPane().add(lblNewLabel_1);
 		
+		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(48, 162, 466, 83);
+		panel_1.setBounds(72, 162, 466, 83);
 		frmSetting.getContentPane().add(panel_1);
+		
 		panel_1.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Level");
-		lblNewLabel.setBounds(190, 6, 42, 16);
+		lblNewLabel.setBounds(215, 6, 42, 16);
 		panel_1.add(lblNewLabel);
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 
 		for (int i = 0; i < 10; ++i) {
 			JRadioButton checkLevel = new JRadioButton("" + (i+1));
-			checkLevel.setBounds(6 + 41*i, 41, 47, 23);
+			checkLevel.setBounds(6 + 45*i, 41, 54, 23);
 			panel_1.add(checkLevel); 
 			checkLevel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -136,18 +139,18 @@ public class Settings {
 		
 		//Save Settings
 		saveSettingsBtn = new JButton("Save");
-		saveSettingsBtn.setBounds(194, 279, 136, 29);
+		saveSettingsBtn.setBounds(239, 278, 136, 29);
 		frmSetting.getContentPane().add(saveSettingsBtn);
 		
 		//Background
 		JLabel background = new JLabel("");
-		background.setBounds(-6, 0, 585, 344);
+		background.setBounds(-6, 0, 631, 344);
 		frmSetting.getContentPane().add(background);
 		Image img = new ImageIcon(this.getClass().getResource("/bg.png")).getImage();
 		background.setIcon(new ImageIcon(img));
 		
 		
-		frmSetting.setBounds(100, 100, 566, 352);
+		frmSetting.setBounds(100, 100, 611, 352);
 		frmSetting.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 

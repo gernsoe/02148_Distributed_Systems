@@ -72,7 +72,7 @@ public class Help {
 		right.setBounds(6, 26, 182, 16);
 		panel.add(right);
 		
-		JLabel up = new JLabel("Shoot: Up key or space key");
+		JLabel up = new JLabel("Shoot: Up key or Space key");
 		up.setBounds(6, 46, 182, 16);
 		panel.add(up);
 		
