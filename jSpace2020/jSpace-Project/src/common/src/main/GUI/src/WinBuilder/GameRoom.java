@@ -32,7 +32,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 	
 	private Timer timer;
 	private int delay = 17, playerHeight = 48;
-	public int score, level, hearts;
+	public int score, level = 1, hearts;
 	boolean bubbleHitPlayer1 = false;
 	boolean player1ArrowHit = false;
 	boolean player2ArrowHit = false;
@@ -460,11 +460,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 				System.out.println("player shape" + game.getPlayer1().getShape().toString());
 				
 				// Lose health if not multiplayer
-				if (!multiplayer) {
-					player1LoseHeart();
-				} else {
-					bubbleHitPlayer1 = true;
-				}
+				bubbleHitPlayer1 = true;
 				
 			}
 			

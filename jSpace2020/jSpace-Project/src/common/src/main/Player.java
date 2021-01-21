@@ -23,6 +23,9 @@ public class Player {
 		this.playerHeight = playerHeight;
 		this.scores = scores;
 		this.hearts = hearts;
+		if (hearts == 0) {
+			isAlive = false;
+		}
 		playerWidth = (playerHeight/3)*2;
 		this.player = player;
 		this.playerName = playerName;

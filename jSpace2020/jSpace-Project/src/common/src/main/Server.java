@@ -136,8 +136,7 @@ class roomHandler implements Runnable {
 	public static final String PLAYER_HIT_TO_SERVER = "player_hit_to_server";
 	public static final String PLAYER_DEAD = "player_dead";
 	public static final String GO_TO_END_SCREEN = "go_to_end_screen";
-
-
+	public static final String SINGLEPLAYER = "singlerplayer";
 
 	public roomHandler(String roomID, int roomCounter, String roomURI, SpaceRepository repo, Space rooms) {
         this.roomID = roomID;
@@ -253,9 +252,7 @@ class roomHandler implements Runnable {
 					case GOTMAP:
 						gameRoom.put(TO, HOST, STARTMAP);
 						gameRoom.put(TO, PARTICIPANT, STARTMAP);
-
 						break;
-					
 					case PLAYER_DEAD:
 						if (who.equals(HOST)) {
 							hostDied = true;
@@ -263,8 +260,14 @@ class roomHandler implements Runnable {
 							participantDied = true;
 						}
 						break;
-
 					default:
+					case SINGLEPLAYER:
+						System.out.print("SinglePlayer");
+						Object[] gameInstruction2 = gameRoom.get(new ActualField(FROM), new FormalField(String.class), new FormalField(String.class));
+						System.out.print("Instruction recerived");
+						if (gameInstruction2 != null) {
+							gameRoom.put(TO, HOST, GO_TO_END_SCREEN);
+						}
 						break;
 				}
 

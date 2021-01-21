@@ -63,6 +63,7 @@ public class Client {
     public static final String AMOUNT_OF_HEARTS = "amount_of_hearts";
     public static final String STARTING_LEVEL = "starting_level";
     public static final String GAME_SETTINGS = "game_settings";
+    public static final String SINGLEPLAYER = "singlerplayer";
      
     //String host = "tcp://2.tcp.ngrok.io:10963/";
     public static final String host = "tcp://127.0.0.1:9001/";
@@ -205,6 +206,7 @@ public class Client {
                 multiplayer = true;
     		} else {
                 singleConnected = true;
+                gameRoom.put(FROM,HOST,SINGLEPLAYER);
             }
     	} else if (myPermission.equals(PARTICIPANT)) {
     		// Receive bubbles from host
@@ -304,7 +306,7 @@ public class Client {
                 // Set other players position and make arrow if they shoot
                 gRoom.setP2(p2goRight, p2goLeft, p2shooting,p2pos.getX(),p2score,p2hearts);
             }
-          // Send player collision with bubbl
+          // Send player collision with bubble
             if (gRoom.checkBubbleHitPlayer1()) {
             	gameRoom.put(FROM, id, PLAYER_HIT);  	
             	gRoom.player1LoseHeart();
@@ -339,7 +341,37 @@ public class Client {
 
         // Game loop - single player
         while (singleConnected) {
-            gameRoom.get(new ActualField("singleplayergameroom"));
+        	System.out.println("check2" + gRoom.checkBubbleHitPlayer1());
+        	if (gRoom.getGame().getBubbles().isEmpty()) {
+        		 System.out.println("check2" + gRoom.checkBubbleHitPlayer1());
+                 gRoom.setCurrentLevel(gRoom.getCurrentLevel()+1);
+                 gRoom.setLevelText();
+                 gRoom.getGame().makeLevel(gRoom.getCurrentLevel(), gRoom.getGame().getPlayer1().getHearts(), gRoom.getGame().getPlayer1().getScore(), 
+                         gRoom.getGame().getPlayer2().getHearts(), gRoom.getGame().getPlayer2().getScore());
+        	}
+        	
+            // Send player collision with bubble
+            if (gRoom.checkBubbleHitPlayer1()) {
+            	gameRoom.put(FROM, id, PLAYER_HIT);  	
+            	gRoom.player1LoseHeart();
+            	gRoom.setBubbleHitPlayer1(false);
+            	
+            	System.out.println("check2" + gRoom.checkBubbleHitPlayer1());
+            	
+            	if(!gRoom.getGame().getPlayer1().isAlive) {
+            		
+            		// Give server information that player is dead.
+            		gameRoom.put(FROM,myPermission,PLAYER_DEAD);
+            		
+            		// Leads to end screen, atm stopping time
+            		gRoom.getTimer().stop();
+                    gameRoom.get(new ActualField(TO), new ActualField(myPermission), new ActualField(GO_TO_END_SCREEN));
+                    try {
+                        gRoom.closeWindow();
+                        endScreen(gRoom.getGame().getPlayer1().getScore(), gRoom.getGame().getPlayer2().getScore());
+                    } catch (IOException e) {}
+            	}
+            }
         }
     }
 
