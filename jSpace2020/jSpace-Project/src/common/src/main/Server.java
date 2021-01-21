@@ -262,7 +262,6 @@ class roomHandler implements Runnable {
 							participantDied = true;
 						}
 						break;
-					default:
 					case SINGLEPLAYER:
 						System.out.print("SinglePlayer");
 						Object[] gameInstruction2 = gameRoom.get(new ActualField(FROM), new FormalField(String.class), new FormalField(String.class));
@@ -273,6 +272,8 @@ class roomHandler implements Runnable {
 							rooms.put(roomID, LEFT_ROOM, HOST);
 							Thread.interrupted();
 						}
+						break;
+					default:
 						break;
 				}
 

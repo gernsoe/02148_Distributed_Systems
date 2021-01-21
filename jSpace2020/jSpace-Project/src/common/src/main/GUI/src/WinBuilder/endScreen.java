@@ -124,7 +124,7 @@ public class endScreen {
 		// "Level" text
 		
 		atLevel = new JLabel("New label");
-		atLevel.setBounds(128, 293, 61, 16);
+		atLevel.setBounds(128, 283, 61, 16);
 		panel.add(atLevel);
 		
 		JLabel levelLabel = new JLabel("");

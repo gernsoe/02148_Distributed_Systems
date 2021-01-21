@@ -274,7 +274,6 @@ public class Client {
             if (newLevel != null) {
                 gRoom.getTimer().stop();
                 currentLevel = (int) newLevel[3];
-                System.out.println("Current level PART: " + currentLevel);
                 gRoom.setCurrentLevel(currentLevel);
                 gRoom.setLevelText();
                 createNewLevel();
@@ -311,8 +310,6 @@ public class Client {
             	gRoom.player1LoseHeart();
             	gRoom.setBubbleHitPlayer1(false);
             	
-            	System.out.println("check2" + gRoom.checkBubbleHitPlayer1());
-            	
             	if(!gRoom.getGame().getPlayer1().isAlive) {
             		
             		// Give server information that player is dead.
@@ -340,11 +337,12 @@ public class Client {
 
         // Game loop - single player
         while (singleConnected) {
-        	System.out.println("");
+            Thread.sleep(10);
         	if (gRoom.getGame().getBubbles().isEmpty()) {
-                 gRoom.setCurrentLevel(gRoom.getCurrentLevel()+1);
-                 gRoom.setLevelText();
-                 gRoom.getGame().makeLevel(gRoom.getCurrentLevel(), gRoom.getGame().getPlayer1().getHearts(), gRoom.getGame().getPlayer1().getScore(), 
+                currentLevel++;
+                gRoom.setCurrentLevel(currentLevel);
+                gRoom.setLevelText();
+                gRoom.getGame().makeLevel(currentLevel, gRoom.getGame().getPlayer1().getHearts(), gRoom.getGame().getPlayer1().getScore(), 
                          gRoom.getGame().getPlayer2().getHearts(), gRoom.getGame().getPlayer2().getScore());
         	}
         	
