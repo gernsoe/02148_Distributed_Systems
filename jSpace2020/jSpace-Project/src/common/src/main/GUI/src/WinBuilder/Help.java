@@ -48,6 +48,7 @@ public class Help {
 		frmHelp.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmHelp.getContentPane().setLayout(null);
 		frmHelp.setLocationRelativeTo(null);
+		frmHelp.setResizable(false);
 		
 		//Buttons
 		JLabel buttons = new JLabel();

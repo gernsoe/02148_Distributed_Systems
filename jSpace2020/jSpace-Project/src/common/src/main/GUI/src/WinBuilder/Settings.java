@@ -62,6 +62,7 @@ public class Settings {
 		frmSetting.setTitle("Setting");
 		frmSetting.getContentPane().setBackground(new Color(218, 165, 32));
 		frmSetting.getContentPane().setLayout(null);
+		frmSetting.setResizable(false);
 		
 		//Amount of lives
 		JPanel panel = new JPanel();

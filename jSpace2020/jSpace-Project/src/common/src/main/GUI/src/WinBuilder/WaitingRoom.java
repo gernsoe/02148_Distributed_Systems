@@ -89,6 +89,7 @@ public class WaitingRoom {
 		frmWaitingRoom.getContentPane().setLayout(null);
 		frmWaitingRoom.setSize(1000,700);
 		frmWaitingRoom.setLocationRelativeTo(null);
+		frmWaitingRoom.setResizable(false);
 		
 		lblWaiting = new JLabel("Waiting for host to start game...");
 		lblWaiting.setFont(new Font("Lucida Grande", Font.BOLD | Font.ITALIC, 16));

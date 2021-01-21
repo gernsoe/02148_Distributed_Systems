@@ -164,9 +164,9 @@ class roomHandler implements Runnable {
 				// Get instruction (name, instruction) - where an instruction is either ready, start or leave room
 				Object[] waitingRoomInstruction = gameRoom.get(new ActualField(FROM), new FormalField(String.class), new FormalField(String.class));
 				String who = (String) waitingRoomInstruction[1];
-				String singlePlayerInstruction = (String) waitingRoomInstruction[2];
+				String gameInstruction = (String) waitingRoomInstruction[2];
 
-				switch (singlePlayerInstruction) {
+				switch (gameInstruction) {
 					case READY_TO_PLAY:	// Player 2 joined
 						player2 = who;
 						System.out.println(player2 + " is ready to play!!!");
@@ -187,11 +187,6 @@ class roomHandler implements Runnable {
 										gameRoom.put(TO, HOST, GAME_STARTED, "", 0, "", 0);			//Player one - last 4 are only used to match the template in checkWaitingRoomInstruction
 										gameRoom.put(TO, PARTICIPANT, GAME_STARTED, "", 0, "", 0); 	//Player two -  -||-
 										inLobby = false;
-										break;
-									
-									case SETTINGS:
-										// Implement settings
-									System.out.println("Implement settings");
 										break;
 		
 									case LEAVE_ROOM:	// Host leaves room when it's full

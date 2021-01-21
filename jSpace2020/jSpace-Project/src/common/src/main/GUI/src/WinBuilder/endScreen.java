@@ -19,6 +19,10 @@ public class endScreen {
 	private JLabel score_1, score_2, actualLevelLabel;
 	private JButton btnNewButton, btnNewButton_1;
 	private JLabel atLevel;
+	private JPanel panel = new JPanel();
+	private JPanel panel_1 = new JPanel();
+	private JPanel panel_2 = new JPanel();
+	private JPanel panel_3 = new JPanel();
 
 	/**
 	 * Launch the application.
@@ -53,13 +57,7 @@ public class endScreen {
 		frmEndScreen.setSize(1000,700);
 		frmEndScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmEndScreen.getContentPane().setLayout(null);
-		
-		
-		JPanel panel_3 = new JPanel();
-		panel_3.setBackground(new Color(47, 79, 79));
-		panel_3.setBounds(418, 50, 175, 114);
-		frmEndScreen.getContentPane().add(panel_3);
-		panel_3.setLayout(null);
+		frmEndScreen.setResizable(false);
 		
 		JLabel lblNewLabel_7 = new JLabel("HIGH SCORE");
 		lblNewLabel_7.setFont(new Font("Lucida Grande", Font.BOLD, 13));
@@ -78,11 +76,6 @@ public class endScreen {
 		score_1.setBounds(115, 39, 16, 26);
 		panel_3.add(score_1);
 		score_1.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(76, 43, 80, 16);
-		panel_3.add(panel_1);
-		panel_1.setBackground(new Color(255, 255, 255));
-		panel_1.setLayout(null);
 
 		JLabel lblNewLabel_6 = new JLabel("PLAYER 2");
 		lblNewLabel_6.setBounds(6, 85, 61, 16);
@@ -93,19 +86,7 @@ public class endScreen {
 		score_2 = new JLabel("0");
 		score_2.setBounds(115, 85, 16, 16);
 		panel_3.add(score_2);
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(76, 85, 80, 16);
-		panel_3.add(panel_2);
-		panel_2.setBackground(new Color(255, 255, 255));
-		panel_2.setLayout(null);
 
-		
-		
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(47, 79, 79));
-		panel.setBounds(339, 176, 324, 370);
-		frmEndScreen.getContentPane().add(panel);
-		panel.setLayout(null);
 		
 		btnNewButton = new JButton("Restart");
 		btnNewButton.setBounds(116, 126, 88, 29);
@@ -141,9 +122,26 @@ public class endScreen {
 		lblNewLabel_4.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 		lblNewLabel_4.setBounds(137, 252, 80, 16);
 		panel.add(lblNewLabel_4);
-		
-		
-		
+
+		panel_3.setBackground(new Color(47, 79, 79));
+		panel_3.setBounds(418, 50, 175, 114);
+		frmEndScreen.getContentPane().add(panel_3);
+		panel_3.setLayout(null);
+
+		panel_2.setBounds(76, 85, 80, 16);
+		panel_3.add(panel_2);
+		panel_2.setBackground(new Color(255, 255, 255));
+		panel_2.setLayout(null);
+
+		panel_1.setBounds(76, 43, 80, 16);
+		panel_3.add(panel_1);
+		panel_1.setBackground(new Color(255, 255, 255));
+		panel_1.setLayout(null);
+
+		panel.setBackground(new Color(47, 79, 79));
+		panel.setBounds(339, 176, 324, 370);
+		frmEndScreen.getContentPane().add(panel);
+		panel.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("");
 		Image img = new ImageIcon(this.getClass().getResource("/bg.png")).getImage();

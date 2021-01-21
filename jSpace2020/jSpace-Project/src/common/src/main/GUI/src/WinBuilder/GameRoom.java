@@ -456,8 +456,6 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 			// Bubble collision with player
 			if(game.getPlayer1().isAlive() && !(game.getPlayer1().getInvincible()) && game.getBubbles().get(i).getShape().intersects(game.getPlayer1().getShape())) {
 				// Lose life if player gets hit and restart level, if dead then stop game
-				System.out.println("bubble shape" + game.getBubbles().get(i).getShape().getBounds2D());
-				System.out.println("player shape" + game.getPlayer1().getShape().toString());
 				
 				// Lose health if not multiplayer
 				bubbleHitPlayer1 = true;

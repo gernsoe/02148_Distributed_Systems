@@ -119,6 +119,8 @@ public class Client {
                 // Create popup window
                 System.out.println("Room is full");
                 menu.clearIDField();
+                menu.hideLoginText();
+                menu.roomFull();
             } else {
                 menu.closeWindow();
                 System.out.println("Joining game room: " + roomID);
@@ -495,6 +497,7 @@ public class Client {
                 try {
                     name = menu.getName();
                     roomID = menu.getRoomID();
+                    menu.hideLoginText();
                     if (name.equals("") || name.equals(null)  ) {
                         //TODO create popup
                     	menu.missingName();
@@ -585,5 +588,7 @@ public class Client {
         inLobby = true;
         multiConnected = false;
         singleConnected = false;
+        startingLevel = 1;
+        amountOfHearts = 5;
     }
 }

@@ -181,6 +181,12 @@ public class fMenu {
 		textField_RoomID.setText("");
 	}
 
+	public void hideLoginText() {
+		lblMissingRoomID.setVisible(false);
+		lbNameMissing.setVisible(false);
+		lblFullRoom.setVisible(false);
+	}
+
 	public String getName() {
 		return textField_Name.getText();
 	}
