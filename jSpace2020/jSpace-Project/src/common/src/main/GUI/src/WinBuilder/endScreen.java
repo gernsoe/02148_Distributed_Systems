@@ -123,13 +123,13 @@ public class endScreen {
 
 		// "Level" text
 		
-		atLevel = new JLabel("New label");
-		atLevel.setBounds(128, 283, 61, 16);
+		JLabel atLevel = new JLabel("New label");
+		atLevel.setBounds(128, 288, 61, 16);
 		panel.add(atLevel);
 		
 		JLabel levelLabel = new JLabel("");
 		levelLabel.setBounds(128, 261, 61, 60);
-		Image img1 = new ImageIcon(this.getClass().getResource("/level.png")).getImage();
+		Image img1 = new ImageIcon(this.getClass().getResource("/imgLevel.png")).getImage();
 		levelLabel.setIcon(new ImageIcon(img1));
 		panel.add(levelLabel);
 		
