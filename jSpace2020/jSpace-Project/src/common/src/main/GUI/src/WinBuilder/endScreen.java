@@ -16,6 +16,7 @@ public class endScreen {
 	private JFrame frmEndScreen;
 	private JLabel score_1, score_2, actualLevelLabel;
 	private JButton btnNewButton, btnNewButton_1;
+	private JLabel atLevel;
 
 	/**
 	 * Launch the application.
@@ -173,8 +174,8 @@ public class endScreen {
 	}
 
 	public void setLevel(int level) {
-		actualLevelLabel.setText("" + level);
-		actualLevelLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		atLevel.setText("" + level);
+		atLevel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 	}
 	public void closeWindow() {
 		frmEndScreen.setVisible(false);

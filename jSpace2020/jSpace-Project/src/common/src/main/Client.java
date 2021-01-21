@@ -340,9 +340,8 @@ public class Client {
 
         // Game loop - single player
         while (singleConnected) {
-        	System.out.println("check2" + gRoom.checkBubbleHitPlayer1());
+        	System.out.println("");
         	if (gRoom.getGame().getBubbles().isEmpty()) {
-        		 System.out.println("check2" + gRoom.checkBubbleHitPlayer1());
                  gRoom.setCurrentLevel(gRoom.getCurrentLevel()+1);
                  gRoom.setLevelText();
                  gRoom.getGame().makeLevel(gRoom.getCurrentLevel(), gRoom.getGame().getPlayer1().getHearts(), gRoom.getGame().getPlayer1().getScore(), 
@@ -354,8 +353,6 @@ public class Client {
             	gameRoom.put(FROM, id, PLAYER_HIT);  	
             	gRoom.player1LoseHeart();
             	gRoom.setBubbleHitPlayer1(false);
-            	
-            	System.out.println("check2" + gRoom.checkBubbleHitPlayer1());
             	
             	if(!gRoom.getGame().getPlayer1().isAlive) {
             		

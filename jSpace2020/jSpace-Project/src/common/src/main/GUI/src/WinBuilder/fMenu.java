@@ -64,8 +64,6 @@ public class fMenu {
 			}
 		});
 		
-
-		
 		btnNewButton.setBounds(447, 477, 117, 29);
 		frame.getContentPane().add(btnNewButton); 
 		
