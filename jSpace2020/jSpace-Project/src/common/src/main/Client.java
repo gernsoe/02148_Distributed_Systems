@@ -65,7 +65,6 @@ public class Client {
     public static final String GAME_SETTINGS = "game_settings";
     public static final String SINGLEPLAYER = "singlerplayer";
      
-    //String host = "tcp://2.tcp.ngrok.io:10963/";
     public static final String host = "tcp://127.0.0.1:9001/";
     public static final String lobbyURI = host + "lobby?keep";
     public static RemoteSpace lobby;
