@@ -98,6 +98,9 @@ public class Server {
 	}
 }
 
+
+
+
 class roomHandler implements Runnable {
     private String roomID;
 	private String roomURI;
@@ -134,6 +137,8 @@ class roomHandler implements Runnable {
 	public static final String PLAYER_DEAD = "player_dead";
 	public static final String GO_TO_END_SCREEN = "go_to_end_screen";
 
+
+
 	public roomHandler(String roomID, int roomCounter, String roomURI, SpaceRepository repo, Space rooms) {
         this.roomID = roomID;
 		this.roomURI = roomURI;
@@ -141,7 +146,9 @@ class roomHandler implements Runnable {
         
         gameRoom = new SequentialSpace(); 
         repo.add("game" + roomCounter, gameRoom);
-    }
+	}
+	
+
     
 	public void run() {
 		
@@ -275,6 +282,8 @@ class roomHandler implements Runnable {
 		}
     }
 }
+
+
 
 class leaveRoomHandler implements Runnable {
 	private Space rooms;

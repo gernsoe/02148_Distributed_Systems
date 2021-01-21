@@ -85,6 +85,8 @@ public class Client {
         } catch (InterruptedException e) {}
     }
 
+    
+
     // Call when restarting the game
     public static void gameStates() throws InterruptedException, UnknownHostException, IOException {
         joinRoom();
@@ -93,6 +95,8 @@ public class Client {
 
         gameLoop();
     }
+
+
 
     public static void joinRoom() throws InterruptedException, UnknownHostException, IOException {
         resetVariables();   //Reset variables if user leaves room
@@ -122,6 +126,8 @@ public class Client {
             }
         }
     }
+
+
 
     public static void preGameLobby() throws InterruptedException, UnknownHostException, IOException {
         gameRoom = new RemoteSpace(roomURI);
@@ -170,67 +176,7 @@ public class Client {
         }
     }
 
-    public static void checkWaitingRoomInstructions(WaitingRoom wRoom) throws InterruptedException, IOException {
-        Object[] waitingRoomOptions = gameRoom.get(new ActualField(TO), new ActualField(myPermission), new FormalField(String.class), new FormalField(String.class),
-                                                           new FormalField(Integer.class), new FormalField(String.class), new FormalField(Integer.class));
 
-        String sender = (String) waitingRoomOptions[1];
-        String instruction = (String) waitingRoomOptions[2];
-
-        switch (instruction) {
-            case PLAYER_JOINED:
-                otherPlayerName = (String) waitingRoomOptions[3];
-                wRoom.setUserName2(otherPlayerName);
-                wRoom.toggleFigure2();
-                System.out.println("Player 2 joined");
-                break;
-
-            case GAME_STARTED:
-                wRoom.closeWindow();
-                gameLoop();
-                break;
-
-            case GAME_SETTINGS:
-                startingLevel = (int) waitingRoomOptions[4];
-                amountOfHearts = (int) waitingRoomOptions[6];
-                break;
-
-            case LEAVE_ROOM:
-                String whoLeft = (String) waitingRoomOptions[3];
-                switch (sender) {
-                    case HOST:
-                        switch (whoLeft) {
-                            case HOST:
-                                wRoom.closeWindow();
-                                gameRoom.put(FROM, myPermission, LEFT_ROOM);
-                                gameStates();
-    
-                                break;
-                            case PARTICIPANT:
-                                wRoom.toggleFigure2();
-                                wRoom.setUserName2("");
-                                otherPlayerName = null;
-                                break;
-                            default:
-                                break;
-                        }
-    
-                        break;
-                    case PARTICIPANT:
-                        wRoom.closeWindow();
-                        gameRoom.put(FROM, myPermission, LEFT_ROOM);
-                        gameStates();
-                        break;
-                        
-                    default:
-                        break;
-                }
-                break;
-        
-            default:
-                break;
-        }
-    }
 
     public static void gameLoop() throws InterruptedException {
     	multiplayer = false;
@@ -397,6 +343,8 @@ public class Client {
         }
     }
 
+
+
     public static void endScreen(int player1Score, int player2Score) throws InterruptedException, UnknownHostException, IOException {
         endScreen eScreen = new endScreen();
         eScreen.setScore(1, player1Score);
@@ -413,6 +361,8 @@ public class Client {
         eScreen.closeWindow();
         gameStates();
     }
+
+
 
     public static void createNewLevel() throws InterruptedException {
         if (myPermission.equals(HOST)) {
@@ -446,6 +396,72 @@ public class Client {
         }
         gRoom.getTimer().start();
     }
+
+
+
+    public static void checkWaitingRoomInstructions(WaitingRoom wRoom) throws InterruptedException, IOException {
+        Object[] waitingRoomOptions = gameRoom.get(new ActualField(TO), new ActualField(myPermission), new FormalField(String.class), new FormalField(String.class),
+                                                           new FormalField(Integer.class), new FormalField(String.class), new FormalField(Integer.class));
+
+        String sender = (String) waitingRoomOptions[1];
+        String instruction = (String) waitingRoomOptions[2];
+
+        switch (instruction) {
+            case PLAYER_JOINED:
+                otherPlayerName = (String) waitingRoomOptions[3];
+                wRoom.setUserName2(otherPlayerName);
+                wRoom.toggleFigure2();
+                System.out.println("Player 2 joined");
+                break;
+
+            case GAME_STARTED:
+                wRoom.closeWindow();
+                gameLoop();
+                break;
+
+            case GAME_SETTINGS:
+                startingLevel = (int) waitingRoomOptions[4];
+                amountOfHearts = (int) waitingRoomOptions[6];
+                break;
+
+            case LEAVE_ROOM:
+                String whoLeft = (String) waitingRoomOptions[3];
+                switch (sender) {
+                    case HOST:
+                        switch (whoLeft) {
+                            case HOST:
+                                wRoom.closeWindow();
+                                gameRoom.put(FROM, myPermission, LEFT_ROOM);
+                                gameStates();
+    
+                                break;
+                            case PARTICIPANT:
+                                wRoom.toggleFigure2();
+                                wRoom.setUserName2("");
+                                otherPlayerName = null;
+                                break;
+                            default:
+                                break;
+                        }
+    
+                        break;
+                    case PARTICIPANT:
+                        wRoom.closeWindow();
+                        gameRoom.put(FROM, myPermission, LEFT_ROOM);
+                        gameStates();
+                        break;
+                        
+                    default:
+                        break;
+                }
+                break;
+        
+            default:
+                break;
+        }
+    }
+
+
     
     public static void loginButton(fMenu menu, Space lobby) throws InterruptedException{
         menu.getLoginButton().addActionListener(new ActionListener() {
@@ -471,6 +487,9 @@ public class Client {
             }
         });
     }
+
+
+
     public static void saveSettingsButton(WaitingRoom wRoom, Space gameRoom) throws InterruptedException{
         wRoom.getSettingsButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -492,6 +511,8 @@ public class Client {
         });
     }
 
+
+
     public static void startGameButton(WaitingRoom wRoom) throws InterruptedException {
         wRoom.getStartButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -501,6 +522,8 @@ public class Client {
             }
         });
     }
+
+
     
     public static void leaveRoomButton(WaitingRoom wRoom) throws InterruptedException {
         wRoom.getLeaveButton().addActionListener(new ActionListener() {
@@ -512,6 +535,8 @@ public class Client {
         });
     }
 
+
+
     public static void backToMenuButton(endScreen eScreen) {
         eScreen.getBackButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -519,6 +544,8 @@ public class Client {
             }
         });
     }
+
+
 
     public static void resetVariables() {
         name = "";
@@ -532,66 +559,4 @@ public class Client {
         multiConnected = false;
         singleConnected = false;
     }
-
-    //Object[] waitingRoomOptions = gameRoom.get(new FormalField(String.class), new FormalField(String.class), new FormalField(String.class), 
-    //                                           new FormalField(Integer.class), new FormalField(String.class), new FormalField(Integer.class));
-    /*
-    public static void checkGameStarted(WaitingRoom wRoom) throws InterruptedException {
-        Object[] gameStarted = gameRoom.getp(new ActualField(TO), new ActualField(myPermission), new ActualField(GAME_STARTED),
-                                            new FormalField(String.class),  new FormalField(Integer.class), new FormalField(String.class), new FormalField(Integer.class));
-        if (gameStarted != null) {
-            wRoom.closeWindow();
-            gameLoop();
-        }
-    }
-
-    // Get updated settings directly from the host
-    public static void checkGameSettings(WaitingRoom wRoom) throws InterruptedException {
-        Object[] gameSettings = gameRoom.getp(new ActualField(FROM), new ActualField(HOST), new ActualField(GAME_SETTINGS), new ActualField(STARTING_LEVEL), 
-                                              new FormalField(Integer.class), new ActualField(AMOUNT_OF_HEARTS), new FormalField(Integer.class));
-        if (gameSettings != null) {
-            startingLevel = (int) gameSettings[4];
-            amountOfHearts = (int) gameSettings[6];
-            System.out.println("starting level " + startingLevel + " hearts: " + amountOfHearts);
-        }
-    }
-
-    public static void checkLeaveRoom(WaitingRoom wRoom) throws InterruptedException, IOException {
-        Object[] gameLeft = gameRoom.getp(new ActualField(TO), new ActualField(myPermission), new ActualField(LEAVE_ROOM), new FormalField(String.class),
-                                          new FormalField(Integer.class), new FormalField(String.class), new FormalField(Integer.class));
-        
-        if (gameLeft != null) {
-            String me = (String) gameLeft[1];
-            String whoLeft = (String) gameLeft[3];
-            switch (me) {
-                case HOST:
-                    switch (whoLeft) {
-                        case HOST:
-                            wRoom.closeWindow();
-                            gameRoom.put(FROM, myPermission, LEFT_ROOM);
-                            gameStates();
-
-                            break;
-                        case PARTICIPANT:
-                            wRoom.toggleFigure2();
-                            wRoom.setUserName2("");
-                            otherPlayerName = null;
-                            break;
-                        default:
-                            break;
-                    }
-
-                    break;
-                case PARTICIPANT:
-                    wRoom.closeWindow();
-                    gameRoom.put(FROM, myPermission, LEFT_ROOM);
-                    gameStates();
-                    break;
-                    
-                default:
-                    break;
-            }
-        }
-    }
-    */
 }
