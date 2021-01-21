@@ -53,8 +53,8 @@ public class endScreen {
 		
 		
 		JPanel panel_3 = new JPanel();
-		panel_3.setBackground(new Color(220, 20, 60));
-		panel_3.setBounds(36, 32, 175, 114);
+		panel_3.setBackground(new Color(47, 79, 79));
+		panel_3.setBounds(418, 50, 175, 114);
 		frmEndScreen.getContentPane().add(panel_3);
 		panel_3.setLayout(null);
 		
@@ -97,10 +97,9 @@ public class endScreen {
 		panel_2.setLayout(null);
 
 		
-			
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(220, 20, 60));
+		panel.setBackground(new Color(47, 79, 79));
 		panel.setBounds(339, 176, 324, 370);
 		frmEndScreen.getContentPane().add(panel);
 		panel.setLayout(null);
@@ -122,17 +121,24 @@ public class endScreen {
 		panel.add(actualLevelLabel);
 
 		// "Level" text
-		JLabel lblNewLabel_3 = new JLabel("");
-		lblNewLabel_3.setBounds(128, 261, 61, 60);
+		
+		JLabel atLevel = new JLabel("New label");
+		atLevel.setBounds(128, 293, 61, 16);
+		panel.add(atLevel);
+		
+		JLabel levelLabel = new JLabel("");
+		levelLabel.setBounds(128, 261, 61, 60);
 		Image img1 = new ImageIcon(this.getClass().getResource("/level.png")).getImage();
-		lblNewLabel_3.setIcon(new ImageIcon(img1));
-		panel.add(lblNewLabel_3);
+		levelLabel.setIcon(new ImageIcon(img1));
+		panel.add(levelLabel);
 		
 		JLabel lblNewLabel_4 = new JLabel("LEVEL");
 		lblNewLabel_4.setForeground(new Color(255, 255, 255));
 		lblNewLabel_4.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 		lblNewLabel_4.setBounds(137, 252, 80, 16);
 		panel.add(lblNewLabel_4);
+		
+		
 		
 		
 		JLabel lblNewLabel = new JLabel("");
