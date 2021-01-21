@@ -64,8 +64,7 @@ public class Client {
     public static final String STARTING_LEVEL = "starting_level";
     public static final String GAME_SETTINGS = "game_settings";
     public static final String SINGLEPLAYER = "singlerplayer";
-     
-    //public static final String host = "tcp://2.tcp.eu.ngrok.io:17657/";
+
     public static final String host = "tcp://127.0.0.1:9001/";
     public static final String lobbyURI = host + "lobby?keep";
     public static RemoteSpace lobby;
@@ -587,6 +586,7 @@ public class Client {
         myPermission = "";
         loginButtonClicked = false;
         startButtonClicked = false;
+        backToMenuButtonClicked = false;
         inLobby = true;
         multiConnected = false;
         singleConnected = false;
