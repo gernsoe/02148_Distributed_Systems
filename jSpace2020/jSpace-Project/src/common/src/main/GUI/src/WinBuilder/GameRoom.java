@@ -183,7 +183,7 @@ public class GameRoom implements KeyListener, WindowListener, ActionListener {
 		// Read images and resize and add to panels
 		Image img = new ImageIcon(this.getClass().getResource("/Tall.png")).getImage();
 		Image img1 = new ImageIcon(this.getClass().getResource("/Long.png")).getImage();
-		Image img_level = new ImageIcon(this.getClass().getResource("/level.png")).getImage();
+		Image img_level = new ImageIcon(this.getClass().getResource("/imgLevel.png")).getImage();
 		Image imgHeart =  new ImageIcon(this.getClass().getResource("/heart.png")).getImage();
 		
 		// Add playerNames

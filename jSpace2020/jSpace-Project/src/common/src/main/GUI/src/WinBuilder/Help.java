@@ -58,7 +58,7 @@ public class Help {
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(255, 255, 255));
-		panel.setBounds(288, 171, 138, 77);
+		panel.setBounds(288, 171, 189, 77);
 		frmHelp.getContentPane().add(panel);
 		panel.setLayout(null);
 		
@@ -71,7 +71,7 @@ public class Help {
 		right.setBounds(6, 26, 182, 16);
 		panel.add(right);
 		
-		JLabel up = new JLabel("Shoot: Up key");
+		JLabel up = new JLabel("Shoot: Up key or space key");
 		up.setBounds(6, 46, 182, 16);
 		panel.add(up);
 		
