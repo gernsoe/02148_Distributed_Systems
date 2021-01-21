@@ -3,6 +3,8 @@ package common.src.main;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import common.src.main.GUI.src.WinBuilder.endScreen;
+
 public class LevelHandler {
 	
 	Map game;
@@ -45,7 +47,9 @@ public class LevelHandler {
 		} else if (level == 9) {
 			bubbleCounts = new int[] {0,10,0,2,0,0,0,0,0,0};
 		} else if (level == 10) {
-			bubbleCounts = new int[] {0,0,0,0,0,0,0,0,0,1};
+			bubbleCounts = new int[] {100,100,100,100,100,100,100,100,100,100};
+		} else {
+			bubbleCounts = new int[] {0,0,0,0,0,0,0,0,0,10};
 		}
 
 		game.makeMap(bubbleCounts, bubbleSizes, speedX, speedY);
