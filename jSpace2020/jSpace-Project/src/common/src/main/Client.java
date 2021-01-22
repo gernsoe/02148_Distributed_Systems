@@ -590,5 +590,6 @@ public class Client {
         singleConnected = false;
         startingLevel = 1;
         amountOfHearts = 5;
+        otherPlayerDied = false;
     }
 }
